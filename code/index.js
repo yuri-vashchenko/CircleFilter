@@ -1,0 +1,1 @@
+$( "#greeting" ).html( "Hello, " + readProperty( "my_name", "Unknown" ) + "!" );
