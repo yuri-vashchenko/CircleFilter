@@ -1,0 +1,27 @@
+﻿{
+    "manifest_version": 2,
+
+    "name": "CircleFilter",
+    "version": "0.1",
+    "description": "A plain text description",
+    
+    "icons": {
+        "16": "icon.png"
+    },
+
+    "permissions": [
+        "tabs",
+        "http://google.com/*"
+    ],
+   
+    "background": {
+        "scripts": ["background.js"]
+    },
+
+    "browser_action": {
+        "default_title": "CircleFilter",
+        "default_icon": "icon.png"
+    },
+   
+    "options_page": "options.html"
+}
