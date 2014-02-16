@@ -1,12 +1,28 @@
 <html>
 <head>
-    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    <meta http-equiv = "Content-Type" content = "text/html; charset=UTF-8">
     <title>CircleFilter</title>
-    <script src="jquery.js"></script>
-    <script src="general.js"></script>
+    <link rel = "stylesheet" type = "text/css" href = "css/bootstrap.min.css">
+    <link rel = "stylesheet" type = "text/css" href = "css/stylesheet.css">
+    <script src = "js/jquery.js"></script>
+    <script src = "js/general.js"></script>
 </head>
 <body>
-    <div id="greeting"></div>
+    <div class = "header">
+        <img src = "icons/logo64.png">
+        <div class = "account">test@gmail.com</div>
+        <div class = "nav">
+            <a href = '#' class='button' id = "help"><img class='but-icon' src='images/help.png'/>Помощь</a>
+            <a href = '/options.html' class='button' id = "config"><img class='but-icon' src='images/config.png'/>Настройки</a>
+        </div>
+    </div>
+    <div id = "content">
+        <div id = "left-block">
+            <button type = "button" class = "btn btn-default" id = "from-internet">Получить контакты</button>
+        </div>
+        <div id = "right-block"></div>
+    </div>
+    <div id = "footer"></div>
 </body>
-    <script src="index.js"></script>
+    <script src = "js/index.js"></script>
 </html>
