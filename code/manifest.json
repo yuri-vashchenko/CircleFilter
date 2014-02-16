@@ -21,7 +21,8 @@
         "https://accounts.google.com/*"
     ],
     
-    "content_security_policy": "script-src 'self' 'unsafe-eval' https://content.googleapis.com https://www.googleapis.com https://accounts.google.com https://apis.google.com https://plusone.google.com; frame-src 'self' https://apis.google.com https://accounts.google.com https://plusone.google.com https://content.googleapis.com chrome-extension://; object-src 'self' 'unsafe-eval' https://apis.google.com",
+    "content_security_policy": "script-src 'self' 'unsafe-eval' https://accounts.google.com https://plus.google.com https://apis.google.com; frame-src 'self' https://apis.google.com https://accounts.google.com https://content.googleapis.com; object-src 'self'",
+
     "background": {
         "scripts": []
     },

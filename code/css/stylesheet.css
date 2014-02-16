@@ -88,14 +88,39 @@ body {
     width: 100%;
 }
 #left-block {
-    background-color: gray;
     width: 300px !important;
+    border-right: 1px solid black;
     height: 100%;
+    display: table-cell;
+    padding: 20px;
 }
 
 #right-block {
-    background-color: green;
     min-width: 300px;
+    display: table-cell;
+    padding: 20px;
 }
+
+.person {    
+    display: inline-block;
+    height: 72px;
+    width: 200px;
+    margin: 5px;
+    border: 1px solid gray;
+    border-radius: 5px;
+}
+
+.person .name {    
+    margin: 10px 0px 10px 10px;
+}
+
+.person img {    
+    float:left;
+}
+.person a {   
+    cursor: pointer;
+}
+
+
 
 

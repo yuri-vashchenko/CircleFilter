@@ -4,25 +4,41 @@
     <title>CircleFilter</title>
     <link rel = "stylesheet" type = "text/css" href = "css/bootstrap.min.css">
     <link rel = "stylesheet" type = "text/css" href = "css/stylesheet.css">
-    <script src = "js/jquery.js"></script>
-    <script src = "js/general.js"></script>
+    <script type = "text/javascript" src = "js/JQuery/jquery.js"></script>
+    <script type = "text/javascript" src = "js/general.js"></script>
+    <script src="https://apis.google.com/js/client:plus.js"></script>  
 </head>
 <body>
     <div class = "header">
         <img src = "icons/logo64.png">
-        <div class = "account">test@gmail.com</div>
+  
+        <div class = "account">
+            <div id="gConnect">
+                <button class="g-signin"
+                    data-scope="https://www.googleapis.com/auth/plus.login"
+                    data-requestvisibleactions="http://schemas.google.com/AddActivity"
+                    data-clientId="108705996217-lf35tgsg3r8hi6n9cgos1mpjo8ncsa2h.apps.googleusercontent.com"
+                    data-callback="onSignInCallback"
+                    data-theme="dark"
+                    data-cookiepolicy="single_host_origin">
+                </button>
+            </div>
+            <button id="disconnect" style="display:none">Выйти</button>
+        </div>
         <div class = "nav">
             <a href = '#' class='button' id = "help"><img class='but-icon' src='images/help.png'/>Помощь</a>
-            <a href = '/options.html' class='button' id = "config"><img class='but-icon' src='images/config.png'/>Настройки</a>
+            <a href = '#' class='button' id = "config"><img class='but-icon' src='images/config.png'/>Настройки</a>
         </div>
     </div>
     <div id = "content">
-        <div id = "left-block">
-            <button type = "button" class = "btn btn-default" id = "from-internet">Получить контакты</button>
+        <div id = "left-block"></div>
+        <div id = "right-block">
+            <div id="authOps" style="display:none">
+                <div id="visiblePeople"></div>
+            </div>
         </div>
-        <div id = "right-block"></div>
     </div>
     <div id = "footer"></div>
 </body>
-    <script src = "js/index.js"></script>
+    <script type="text/javascript" src="js/gplus.js" ></script>
 </html>
