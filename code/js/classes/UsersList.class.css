@@ -1,0 +1,7 @@
+ul.usersList {
+    list-style-type : none;
+}
+
+ul.usersList li {
+    display: inline;
+}

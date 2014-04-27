@@ -1,0 +1,19 @@
+.user {    
+    display: inline-block;
+    height: 72px;
+    width: 200px;
+    margin: 5px;
+    border: 1px solid gray;
+    border-radius: 5px;
+}
+
+.user .name {    
+    margin: 10px 0px 10px 10px;
+}
+
+.user img {    
+    float:left;
+}
+.user a {   
+    cursor: pointer;
+}

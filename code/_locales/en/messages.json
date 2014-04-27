@@ -1,0 +1,17 @@
+{
+    "extName": {
+        "message": "CircleFilter"
+    },
+    "extDescr": {
+        "message": "Best tool for manage Google+ accounts."
+    },
+    "language": {
+        "message": "Language"
+    },
+    "emptyResultBlock": {
+        "message": "Empty result block..."
+    },
+    "defaultResultBlockContent": {
+        "message": "Default result block content..."
+    }    
+}

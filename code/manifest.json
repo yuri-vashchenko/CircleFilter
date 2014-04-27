@@ -1,9 +1,11 @@
 ﻿{
     "manifest_version": 2,
-
-    "name": "CircleFilter",
-    "version": "0.1",
-    "description": "Лучшее средство для управления аккаунтами Google+",
+    "default_locale":"en",
+    
+    "name": "__MSG_extName__",
+    "version": "0.4.3",
+    "description": "__MSG_extDescr__",
+    
     
     "icons": {
         "16": "icons/logo16.png",
@@ -24,13 +26,12 @@
     "content_security_policy": "script-src 'self' 'unsafe-eval' https://accounts.google.com https://plus.google.com https://apis.google.com; frame-src 'self' https://apis.google.com https://accounts.google.com https://content.googleapis.com; object-src 'self'",
 
     "background": {
-        "scripts": []
+        "scripts": ["js/background.js"]
     },
-
+    
     "browser_action": {
         "default_title": "CircleFilter",
-        "default_icon": "icons/logo32.png",
-        "default_popup": "popup.html"
+        "default_icon": "icons/logo32.png"
     },
    
     "options_page": "options.html"

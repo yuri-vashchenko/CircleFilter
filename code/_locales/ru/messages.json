@@ -1,0 +1,17 @@
+{
+    "extName": {
+        "message": "CircleFilter"
+    },
+    "extDescr": {
+        "message": "Лучшее средство для управления аккаунтами Google+"
+    },
+    "language": {
+        "message": "Язык"
+    },
+    "emptyResultBlock": {
+        "message": "Пользователи не найдены"
+    },
+    "defaultResultBlockContent": {
+        "message": "Здесь будет результат фильтра"
+    }   
+}

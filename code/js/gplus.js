@@ -65,13 +65,13 @@ var helper = (function() {
         'collection': 'visible'
       });
       request.execute(function(people) {
-        console.log(people);
-        $('#visiblePeople').empty();
-        $('#visiblePeople').append('Список пользователей: ' +
+        console.log("peop", people);
+        $('#right-block').empty();
+        $('#right-block').append('Список пользователей: ' +
             people.totalItems + '<br/>');
         for (var personIndex in people.items) {
           person = people.items[personIndex];
-          $('#visiblePeople').append('<div class="person"><p class="name"><img src="' + person.image.url + '"><a>'+person.displayName+'</a></p></div>');
+          $('#right-block').append('<div class="person"><p class="name"><img src="' + person.image.url + '"><a>'+person.displayName+'</a></p></div>');
         }
       });
     },
