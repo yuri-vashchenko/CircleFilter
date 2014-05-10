@@ -1,0 +1,75 @@
+<html>
+<head>
+	<meta charset="UTF-8"> 
+	<link rel="stylesheet" href="main.css">
+	<script type="text/javascript" src="jquery-1.7.1.min.js"></script>
+	<script type="text/javascript" src="main.js"></script>
+</head>
+
+<body onload='addElement()'>
+<div id='main'>
+	<div class='head'>
+		<div class='icon'></div>
+		<div class='title'>exemple@gmail.com</div>
+		<div class='button'><input type="button" value='Выйти'></div>
+		<div class='iconHelp'></div>
+		<div class='help show_popup' rel='helpForm' href='#'>Помощь</div>
+		<div class='iconOptions'></div>
+		<div class='options' rel="helpForm" href='#'>Настройки</div>	
+	</div>
+	
+	<div id='left'>Текст в данном элементе будет создан динамически.</div>
+	<div id='right'>Текст в данном элементе будет создан динамически.</div>
+	
+	<div class='popup helpForm'>
+		<h2>Справка</h2>
+		<a class='close' href='#'>Закрыть</a>
+		<div class='text'>
+			<p>Веб-дизайн (от англ. Web design) — отрасль веб-разработки и разновидность дизайна, в задачи которой входит проектирование пользовательских веб-интерфейсов для сайтов или веб-приложений. Веб-дизайнеры проектируют логическую структуру веб-страниц, продумывают наиболее удобные решения подачи информации, а также занимаются художественным оформлением веб-проекта. В результате пересечения двух отраслей человеческой деятельности грамотный веб-дизайнер должен быть знаком с последними веб-технологиями и обладать соответствующими художественными качествами.</p>
+		</div>
+	</div>
+</div>
+
+<!--*******************************-->
+
+<div id='optionsShow'>
+	<div class='head'>
+		<div class='icon'></div>
+		<div class='optionsNew'>Настройки</div>	
+	</div>
+	<div id='center'>
+		<div class='lang'><div class='langName'>Язык</div>
+		<form>
+			<div class='lineForm'>
+				<select id='country' name='country' tabindex='2'>
+					<option value='1'>Русский</option>
+					<option value='2'>English</option>
+				</select>
+			</div>
+		</form>
+		</div>
+		
+		<div id='radio'>
+			<form>
+				<div class='langName'>Запоминание ресурсов загруски данных</div>
+				<p><input type="radio" name="answer" value="a1">Всегда спрашивать о выборе загруски<Br>
+				<input type="radio" name="answer" value="a1">Использовать только локальные даннык<Br>
+				<input type="radio" name="answer" value="a1">Использовать только актуальные даннык<Br>
+			</form>
+		</div>
+		
+		<div id='input'>
+			<form>
+				<div class='langName'>Расположение файла по умолчанию</div>
+					<div class='country1'><input type="text" size="40"></div>
+					<div class='button2'><input type='button' value='Обзор'></div>
+				 </p>
+			</form>
+		</div>
+		
+		<div class='button1'><input type='button' value='Вернутся'></div>	
+		<div class='button3'><input type='button' value='Применить'></div>	
+	</div>
+</div>
+</body>
+</html>
