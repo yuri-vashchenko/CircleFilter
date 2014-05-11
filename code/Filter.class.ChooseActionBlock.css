@@ -1,0 +1,41 @@
+.dropdown {
+	padding: 0px 10px;
+	position: relative;
+}
+
+.dropdown.inactive {
+	color: #bbb;
+}
+
+.dropdown .title {
+    color: black;
+    cursor: pointer;
+	position: relative;
+}
+
+.dropdown .title h3 {
+    padding: 0px 20px;
+	font-size: 1.4em;
+}
+
+.dropdown .title span {
+	position: absolute;
+	left: 0;
+	top: 17%;
+	width: 14px;
+	height: 14px;
+	background: url("/images/trigger.gif") no-repeat left bottom;
+	display: block;
+}
+    
+.dropdown.inactive .title span {
+	background-position: left top;
+}
+
+.dropdown .content {
+	padding: 0px 0px;
+}
+
+.filter .action button {
+  display: block;
+}
