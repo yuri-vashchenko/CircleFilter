@@ -8,7 +8,7 @@ function User( id, firstName, lastName, photo ) {
         var userBlock = document.createElement( 'div' ),
               img = document.createElement( 'img' ),
               span = document.createElement( 'span' );
-              
+ 
         userBlock.className = 'user';
         
         img.src = this.photo;
