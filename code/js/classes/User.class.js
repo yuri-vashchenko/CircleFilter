@@ -9,7 +9,7 @@ function User( id, firstName, lastName, photo ) {
               img = document.createElement( 'img' ),
               span = document.createElement( 'span' );
               
-        userBlock.className = 'user';
+        $( userBlock ).addClass( 'user' );
         
         img.src = this.photo;
         span.textContent = this.firstName + ' ' + this.lastName;

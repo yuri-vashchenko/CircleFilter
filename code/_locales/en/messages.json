@@ -13,5 +13,59 @@
     },
     "defaultResultBlockContent": {
         "message": "Default result block content..."
-    }    
+    },
+    "revoke": {
+        "message": "Logout"
+    },
+    "help": {
+        "message": "Help"
+    },
+    "config": {
+        "message": "Config"
+    },
+    "inDev": {
+        "message": "in dev..."
+    },
+	"import": {
+		"message": "Upload formula filtering"
+	},
+	"export": {
+		"message": "Unload formula filtering"
+	},
+	"clear": {
+		"message": "Clear"
+	},
+	"apply": {
+		"message": "Apply"
+	},
+	"or": {
+		"message": "OR"
+	},
+	"chooseAction": {
+		"message": "Choose an action"
+	},
+	"chooseFilter": {
+		"message": "Select filter criteria"
+	},
+	"addToCircle": {
+		"message": "addToCircle"
+	},
+	"moveToCircle": {
+		"message": "moveToCircle"
+	},
+	"deleteFromCircle": {
+		"message": "deleteFromCircle"
+	},
+	"deleteAllFromCircle": {
+		"message": "deleteAllFromCircle"
+	},
+	"exportToFile": {
+		"message": "exportToFile"
+	},
+	"exportToXml": {
+		"message": "exportToXml"
+	},
+	"exportToCsv": {
+		"message": "exportToCsv"
+	}
 }

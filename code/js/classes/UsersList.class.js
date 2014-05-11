@@ -9,7 +9,7 @@ function UsersList() {
         var usersListBlock = document.createElement( 'div' ),
               ul = document.createElement( 'ul' );
               
-        ul.className = 'usersList';
+        $( ul ).addClass( 'usersList' );
         
         for ( var i = 0; i < this.usersList.length; i++ ) {
             var li = document.createElement( 'li' );
