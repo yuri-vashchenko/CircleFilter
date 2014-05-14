@@ -11,24 +11,29 @@
     <script type = "text/javascript" src = "js/client_plus.js"></script>     -->
 </head>
 <body>
-    <div class = "header">
-        <img src = "icons/logo64.png">
-  
-        <div id = "account">
-            <span id="user-email"></span>
-            <button id="revoke"></button>
+    <div class="wrapper">
+        <div class = "header">
+            <img src = "icons/logo64.png">
+      
+            <div id = "account">
+                <span id="user-email"></span>
+                <button id="revoke"></button>
+            </div>
+            
+            <div class = "nav">
+                <a href = '#' class='button' id = "help"><img class='but-icon' src='images/help.png'/><span></span></a>
+                <a href = '#' class='button' id = "config"><img class='but-icon' src='images/config.png'/><span></span></a>
+            </div>
         </div>
         
-        <div class = "nav">
-            <a href = '#' class='button' id = "help"><img class='but-icon' src='images/help.png'/><span></span></a>
-            <a href = '#' class='button' id = "config"><img class='but-icon' src='images/config.png'/><span></span></a>
+        <div class="middle">
+            <div class = "container">
+                <div class = "content"></div>
+            </div>
+            <div class = "left-sidebar"></div>
         </div>
+        
+        <div class = "footer"></div>
     </div>
-    <div id = "content">
-        <div id = "left-block"></div>
-        <div id = "right-block"></div>
-    </div>
-    <div id = "footer"></div>
-    
 </body>
 </html>

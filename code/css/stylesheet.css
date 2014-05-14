@@ -1,60 +1,75 @@
+/* Eric Meyer's CSS Reset */
+html, body, div, span, applet, object, iframe,
+h1, h2, h3, h4, h5, h6, p, blockquote, pre,
+a, abbr, acronym, address, big, cite, code,
+del, dfn, em, img, ins, kbd, q, s, samp,
+small, strike, strong, sub, sup, tt, var,
+b, u, i, center,
+dl, dt, dd, ol, ul, li,
+fieldset, form, label, legend,
+table, caption, tbody, tfoot, thead, tr, th, td,
+article, aside, canvas, details, embed,
+figure, figcaption, footer, header, hgroup,
+menu, nav, output, ruby, section, summary,
+time, mark, audio, video {
+    margin: 0;
+    padding: 0;
+    border: 0;
+    font-size: 100%;
+    font: inherit;
+}
+
+/* HTML5 display-role reset for older browsers */
+article, aside, details, figcaption, figure,
+footer, header, hgroup, menu, nav, section {
+    display: block;
+}
+
+body {
+    line-height: 1;
+}
+
+ol, ul {
+    list-style: none;
+}
+
+blockquote, q {
+    quotes: none;
+}
+
+blockquote:before, blockquote:after,
+q:before, q:after {
+    content: '';
+    content: none;
+}
+
+table {
+    border-collapse: collapse;
+    border-spacing: 0;
+}
+/* End of Eric Meyer's CSS Reset */
+
+article, aside, details, figcaption, figure, footer, header, hgroup, main, nav, section, summary {
+    display: block;
+}
+
 body {
     -webkit-font-smoothing: antialiased;
     text-rendering: optimizeSpeed;
-}
-.container {
-    width: 284px;
-    padding-top: 15px;
-    padding-bottom: 15px;
     font-family: 'Segoe UI';
 }
-.container hr {
-    margin: 0px;
+
+.wrapper {
+    width: 100%;
+    min-width: 900px;
 }
 
-.container .choose-types button {
-    margin: 0px;
-}
-
-.header .title {
-    font-size: 30;
-}
-
-.header .title img {
-    vertical-align: top;
-}
-
-.welcome {
-    font-size: 30;
-    font-weight: bold;
-    text-align: center;
-    color: rgb(0, 180, 250);
-    margin-top: 15px;
-}
-
-.choose {
-    text-align: center;
-    margin-bottom: 20px;
-}
-
-#choose-types button{
-    width: 80%;
-    margin-top: 5px;
-    margin-bottom: 5px;
-    color: rgb(0, 180, 250);
-}
-
-.header  {
+/* Header
+-----------------------------------------------------------------------------*/
+.header {
+    height: 64px;
     color: gray;
     background-color: rgb(80, 80, 80);
-    width: 100%;
-    display: inline-block;
-}
-
-.container #account {
-    color: gray;
-    text-align: right;
-    display: block;
 }
 
 .header img{
@@ -68,6 +83,11 @@ body {
     float: left;
 }
 
+span#user-email {
+    font-size: 16;
+    color: gray;
+}
+
 .header .nav{
     padding-top: 15px;
     margin-right: 20px;
@@ -79,31 +99,51 @@ body {
     float: none;
     margin-left: 10px;
 }
+
 .header .nav img{
     float: none;
 }
 
-#content {  
-    height: 100%;
+/* Middle
+-----------------------------------------------------------------------------*/
+.middle {
+    border-left: 500px solid #D7F0FF;
+    position: relative;
+}
+
+.middle:after {
+    display: table;
+    clear: both;
+    content: '';
+}
+
+.container {
     width: 100%;
+    float: left;
+    overflow: hidden;
+    margin-right: -100%;
+}
+
+.content {
+    padding: 0 20px;
+}
+
+/* Left Sidebar
+-----------------------------------------------------------------------------*/
+.left-sidebar {
+    float: left;
     padding: 15px;
-}
-#left-block {
-    width: 300px !important;
-    border-right: 1px solid black;
+    width: 500px;
     height: 100%;
-    display: table-cell;
-    padding: 20px;
+    position: relative;
+    background: #D7F0FF;
+    border-right: 1px solid grey;
+    left: -500px;
 }
 
-#right-block {
-    width: 77%;
-    display: table-cell;
-    padding: 20px;
-    border: 4px solid grey;
-}
-
-span#user-email {
-    font-size: 16;
-    color: gray;
+/* Footer
+-----------------------------------------------------------------------------*/
+.footer {
+    border-top: 1px solid grey;
+    height: 64px;
 }
