@@ -1,63 +1,23 @@
-.dropdown {
-    padding: 0px 10px;
-    position: relative;
-}
-
-.dropdown.inactive {
-    color: #bbb;
-}
-
-.dropdown .title {
-    color: black;
-    cursor: pointer;
-    position: relative;
-}
-
-.dropdown .title h3 {
-    padding: 0px 20px;
-    font-size: 1.4em;
-}
-
-.dropdown .title span {
-    position: absolute;
-    left: 0;
-    top: 17%;
-    width: 14px;
-    height: 14px;
-    background: url("/images/trigger.gif") no-repeat left bottom;
-    display: block;
-}
-    
-.dropdown.inactive .title span {
-    background-position: left top;
-}
-
-.dropdown .content {
-    padding: 0px 0px;
-}
-
 .filter .formula {
-    padding: 20px;
-    display: table-cell;
+    width: 300px;
+    display: inline-block;
+    vertical-align: top;
 }
 
-.filter .formula button {
-    display: block;
-    margin: 0 auto;
-    text-align: center;
-}
-
-.filter .formula .orBlock+div {
+.filter .formula .orText, .filter .formula button {
     display: block;
     margin: 0 auto;
     text-align: center;
 }
 
 .filter .formula+.control {
-    padding: 20px;
+    padding: 0 20px;
     margin: 0 auto;
     text-align: center;
-    display: table-cell;
+    display: inline-block;
+    position: absolute;
+    
+    height: 100%;
 }
 
 .filter .formula+.control button {
@@ -66,27 +26,18 @@
     text-align: center;
 }
 
-.filter .formula .orBlock {
-    display: block;
-    padding: 5px;
-    border: 1px gray solid;
-}
-
-.filter .formula .andBlock {
-    display: block;
-    padding: 5px;
-    border: 1px gray solid;
-}
-
 .filter .control .topGroupBlock {
     display: block;
-    padding: 20px;
+    padding: 0 25px;
 }
 
-.filter .control .topBottomBlock {
+.filter .control .bottomGroupBlock {
     display: block;
 }
 
 .filter .action button {
     display: block;
+}
+
+.filter .content {
 }

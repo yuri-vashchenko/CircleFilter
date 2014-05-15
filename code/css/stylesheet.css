@@ -107,7 +107,7 @@ span#user-email {
 /* Middle
 -----------------------------------------------------------------------------*/
 .middle {
-    border-left: 500px solid #D7F0FF;
+    border-left: 500px solid white;
     position: relative;
 }
 
@@ -132,11 +132,11 @@ span#user-email {
 -----------------------------------------------------------------------------*/
 .left-sidebar {
     float: left;
-    padding: 15px;
+    padding: 15px 0 15px 15px;
     width: 500px;
     height: 100%;
     position: relative;
-    background: #D7F0FF;
+    background: white;
     border-right: 1px solid grey;
     left: -500px;
 }
@@ -146,4 +146,52 @@ span#user-email {
 .footer {
     border-top: 1px solid grey;
     height: 64px;
+}
+
+/* Dropdown
+-----------------------------------------------------------------------------*/
+
+.dropdown {
+    padding: 0px 10px;
+    position: relative;
+}
+
+.dropdown.inactive {
+    color: #bbb;
+}
+
+.dropdown .title {
+    color: black;
+    cursor: pointer;
+    position: relative;
+}
+
+.dropdown .title h3 {
+    padding: 5px 20px;
+    font-size: 1.4em;
+}
+
+.dropdown .title span {
+    position: absolute;
+    left: 0;
+    top: 5px;
+    width: 14px;
+    height: 14px;
+    background: url("/images/trigger.png") no-repeat left bottom;
+    display: block;
+}
+    
+.dropdown.inactive .title span {
+    background-position: left top;
+}
+
+.dropdown .content {
+    padding: 20px 0px;
+}
+
+/* Other
+-----------------------------------------------------------------------------*/
+
+.but-icon {
+    cursor: pointer;
 }

@@ -5,7 +5,7 @@
     "manifest_version": 2,
     "minimum_chrome_version": "29",
     "key": "MIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEAgb5mUKJGx1VClnS+X6E8/dHhNE9bl6pfwNRsDWkHcQBnJbjZfeyCDrDglHzGJzTcXLW3ixA4UTSPVwwazkwI3IXaNaHxBnOq2tBmRVFoMN96HtPxWp8U6SiPZc1PvfNxTpIDUqSbTUAxhmdz5Ge0o3Oj32JcNu1aiEM5KTqvzrO8GcXMfUQc/uJWLPdNAu4TmjETfUIbB0OE0rN2EgIOXF2Ifmwren7Lc2rhUTa5VvUS0XKuVqUjV3VIavI6iVYAyrr09QP6/RC153cr7yLqgRFRV2SGkyU5L+4dngJr9r0Q2elysxCGs0t2Jf/8chA7Q5J8qWNHBkBmUbKMDWnOBwIDAQAB",
-    
+
     "description": "__MSG_extDescr__",     
     "default_locale":"en",    
     

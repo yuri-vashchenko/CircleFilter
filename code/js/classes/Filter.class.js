@@ -1,9 +1,12 @@
 function Filter( filterBlock, resultBlock ) {
     this.result = new Result( resultBlock );
     
-	this.filterOptionsList = Array();    
-    this.filterBlock = filterBlock;
-    this.formula;
+    this.filterSetList = Array(); /* toSolve */
+    this.addFilterSet = function( filterSet ) { /* toSolve */
+        this.filterSetList.push( filterSet );
+    }
+    
+    this.filterBlock = filterBlock;    
     
     $( this.filterBlock ).addClass( 'filter' );
          
@@ -16,69 +19,42 @@ function Filter( filterBlock, resultBlock ) {
         getMessage( 'chooseAction' ), 
         showChooseActionBlock( this ),
         false ) );
-    
-    this.addFilterOption = function( filterOption ) {
-        this.filterOptionsList.push( filterOption );
-    }
-    
-    function showDropdownBlock( title, contentBlock, state ) {
-        var dropdownBlock = document.createElement( 'div' ),
-              titleBlock = document.createElement( 'div' ),
-              titleContentBlock = document.createElement( 'h3' ),
-              stateIconBlock = document.createElement( 'span' );
-               
-        $( titleBlock ).addClass( 'title' );     
-        titleContentBlock.textContent = title;
         
-        titleBlock.appendChild( stateIconBlock );
-        titleBlock.appendChild( titleContentBlock );
-        
-        $( dropdownBlock ).addClass( 'dropdown' ); 
-        $( contentBlock ).addClass( 'content' );
-        
-        dropdownBlock.appendChild( titleBlock );
-        dropdownBlock.appendChild( contentBlock );        
-        
-        if ( !state ) {
-            $( contentBlock ).hide();
-            $( dropdownBlock ).toggleClass( 'inactive' );
-        }
-         
-        titleBlock.addEventListener( 'click', function() {
-            $( contentBlock ).slideToggle();
-            $( dropdownBlock ).toggleClass( 'inactive' );
-        });
- 
-        return dropdownBlock;
-    }
-    
     function showControlBlock( filter ) {
         var controlBlock = document.createElement( 'div' ),
               importButton = document.createElement( 'a' ),
-              exportButton = document.createElement( 'a' ),
               importIcon = document.createElement( 'img' ),
+              exportButton = document.createElement( 'a' ),              
               exportIcon = document.createElement( 'img' ),
               clearButton = document.createElement( 'button' ),
               applyButton = document.createElement( 'button' ),
               topGroupBlock = document.createElement( 'div'),
               bottomGroupBlock = document.createElement( 'div');
-        
-        importButton.href = '#';
-        exportButton.href = '#';
-        importIcon.src = 'images/save.png';
-        exportIcon.src = 'images/load.png';    
-        
-        $( importIcon ).addClass( 'but-icon' );
-        $( exportIcon ).addClass( 'but-icon' );
-        
-        $( importButton ).addClass( 'button' );
-        $( exportButton ).addClass( 'button' );
-        
-        importButton.appendChild( importIcon );
+              
+        exportIcon.src = 'images/save.png';
         exportButton.appendChild( exportIcon );
+        $( exportIcon ).addClass( 'but-icon' );
+        $( exportButton ).addClass( 'button' );        
+        topGroupBlock.appendChild( exportButton );
+        
+        exportButton.addEventListener( 'click', function() {
+            console.log( filter.filterSetList );
+        });
+        
+        importIcon.src = 'images/load.png';    
+        importButton.appendChild( importIcon );
+        $( importIcon ).addClass( 'but-icon' );
+        $( importButton ).addClass( 'button' );
+        topGroupBlock.appendChild( importButton );
+        
+        controlBlock.appendChild( topGroupBlock );
+        $( topGroupBlock ).addClass( 'topGroupBlock' );
         
         clearButton.textContent = getMessage( 'clear' );
+        bottomGroupBlock.appendChild( clearButton );
+        
         applyButton.textContent = getMessage( 'apply' );
+        bottomGroupBlock.appendChild( applyButton );
         
         applyButton.addEventListener( 'click', function() {
             filter.result.reset();
@@ -90,91 +66,44 @@ function Filter( filterBlock, resultBlock ) {
                     }
                 }
             }); 
-        });
+        });        
         
-        topGroupBlock.appendChild( importButton );
-        topGroupBlock.appendChild( exportButton );
-        bottomGroupBlock.appendChild( clearButton );
-        bottomGroupBlock.appendChild( applyButton );
-        controlBlock.appendChild( topGroupBlock );
         controlBlock.appendChild( bottomGroupBlock );
+        $( bottomGroupBlock ).addClass( 'bottomGroupBlock' );
         
         $( controlBlock ).addClass( 'control' );
-        $( topGroupBlock ).addClass( 'topGroupBlock' );
-        $( bottomGroupBlock ).addClass( 'bottomGroupBlock' );
         
         return controlBlock;
     }
     
     function showFormulaBlock( filter ) {
         var formulaBlock = document.createElement( 'div' ),
-              orButton = document.createElement( 'button' );
-               
-        orButton.textContent = getMessage( 'or' );
+              addFilterSetButton = document.createElement( 'button' ),
+              filterSet = new FilterSet();
+              
+        filter.addFilterSet( filterSet );
         
-        orButton.addEventListener( 'click', function() {
-            var orBlock = showOrBlock( filter ),
-                  orText = document.createElement( 'div' );    
+        formulaBlock.appendChild( filterSet.show() );     
+        
+        addFilterSetButton.textContent = getMessage( 'or' );
+        formulaBlock.appendChild( addFilterSetButton );
+        
+        addFilterSetButton.addEventListener( 'click', function() {
+            var filterSet = new FilterSet(),
+                  orText = document.createElement( 'div' ); 
+                  
+            filter.addFilterSet( filterSet );
                    
             orText.textContent = getMessage( 'or' );
+            $( orText ).addClass( 'orText' );
             
             formulaBlock.insertBefore( orText, this );
-            formulaBlock.insertBefore( showOrBlock( filter ), this );
+            formulaBlock.insertBefore( filterSet.show(), this );
         });
-        
-        formulaBlock.appendChild( showOrBlock( filter ) );
-        formulaBlock.appendChild( orButton );
         
         $( formulaBlock ).addClass( 'formula' );
         
         return formulaBlock;
-        
-        function showOrBlock( filter ) {
-            var orBlock = document.createElement( 'div' ),
-                  removeButton = document.createElement( 'button' ),
-                  andButton = document.createElement( 'button' );
-                   
-            andButton.textContent = "+";
-            removeButton.textContent = "X";
-            
-            andButton.addEventListener( 'click', function() {
-                orBlock.insertBefore( showAndBlock( filter ), this );
-            });
-            removeButton.addEventListener( 'click', function() {
-                if ( this.parentElement.nextSibling.nodeName != 'BUTTON' ) {
-                    this.parentElement.nextSibling.remove();
-                    this.parentElement.remove();
-                } else  if ( this.parentElement.previousElementSibling ) {
-                    this.parentElement.previousElementSibling.remove();
-                    this.parentElement.remove();
-                }
-            });
-            
-            orBlock.appendChild( removeButton );
-            orBlock.appendChild( andButton );
-            
-            $( orBlock ).addClass( 'orBlock' );
-            
-            return orBlock;
-        }
-        
-        function showAndBlock( filter ) {
-            var andBlock = document.createElement( 'div' ),
-                  removeButton = document.createElement( 'button' );
-                   
-            removeButton.textContent = "X";
-            andBlock.textContent = getMessage( 'inDev' );
-            
-            removeButton.addEventListener( 'click', function() {
-                    this.parentElement.remove();
-            });
-            
-            andBlock.appendChild( removeButton );
-            
-            $( andBlock ).addClass( 'andBlock' );
-            
-            return andBlock;
-        }
     }
     
     function showChooseFilterBlock( filter ) {
@@ -186,7 +115,7 @@ function Filter( filterBlock, resultBlock ) {
         return chooseFilterBlock;
     }
     
- function showChooseActionBlock( filter ) {
+    function showChooseActionBlock() {
         var chooseActionBlock = document.createElement( 'div' ),
               addToCircleButton = document.createElement( 'button' ),
               moveToCircleButton = document.createElement( 'button' ),

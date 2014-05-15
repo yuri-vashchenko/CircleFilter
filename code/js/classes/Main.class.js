@@ -6,7 +6,7 @@ function Main() {
     GPlus.getUserEmail( putUserEmail );
     GPlus.testQuery( 'https://www.googleapis.com/plusDomains/v1/people/me/circles', print);
     
-    var filter = new Filter( document.querySelector('#left-block'), document.querySelector( '#right-block' ) );
+    var filter = new Filter( document.querySelector('.left-sidebar'), document.querySelector( '.content' ) );
     
     function putUserEmail( error, status, response ) {
         if ( !error && status == 200 ) {            

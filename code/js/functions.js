@@ -1,3 +1,34 @@
+function showDropdownBlock( title, contentBlock, state ) {
+    var dropdownBlock = document.createElement( 'div' ),
+          titleBlock = document.createElement( 'div' ),
+          titleContentBlock = document.createElement( 'h3' ),
+          stateIconBlock = document.createElement( 'span' );
+           
+    $( titleBlock ).addClass( 'title' );     
+    titleContentBlock.textContent = title;
+    
+    titleBlock.appendChild( stateIconBlock );
+    titleBlock.appendChild( titleContentBlock );
+    
+    $( dropdownBlock ).addClass( 'dropdown' ); 
+    $( contentBlock ).addClass( 'content' );
+    
+    dropdownBlock.appendChild( titleBlock );
+    dropdownBlock.appendChild( contentBlock );        
+    
+    if ( !state ) {
+        $( contentBlock ).hide();
+        $( dropdownBlock ).toggleClass( 'inactive' );
+    }
+     
+    titleBlock.addEventListener( 'click', function() {
+        $( contentBlock ).slideToggle();
+        $( dropdownBlock ).toggleClass( 'inactive' );
+    });
+
+    return dropdownBlock;
+}
+    
 function readProperty( property, defValue ) {
     if ( localStorage[property] == null ) {
         return defValue;
@@ -19,7 +50,7 @@ function closeWindow() {
 }
   
 function loadClasses() {
-    var classesList = ['User', 'UsersList', 'Result', 'GPlus', 'Filter', 'Main'];          
+    var classesList = ['User', 'UsersList', 'Result', 'GPlus', 'FilterOption', 'FilterOptionsLoader', 'Filter', 'FilterSet', 'Main'];          
     
     for ( var i = 0; i < classesList.length; i++ ) {
         var script = document.createElement( 'script' );

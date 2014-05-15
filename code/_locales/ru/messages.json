@@ -26,46 +26,46 @@
     "inDev": {
         "message": "Данный блок находится в разработке."
     },
-	"import": {
-		"message": "Загрузить формулу фильтрации"
-	},
-	"export": {
-		"message": "Выгрузить формулу фильтрации"
-	},
-	"clear": {
-		"message": "Сбросить"
-	},
-	"apply": {
-		"message": "Применить"
-	},
-	"or": {
-		"message": "ИЛИ"
-	},
-	"chooseAction": {
-		"message": "Выберите действие"
-	},
-	"chooseFilter": {
-		"message": "Выберите критерий фильтра"
-	},
-	"addToCircle": {
-		"message": "Добавить в круг"
-	},
-	"moveToCircle": {
-		"message": "Переместить в круг"
-	},
-	"deleteFromCircle": {
-		"message": "Удалить из круга"
-	},
-	"deleteAllFromCircle": {
-		"message": "Удалить всех из круга"
-	},
-	"exportToFile": {
-		"message": "Экспорт в файл"
-	},
-	"exportToXml": {
-		"message": "В XML"
-	},
-	"exportToCsv": {
-		"message": "В CSV"
-	}
+    "import": {
+        "message": "Загрузить формулу фильтрации"
+    },
+    "export": {
+        "message": "Выгрузить формулу фильтрации"
+    },
+    "clear": {
+        "message": "Сбросить"
+    },
+    "apply": {
+        "message": "Применить"
+    },
+    "or": {
+        "message": "ИЛИ"
+    },
+    "chooseAction": {
+        "message": "Выберите действие"
+    },
+    "chooseFilter": {
+        "message": "Выберите критерий фильтра"
+    },
+    "addToCircle": {
+        "message": "Добавить в круг"
+    },
+    "moveToCircle": {
+        "message": "Переместить в круг"
+    },
+    "deleteFromCircle": {
+        "message": "Удалить из круга"
+    },
+    "deleteAllFromCircle": {
+        "message": "Удалить всех из круга"
+    },
+    "exportToFile": {
+        "message": "Экспорт в файл"
+    },
+    "exportToXml": {
+        "message": "В XML"
+    },
+    "exportToCsv": {
+        "message": "В CSV"
+    }
 }
