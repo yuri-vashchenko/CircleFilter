@@ -1,3 +1,34 @@
+function showDropdownBlock( title, contentBlock, state ) {
+    var dropdownBlock = document.createElement( 'div' ),
+          titleBlock = document.createElement( 'div' ),
+          titleContentBlock = document.createElement( 'h3' ),
+          stateIconBlock = document.createElement( 'span' );
+           
+    $( titleBlock ).addClass( 'title' );     
+    titleContentBlock.textContent = title;
+    
+    titleBlock.appendChild( stateIconBlock );
+    titleBlock.appendChild( titleContentBlock );
+    
+    $( dropdownBlock ).addClass( 'dropdown' ); 
+    $( contentBlock ).addClass( 'content' );
+    
+    dropdownBlock.appendChild( titleBlock );
+    dropdownBlock.appendChild( contentBlock );        
+    
+    if ( !state ) {
+        $( contentBlock ).hide();
+        $( dropdownBlock ).toggleClass( 'inactive' );
+    }
+     
+    titleBlock.addEventListener( 'click', function() {
+        $( contentBlock ).slideToggle();
+        $( dropdownBlock ).toggleClass( 'inactive' );
+    });
+
+    return dropdownBlock;
+}
+    
 function readProperty( property, defValue ) {
     if ( localStorage[property] == null ) {
         return defValue;
@@ -13,3 +44,39 @@ function getMessage( label ) {
 
     return chrome.i18n.getMessage( label );
 }
+
+function closeWindow() {
+    window.close();
+}
+  
+function loadClasses() {
+    var classesList = ['User', 'UsersList', 'Result', 'GPlus', 'FilterOption', 'FilterOptionsLoader', 'Filter', 'FilterSet', 'Main'];          
+    
+    for ( var i = 0; i < classesList.length; i++ ) {
+        var script = document.createElement( 'script' );
+        script.type = 'text/javascript';
+        script.src = 'js/classes/' + classesList[i] + '.class.js';
+        
+        var s = document.getElementsByTagName('script')[0];
+        s.parentNode.insertBefore(script, s);
+        
+        var link = document.createElement( 'link' );
+        link.type = 'text/css'; 
+        link.rel = 'stylesheet';
+        link.href = 'js/classes/' + classesList[i] + '.class.css';
+        
+        var l = document.getElementsByTagName('link')[0];
+        l.parentNode.insertBefore(link, l);
+    }
+};
+
+(function(){
+    loadClasses();
+})();
+
+$(function() {
+    document.querySelector( 'head>title' ).textContent = getMessage( 'extName' );
+    document.querySelector( '#revoke' ).textContent = getMessage( 'revoke' );
+    document.querySelector( '#help>span' ).textContent = getMessage( 'help' );
+    document.querySelector( '#config>span' ).textContent = getMessage( 'config' );
+});

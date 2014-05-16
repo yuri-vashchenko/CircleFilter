@@ -6,6 +6,7 @@ function Result( block ) {
     }
     
     this.block = block;
+    $( this.block ).addClass( 'result' );
     
     this.append = function( user ) {
         if ( !user ) return;
