@@ -1,3 +1,13 @@
 .editInterface {
     padding: 12px;
 }
+
+.name {
+    display: inline-block;
+    margin-left: 10px;
+    vertical-align: middle;
+}
+
+img.icon {
+    -webkit-filter: grayscale(100%) brightness(50%);
+}

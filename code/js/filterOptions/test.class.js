@@ -1,3 +1,3 @@
 (function(){
-    filterOptionsList.push( new FilterOption( '', 'testname' ) );
+    filterOptionsList.push( new FilterOption( '/images/load.png', 'FilterOption1' ) );
 })();
