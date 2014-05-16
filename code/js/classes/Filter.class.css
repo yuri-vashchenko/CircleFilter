@@ -1,0 +1,43 @@
+.filter .formula {
+    width: 300px;
+    display: inline-block;
+    vertical-align: top;
+}
+
+.filter .formula .orText, .filter .formula button {
+    display: block;
+    margin: 0 auto;
+    text-align: center;
+}
+
+.filter .formula+.control {
+    padding: 0 20px;
+    margin: 0 auto;
+    text-align: center;
+    display: inline-block;
+    position: absolute;
+    
+    height: 100%;
+}
+
+.filter .formula+.control button {
+    display: block;
+    margin: 0 auto;
+    text-align: center;
+}
+
+.filter .control .topGroupBlock {
+    display: block;
+    padding: 0 25px;
+}
+
+.filter .control .bottomGroupBlock {
+    display: block;
+}
+
+.filter .action button {
+    display: block;
+}
+
+.filter .content {
+}
