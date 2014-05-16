@@ -22,7 +22,7 @@ function FilterSet() {
             var dropdownList = showFilterOptionList(),
                   editInterfaceBlock = null,
                   index = null;
-                  
+            addIcon.src = 'images/trigger-down.png';      
                 
             $.modal( $( dropdownList ), { 
                 overlayClose : true,
@@ -66,13 +66,16 @@ function FilterSet() {
                                                         var configuredFilterOption = filterOptionsList[index].show(),
                                                               filterOptionBlock = showAddFilterOptionBlock( configuredFilterOption );
                                                               
-                                                        filterSetBlock.insertBefore( filterOptionBlock, addBlock );                                        
+                                                        filterSetBlock.insertBefore( filterOptionBlock, addBlock );         
+                                                        addIcon.src = 'images/plus-btn.png';
                                                         $.modal.close();
                                                     });
                                                 });
                                             });
                                         }
                                     });
+                                } else {
+                                    addIcon.src = 'images/plus-btn.png';
                                 }
                             });
                         });
