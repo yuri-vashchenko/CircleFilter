@@ -22,17 +22,16 @@ function FilterSet() {
             var dropdownList = showFilterOptionList(),
                   editInterfaceBlock = null,
                   index = null;
-            addIcon.src = 'images/trigger-down.png';      
+                  
                 
             $.modal( $( dropdownList ), { 
                 overlayClose : true,
                 position : [$( addBlock ).offset().top + $( addBlock ).outerHeight() - 1 - $( document ).scrollTop(), $( addBlock ).offset().left],
                 onOpen: function ( dialog ) {
-                    dialog.overlay.fadeIn( 'fast' , function () {
-                        dialog.data.hide();
-                        dialog.container.slideDown( 'fast', function () {
-                            dialog.data.slideDown( 'fast' );	
-                        });
+                    dialog.overlay.fadeIn( 'fast' );
+                    dialog.data.hide();
+                    dialog.container.slideDown( 'fast', function () {
+                        dialog.data.slideDown( 'fast' );	
                     });
                 },
                 onShow: function( dialog ) {
@@ -52,11 +51,10 @@ function FilterSet() {
                                         overlayClose : true, 
                                         position : [$( addBlock ).offset().top + $( addBlock ).outerHeight() - 1 - $( document ).scrollTop(), $( addBlock ).offset().left],
                                         onOpen: function ( dialog ) {
-                                            dialog.overlay.fadeIn( 'fast' , function () {
-                                                dialog.data.hide();
-                                                dialog.container.slideDown( 'fast', function () {
-                                                    dialog.data.slideDown( 'fast' );	 
-                                                });
+                                            dialog.overlay.fadeIn( 'fast' );
+                                            dialog.data.hide();
+                                            dialog.container.slideDown( 'fast', function () {
+                                                dialog.data.slideDown( 'fast' );	 
                                             });
                                         },
                                         onClose: function ( dialog ) {
@@ -66,16 +64,13 @@ function FilterSet() {
                                                         var configuredFilterOption = filterOptionsList[index].show(),
                                                               filterOptionBlock = showAddFilterOptionBlock( configuredFilterOption );
                                                               
-                                                        filterSetBlock.insertBefore( filterOptionBlock, addBlock );         
-                                                        addIcon.src = 'images/plus-btn.png';
+                                                        filterSetBlock.insertBefore( filterOptionBlock, addBlock );                                        
                                                         $.modal.close();
                                                     });
                                                 });
                                             });
                                         }
                                     });
-                                } else {
-                                    addIcon.src = 'images/plus-btn.png';
                                 }
                             });
                         });
