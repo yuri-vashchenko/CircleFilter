@@ -1,10 +1,7 @@
 function Filter( filterBlock, resultBlock ) {
     this.result = new Result( resultBlock );
     
-    this.filterSetList = Array(); /* toSolve */
-    this.addFilterSet = function( filterSet ) { /* toSolve */
-        this.filterSetList.push( filterSet );
-    }
+    this.filterSetList = Array();  
     
     this.filterBlock = filterBlock;    
     
@@ -37,7 +34,7 @@ function Filter( filterBlock, resultBlock ) {
         $( exportButton ).addClass( 'button' );        
         topGroupBlock.appendChild( exportButton );
         
-        exportButton.addEventListener( 'click', function() {
+        exportButton.addEventListener( 'click', function() {-
             console.log( filter.filterSetList );
         });
         
@@ -52,6 +49,14 @@ function Filter( filterBlock, resultBlock ) {
         
         clearButton.textContent = getMessage( 'clear' );
         bottomGroupBlock.appendChild( clearButton );
+        
+        clearButton.addEventListener( 'click', function() {
+            var parentContent = filter.filterBlock.querySelector( '.formula' ).parentElement;
+            
+            filter.filterSetList = new Array();            
+            parentContent.querySelector( '.formula' ).remove();
+            parentContent.insertBefore( showFormulaBlock( filter ), parentContent.querySelector( '.control' ) );
+        });
         
         applyButton.textContent = getMessage( 'apply' );
         bottomGroupBlock.appendChild( applyButton );
@@ -81,24 +86,20 @@ function Filter( filterBlock, resultBlock ) {
               addFilterSetButton = document.createElement( 'button' ),
               filterSet = new FilterSet();
               
-        filter.addFilterSet( filterSet );
-        
-        formulaBlock.appendChild( filterSet.show() );     
+        formulaBlock.appendChild( addFilterSet( filter, filterSet ) );     
         
         addFilterSetButton.textContent = getMessage( 'or' );
         formulaBlock.appendChild( addFilterSetButton );
         
         addFilterSetButton.addEventListener( 'click', function() {
-            var filterSet = new FilterSet(),
+            var filterSet = new FilterSet();
                   orText = document.createElement( 'div' ); 
-                  
-            filter.addFilterSet( filterSet );
                    
             orText.textContent = getMessage( 'or' );
             $( orText ).addClass( 'orText' );
             
             formulaBlock.insertBefore( orText, this );
-            formulaBlock.insertBefore( filterSet.show(), this );
+            formulaBlock.insertBefore( addFilterSet( filter, filterSet ), this );
         });
         
         $( formulaBlock ).addClass( 'formula' );
@@ -148,5 +149,49 @@ function Filter( filterBlock, resultBlock ) {
         $( chooseActionBlock ).addClass( 'action' );
         
         return chooseActionBlock;
+    }
+        
+    function showRemoveFilterSetButton( filter ) {
+        var removeButton = document.createElement( 'a' ),
+              removeIcon = document.createElement( 'img' );
+              
+        removeIcon.src = 'images/cross-btn.png';   
+        removeButton.appendChild( removeIcon );             
+        $( removeButton ).addClass( 'close' );
+        $( removeButton ).addClass( 'but-icon' );      
+        
+        removeButton.addEventListener( 'click', function() {
+            var index = $( this.parentElement ).index() / 2;
+            
+            if ( this.parentElement.nextSibling.nodeName != 'BUTTON' ) {
+                this.parentElement.nextSibling.remove();
+                this.parentElement.remove();
+                removeFilterSet( filter, index );
+            } else  if ( this.parentElement.previousElementSibling ) {
+                this.parentElement.previousElementSibling.remove();
+                this.parentElement.remove();
+                removeFilterSet( filter, index );
+            }
+        });
+        
+        return removeButton;
+    }
+    
+    /*
+     * return filterSetBlock
+     */
+    function addFilterSet( filter, filterSet ) {
+        var filterSetBlock = filterSet.show(),
+              removeButton = showRemoveFilterSetButton( filter, filter.filterSetList.length )
+              
+        filterSetBlock.appendChild( removeButton );
+    
+        filter.filterSetList.push( filterSet );
+        
+        return filterSetBlock;
+    }
+    
+    function removeFilterSet( filter, index ) {
+        filter.filterSetList.splice( index, 1 );
     }
 }
