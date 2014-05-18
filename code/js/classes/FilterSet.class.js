@@ -1,15 +1,12 @@
 function FilterSet() {
     
     this.filterOptionList = Array();
-    this.addConfiguredFilterOption;
-
+    
     this.show = function() {
         var filterSetBlock = document.createElement( 'div' ),
               addBlock = document.createElement( 'div' ),
               addButton = document.createElement( 'a' ),
-              addIcon = document.createElement( 'img' ),
-              closeButton = document.createElement( 'a' ),
-              closeIcon = document.createElement( 'img' );
+              addIcon = document.createElement( 'img' );
         
         addIcon.src = 'images/plus-btn.png';
         addButton.appendChild( addIcon );
@@ -28,79 +25,69 @@ function FilterSet() {
                 overlayClose : true,
                 position : [$( addBlock ).offset().top + $( addBlock ).outerHeight() - 1 - $( document ).scrollTop(), $( addBlock ).offset().left],
                 onOpen: function ( dialog ) {
-                    dialog.overlay.fadeIn( 'fast' , function () {
-                        dialog.data.hide();
-                        dialog.container.slideDown( 'fast', function () {
-                            dialog.data.slideDown( 'fast' );	
-                        });
-                    });
+                    dialog.overlay.fadeIn( 'fast' );
+                    dialog.container.slideDown( 'fast' );
+                    dialog.data.slideDown( 'fast' );
                 },
                 onShow: function( dialog ) {
                     $( dropdownList.querySelectorAll( 'li' ) ).click( function() {
                         index = $( this ).index();
-                        editInterfaceBlock = filterOptionsList[index].showEditInterface();
                         $.modal.close();
                     });
                 },
                 onClose: function ( dialog ) {
                     dialog.data.slideUp( 'fast', function () {
                         dialog.container.slideUp( 'fast', function () {
-                            dialog.overlay.fadeOut( 'fast', function () {
-                                $.modal.close();
-                                if ( index != null ) {
-                                    $.modal( $( editInterfaceBlock ), { 
-                                        overlayClose : true, 
-                                        position : [$( addBlock ).offset().top + $( addBlock ).outerHeight() - 1 - $( document ).scrollTop(), $( addBlock ).offset().left],
-                                        onOpen: function ( dialog ) {
-                                            dialog.overlay.fadeIn( 'fast' , function () {
-                                                dialog.data.hide();
-                                                dialog.container.slideDown( 'fast', function () {
-                                                    dialog.data.slideDown( 'fast' );	 
-                                                });
+                            dialog.overlay.fadeOut( 'fast' );
+                            $.modal.close();
+                            if ( index != null ) {
+                                editInterfaceBlock = filterOptionsList[index].showEditInterface( 
+                                    function() {
+                                        addIcon.src = 'images/plus-btn.png';
+                                        $.modal.close();
+                                    },
+                                    function( configuration ) {
+                                        var configuredFilterOption = new FilterOption(
+                                                filterOptionsList[index].icon, 
+                                                filterOptionsList[index].name, 
+                                                filterOptionsList[index].configurationBlock, 
+                                                filterOptionsList[index].getConfigurationFunc, 
+                                                filterOptionsList[index].configurationToStringFunc, 
+                                                configuration 
+                                              ),
+                                              filterOptionBlock = showAddFilterOptionBlock( configuredFilterOption.show() );
+                                              
+                                        filterSetBlock.insertBefore( filterOptionBlock, addBlock );  
+                                    }
+                                );
+                                $.modal( $( editInterfaceBlock ), { 
+                                    overlayClose : true, 
+                                    position : [$( addBlock ).offset().top + $( addBlock ).outerHeight() - 1 - $( document ).scrollTop(), $( addBlock ).offset().left],
+                                    onOpen: function ( dialog ) {
+                                        dialog.overlay.fadeIn( 'fast' );
+                                        dialog.container.slideDown( 'fast' );
+                                        dialog.data.slideDown();	 
+                                    },
+                                    onClose: function ( dialog ) {
+                                        dialog.data.slideUp( 'fast', function () {
+                                            dialog.container.slideUp( 'fast', function () {
+                                                dialog.overlay.fadeOut( 'fast' );
+                                                addIcon.src = 'images/plus-btn.png';
+                                                $.modal.close();
                                             });
-                                        },
-                                        onClose: function ( dialog ) {
-                                            dialog.data.slideUp( 'fast', function () {
-                                                dialog.container.slideUp( 'fast', function () {
-                                                    dialog.overlay.fadeOut( 'fast', function () {
-                                                        var configuredFilterOption = filterOptionsList[index].show(),
-                                                              filterOptionBlock = showAddFilterOptionBlock( configuredFilterOption );
-                                                              
-                                                        filterSetBlock.insertBefore( filterOptionBlock, addBlock );         
-                                                        addIcon.src = 'images/plus-btn.png';
-                                                        $.modal.close();
-                                                    });
-                                                });
-                                            });
-                                        }
-                                    });
-                                } else {
-                                    addIcon.src = 'images/plus-btn.png';
-                                }
-                            });
-                        });
-                    });
+                                        });
+                                    }
+                                });
+                            } else {
+                                addIcon.src = 'images/plus-btn.png';
+                            }
+                        }); 
+                    }); 
                 }
             });            
         });
         
-        closeIcon.src = 'images/cross-btn.png';   
-        closeButton.appendChild( closeIcon );             
-        $( closeButton ).addClass( 'close' );
-        $( closeButton ).addClass( 'but-icon' );      
-        
-        closeButton.addEventListener( 'click', function() {
-            if ( this.parentElement.nextSibling.nodeName != 'BUTTON' ) {
-                this.parentElement.nextSibling.remove();
-                this.parentElement.remove();
-            } else  if ( this.parentElement.previousElementSibling ) {
-                this.parentElement.previousElementSibling.remove();
-                this.parentElement.remove();
-            }
-        });
-        
         filterSetBlock.appendChild( addBlock );
-        filterSetBlock.appendChild( closeButton );
         
         $( filterSetBlock ).addClass( 'filterSetBlock' );
         

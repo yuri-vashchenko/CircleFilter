@@ -1,13 +1,17 @@
-function FilterOption( icon, name ) {
+function FilterOption( icon, name, configurationBlock, getConfigurationFunc, configurationToStringFunc, configuration ) {
     this.icon = icon;
     this.name = name;
+    this.configuration = configuration;
     
-    this.configuration;
+    this.configurationBlock = configurationBlock;
+    this.getConfigurationFunc = getConfigurationFunc;
+    this.configurationToStringFunc = configurationToStringFunc;
     
     this.show = function() {
         var filterOptionBlock = document.createElement( 'div' );
         
         if ( this.configuration ) {
+            filterOptionBlock.appendChild( showIcon( this ) );
             filterOptionBlock.appendChild( showConfiguration( this ) ) ;
         } else {
             filterOptionBlock.appendChild( showIcon( this ) );
@@ -17,10 +21,44 @@ function FilterOption( icon, name ) {
         return filterOptionBlock;
     }
     
-    this.showEditInterface = function() {
-        var editInterfaceBlock = document.createElement( 'div' );
-        editInterfaceBlock.textContent = 'editable ' + name;
-        $( editInterfaceBlock ).addClass( 'editInterface' );
+    this.showEditInterface = function( onClose, onApply ) {
+        var editInterfaceBlock = document.createElement( 'div' ),
+              headerBlock = document.createElement( 'div' ),
+              controlBlock = document.createElement( 'div' ),
+              cancelButton = document.createElement( 'a' ),
+              cancelIcon = document.createElement( 'img' ),
+              acceptButton = document.createElement( 'a' ),
+              acceptIcon = document.createElement( 'img' ),
+              configurationBlock = this.configurationBlock,
+              getConfigurationFunc = this.getConfigurationFunc;
+              
+        $( headerBlock ).addClass( 'headerBlock' );
+        headerBlock.appendChild( showIcon( this ) );
+        headerBlock.appendChild( showName( this ) );
+        
+        cancelIcon.src = 'images/cross-btn.png';
+        cancelButton.appendChild( cancelIcon );
+        controlBlock.appendChild( cancelButton );        
+        $( cancelButton ).addClass( 'but-icon' );   
+        
+        cancelButton.addEventListener( 'click', onClose );
+        
+        acceptIcon.src = 'images/plus-btn.png';
+        acceptButton.appendChild( acceptIcon );
+        controlBlock.appendChild( acceptButton );        
+        $( acceptButton ).addClass( 'but-icon' );   
+        
+        acceptButton.addEventListener( 'click', function() {
+            onApply( getConfigurationFunc( configurationBlock ) );
+            onClose();
+        });
+        
+        editInterfaceBlock.appendChild( headerBlock );
+        editInterfaceBlock.appendChild( configurationBlock );
+        editInterfaceBlock.appendChild( controlBlock );
+        
+        $( editInterfaceBlock ).addClass( 'editInterface' );        
+        $( controlBlock ).addClass( 'controlBlock' );   
         
         return editInterfaceBlock;
     }
@@ -28,7 +66,8 @@ function FilterOption( icon, name ) {
     function showConfiguration( filterOption ) {
         var configurationBlock = document.createElement( 'div' );
         
-        configurationBlock.textContent = 'configured';
+        configurationBlock.textContent = filterOption.configurationToStringFunc( filterOption.configuration );        
+        $( configurationBlock ).addClass( 'configuration' );
         
         return configurationBlock;
     }
