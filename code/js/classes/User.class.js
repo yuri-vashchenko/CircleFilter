@@ -19,4 +19,15 @@ function User( id, firstName, lastName, photo ) {
         
         return userBlock;
     }
+    
+    this.eq = function( user ) {
+        if ( this.id == user.id ) {
+            return true;
+        }
+        return false;
+    }
 }
+
+User.copy = function( user ) {
+	return ( new User( user.id, user.firstName, user.lastName, user.photo ) );
+};

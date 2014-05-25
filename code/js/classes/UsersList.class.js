@@ -2,6 +2,11 @@ function UsersList() {
     this.usersList = Array();
 
     this.addUser = function( user ) {
+        for ( var i = 0; i < this.usersList.length; i++ ) {
+            if ( this.usersList[i].eq( user ) ) {
+                return false;
+            }
+        }
         this.usersList.push( user );
     }
 

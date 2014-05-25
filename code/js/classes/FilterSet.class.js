@@ -1,12 +1,13 @@
 function FilterSet() {
     
-    this.filterOptionList = Array();
+    this.filterOptionList = new Array();
     
     this.show = function() {
         var filterSetBlock = document.createElement( 'div' ),
               addBlock = document.createElement( 'div' ),
               addButton = document.createElement( 'a' ),
-              addIcon = document.createElement( 'img' );
+              addIcon = document.createElement( 'img' ),
+              filterSet = this;
         
         addIcon.src = 'images/plus-btn.png';
         addButton.appendChild( addIcon );
@@ -53,11 +54,13 @@ function FilterSet() {
                                                 filterOptionsList[index].configurationBlock, 
                                                 filterOptionsList[index].getConfigurationFunc, 
                                                 filterOptionsList[index].configurationToStringFunc, 
+                                                filterOptionsList[index].applyFunc, 
                                                 configuration 
                                               ),
-                                              filterOptionBlock = showAddFilterOptionBlock( configuredFilterOption.show() );
+                                              filterOptionBlock = showAddFilterOptionBlock( configuredFilterOption.show(), filterSet );
                                               
                                         filterSetBlock.insertBefore( filterOptionBlock, addBlock );  
+                                        filterSet.filterOptionList.push( configuredFilterOption );
                                     }
                                 );
                                 $.modal( $( editInterfaceBlock ), { 
@@ -94,7 +97,61 @@ function FilterSet() {
         return filterSetBlock;
     }
     
-    function showAddFilterOptionBlock( filterOptionBlock ) {
+    this.apply = function( callback, onSuccess ) {
+        if ( this.filterOptionList.length ) {
+            var filterOptionList = this.filterOptionList.clone();
+            
+            /* sort filterOptionList by priority here [highest,...., lowest] */
+            
+            StorageManager.getUserIdsList( function( userIdsList ) {
+                applyUserIteration( filterOptionList, userIdsList, callback, onSuccess );
+            });
+        } else {
+            onSuccess();
+        }
+        
+        function applyUserIteration( filterOptionList, userIdsList, callback, onSuccess ) {
+            if ( userIdsList.length ) {
+                var foList = filterOptionList.clone();
+                
+                applyFilterOptionIteration( 
+                    foList,
+                    userIdsList.shift(), 
+                    
+                    function( userId ) {
+                        applyUserIteration( filterOptionList, userIdsList, callback, onSuccess );
+                    },
+                    
+                    function( userId ) {
+                        callback( userId );
+                        applyUserIteration( filterOptionList, userIdsList, callback, onSuccess );
+                    }
+                );
+            } else {
+                onSuccess();
+            }
+        }
+        
+        function applyFilterOptionIteration( filterOptionList, userId, nextUserIteration, callback ) {
+            if ( !filterOptionList.length ) {
+                callback( userId );
+            } else {
+                filterOptionList.shift().apply( 
+                    userId, 
+                    
+                    function( userId ) {
+                        applyFilterOptionIteration( filterOptionList, userId, nextUserIteration, callback );
+                    },
+                    
+                    function( userId ) {
+                        nextUserIteration( userId );
+                    }
+                );
+            }
+        }
+    }
+    
+    function showAddFilterOptionBlock( filterOptionBlock, filterSet ) {
         var showAddFilterOptionBlock = document.createElement( 'div' ),
               removeButton = document.createElement( 'a' ),
               removeIcon = document.createElement( 'img' );
@@ -105,7 +162,9 @@ function FilterSet() {
         $( removeButton ).addClass( 'but-icon' );
         
         removeButton.addEventListener( 'click', function() {
-                this.parentElement.remove();
+            var index = $( this.parentElement ).index();
+            filterSet.filterOptionList.splice( index, 1 );
+            this.parentElement.remove();            
         });        
         
         showAddFilterOptionBlock.appendChild( filterOptionBlock );        

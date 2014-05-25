@@ -1,7 +1,7 @@
 function Filter( filterBlock, resultBlock ) {
     this.result = new Result( resultBlock );
     
-    this.filterSetList = Array();  
+    this.filterSetList = new Array();  
     
     this.filterBlock = filterBlock;    
     
@@ -35,7 +35,7 @@ function Filter( filterBlock, resultBlock ) {
         topGroupBlock.appendChild( exportButton );
         
         exportButton.addEventListener( 'click', function() {-
-            console.log( filter.filterSetList );
+            console.log( filter.filterSetList[0].filterOptionList );
         });
         
         importIcon.src = 'images/load.png';    
@@ -63,16 +63,38 @@ function Filter( filterBlock, resultBlock ) {
         
         applyButton.addEventListener( 'click', function() {
             filter.result.reset();
-            GPlus.getUsersList( function( error, status, response ) {
-                if ( !error && status == 200 ) {
-                    var users = JSON.parse(response).items;
-                    for ( var i = 0; i < users.length; i++ ) {
-                        filter.result.append( new User( users[i].id, users[i].displayName, "", users[i].image.url ) );
+            var operationID = setTimeout( function() {
+                var filterSetList = filter.filterSetList.clone();
+                applyFilterSetIteration( 
+                    filterSetList, 
+                    function( userId ) {
+                        StorageManager.getUserInfo( userId, function( user ) {
+                            filter.result.append( user );
+                        });
+                    }, 
+                    function() { 
+                        filter.result.finish(); 
+                    }
+                );
+                
+                function applyFilterSetIteration( filterSetList, callback, onSuccess ) {
+                    if ( !filterSetList.length ) {
+                        onSuccess();
+                    } else {
+                        filterSetList.shift().apply( 
+                            callback,
+                            
+                            function() {
+                                applyFilterSetIteration( filterSetList, callback, onSuccess )
+                            }
+                        );
                     }
                 }
-            }); 
+            }, 0);
+            
+            //clearTimeout(operationID)
         });        
-        
+
         controlBlock.appendChild( bottomGroupBlock );
         $( bottomGroupBlock ).addClass( 'bottomGroupBlock' );
         
