@@ -4,7 +4,6 @@ function Main() {
     revoke_button.addEventListener( 'click', function() { GPlus.revokeToken( closeWindow ); } );
     
     GPlus.getUserEmail( putUserEmail );
-    GPlus.testQuery( 'https://www.googleapis.com/plusDomains/v1/people/me/circles', print);
     
     var filter = new Filter( document.querySelector('.left-sidebar'), document.querySelector( '.content' ) );
     

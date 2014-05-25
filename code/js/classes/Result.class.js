@@ -11,21 +11,21 @@ function Result( block ) {
     this.append = function( user ) {
         if ( !user ) return;
         
-        this.usersList.addUser( user );
-        
-        switch ( this.state ) {
-            case STATE.FULL : {
-                this.block.querySelector( 'ul' ).appendChild( user.show() );
-                break;
+        if ( this.usersList.addUser( user ) != false ) {
+            switch ( this.state ) {
+                case STATE.FULL : {
+                    this.block.querySelector( 'ul' ).appendChild( user.show() );
+                    break;
+                }
+                
+                default : {
+                    this.block.innerHTML = '';
+                    this.block.appendChild( this.usersList.show() );
+                    this.state = STATE.FULL;
+                    break;
+                }                
             }
-            
-            default : {
-                this.block.innerHTML = '';
-                this.block.appendChild( this.usersList.show() );
-                this.state = STATE.FULL;
-                break;
-            }                
-        }
+        };
     }
     
     this.update = function( usersList ) {
@@ -43,6 +43,12 @@ function Result( block ) {
         this.usersList = new UsersList();
         this.state = STATE.EMPTY;
         this.block.innerHTML = getMessage( 'emptyResultBlock' );
+    }
+    
+    this.finish = function() {
+        if ( this.state == STATE.DEFAULT ) {
+            this.clear();
+        }
     }
     
     this.reset = function() {

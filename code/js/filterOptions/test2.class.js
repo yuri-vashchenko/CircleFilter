@@ -1,32 +1,39 @@
 (function(){
     filterOptionsList.push( new FilterOption( 
         '/images/plus-btn.png', 
-        'FilterOption2',
+        'Filter by id',
         function() {
             var testBlock = document.createElement( 'div' ),
-                  dateLabel = document.createElement( 'label' ),
-                  date = document.createElement( 'input' );
-            dateLabel.textContent = 'date';
+                  idLabel = document.createElement( 'label' ),
+                  id = document.createElement( 'input' );
+            idLabel.textContent = 'Id';
             
-            date.name = 'date';
-            date.type = 'date';
+            id.name = 'id';
             
-            testBlock.appendChild( dateLabel );
-            testBlock.appendChild( date );
+            testBlock.appendChild( idLabel );
+            testBlock.appendChild( id );
             
             return testBlock;
         }(),
         function( configurationBlock ) {
             var configuration = {};
             
-            configuration.date = configurationBlock.querySelector('[name=date]').value;
+            configuration.id = configurationBlock.querySelector('[name=id]').value;
             
             return configuration;
         },
         function( configuration ) {
-            var string = configuration.date;
+            var string = configuration.id;
             
             return string;
+        },
+        function( userId, accept, decline ) {     
+            
+            if ( this.configuration.id == userId ) {
+                accept( userId );
+            }
+            
+            decline( userId );
         }
         ) );
 })();

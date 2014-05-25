@@ -29,14 +29,6 @@ function showDropdownBlock( title, contentBlock, state ) {
     return dropdownBlock;
 }
     
-function readProperty( property, defValue ) {
-    if ( localStorage[property] == null ) {
-        return defValue;
-    }
-
-    return localStorage[property];
-}
-
 function getMessage( label ) {
     if ( label == null ) {
         return 'undefined';
@@ -45,12 +37,25 @@ function getMessage( label ) {
     return chrome.i18n.getMessage( label );
 }
 
+function clone( obj ) {
+    if ( obj == null || typeof( obj ) != 'object' )
+        return obj;
+    var temp = new obj.constructor(); 
+    for ( var key in obj )
+        temp[key] = clone( obj[key] );
+    return temp;
+}
+
+Array.prototype.clone = function() {
+	return this.slice( 0 );
+};
+
 function closeWindow() {
     window.close();
 }
-  
+
 function loadClasses() {
-    var classesList = ['User', 'UsersList', 'Result', 'GPlus', 'FilterOption', 'FilterOptionsLoader', 'Filter', 'FilterSet', 'Main'];          
+    var classesList = ['User', 'UsersList', 'Result', 'GPlus', 'StorageManager', 'FilterOption', 'FilterOptionsLoader', 'Filter', 'FilterSet', 'Main'];          
     
     for ( var i = 0; i < classesList.length; i++ ) {
         var script = document.createElement( 'script' );

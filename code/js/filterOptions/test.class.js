@@ -1,7 +1,7 @@
 (function(){
     filterOptionsList.push( new FilterOption( 
         '/images/load.png', 
-        'FilterOption1', 
+        'Filter by name', 
         function() {
             var testBlock = document.createElement( 'div' ),
                   nameLabel = document.createElement( 'label' ),
@@ -26,6 +26,16 @@
             var string = configuration.name;
             
             return string;
+        },
+        function( userId, accept, decline ) {     
+            var configuration = this.configuration;
+            
+            StorageManager.getUserInfo( userId, function( user ) {
+                if ( user.firstName.indexOf( configuration.name ) != -1 ) {
+                    accept( userId );
+                }
+                decline( userId );
+            });
         }
         ) );
 })();

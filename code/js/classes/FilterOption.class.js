@@ -1,4 +1,4 @@
-function FilterOption( icon, name, configurationBlock, getConfigurationFunc, configurationToStringFunc, configuration ) {
+function FilterOption( icon, name, configurationBlock, getConfigurationFunc, configurationToStringFunc, applyFunc, configuration ) {
     this.icon = icon;
     this.name = name;
     this.configuration = configuration;
@@ -6,6 +6,7 @@ function FilterOption( icon, name, configurationBlock, getConfigurationFunc, con
     this.configurationBlock = configurationBlock;
     this.getConfigurationFunc = getConfigurationFunc;
     this.configurationToStringFunc = configurationToStringFunc;
+    this.applyFunc = applyFunc;
     
     this.show = function() {
         var filterOptionBlock = document.createElement( 'div' );
@@ -61,6 +62,10 @@ function FilterOption( icon, name, configurationBlock, getConfigurationFunc, con
         $( controlBlock ).addClass( 'controlBlock' );   
         
         return editInterfaceBlock;
+    }
+    
+    this.apply = function( userId, accept, decline ) {
+        this.applyFunc( userId, accept, decline );
     }
     
     function showConfiguration( filterOption ) {
