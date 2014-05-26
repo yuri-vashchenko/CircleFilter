@@ -1,5 +1,15 @@
 var StorageManager = (function() {
-
+    function getCurrentTime() {
+        var d=new Date(),
+              day=d.getDate(),
+              month=d.getMonth(),
+              year=d.getFullYear(),
+              h = d.getHours(),
+              m = d.getMinutes();
+        
+        return day + '.' + month + '.' + year + ' ' + h + ':' + m;
+    }
+    
     function initUsers() {
         if ( !readProperty( 'users' ) ) {
             writeProperty( 'users', [] );
@@ -10,44 +20,111 @@ var StorageManager = (function() {
         removeProperty( 'users' );  
     }
     
-    function addUser( u ) {
-        var users = readProperty( 'users' );
+    function addUser( id ) {
+        var users = readProperty( 'users' ),
+              userIndex = getUserIndex( id );
         
-        if ( !findUserById( u.id ) ) {
-            var user = new User( u.id, u.displayName, "", u.image.url );
+        if ( userIndex < 0 ) {
+            var user = new User( id );
             users.push( user );
             writeProperty( 'users', users );
+            userIndex = users.length - 1;
         }
+        
+        return userIndex;
     }
     
-    function findUserById( id ) {
+    function addUserProperty( id, property, value, override ) {
+        var userIndex = addUser( id ),
+              users = readProperty( 'users' );       
+        
+        if ( users[userIndex][property] == undefined || override ) {
+            users[userIndex][property] = { 'value': value, 'date': getCurrentTime() };
+        }
+        
+        writeProperty( 'users', users );
+    }
+    
+    /* @param propArray { property1: value1, property2: value2 ... } */
+    function addUserProperties( id, propArray, override ) {
+    
+        var userIndex = addUser( id ),
+              users = readProperty( 'users' );       
+        
+        for ( property in propArray ) {
+            if ( users[userIndex][property] == undefined || override ) {
+                users[userIndex][property] = { 'value': propArray[property], 'date': getCurrentTime() };
+            }
+        }
+        
+        writeProperty( 'users', users );
+    }
+    
+    function getUserIndex( id ) {
         var users = readProperty( 'users' );
         
         for ( var i = 0; i < users.length; i++ ) {
             if ( users[i].id == id ) {
-                return (User.copy( users[i] ));
+                return i;
             }            
         }
         
-        return false;
+        return -1;
+    }
+    
+    function checkProperties( id, propList ) {
+        var userIndex = addUser( id ),
+              users = readProperty( 'users' ),
+              missingProps = new Array();
+        
+        for ( var i = 0; i < propList.length; i++ ) {
+            if ( users[userIndex][propList[i]] == undefined ) {
+                missingProps.push( propList[i] );
+            }
+        }
+        
+        return missingProps;
+    }
+    
+    function getUser( id ) {
+        var users = readProperty( 'users' ),
+              userIndex = getUserIndex( id );
+              
+        if ( userIndex >= 0 ) {
+            return new User(
+                users[userIndex].id,
+                ( users[userIndex].firstName != undefined ? users[userIndex].firstName.value : null ),
+                ( users[userIndex].lastName != undefined ? users[userIndex].lastName.value : null ),
+                ( users[userIndex].photo != undefined ? users[userIndex].photo.value : null ),
+                ( users[userIndex].age != undefined ? users[userIndex].age.value : null ),
+                ( users[userIndex].sex != undefined ? users[userIndex].sex.value : null ),
+                ( users[userIndex].city != undefined ? users[userIndex].city.value : null )
+            )
+        }
     }
     
     return {
-        getUserInfo: function( id, callback ) {
-            var user = findUserById( id );
-            if ( user ) {
-                callback( user );
-            } else { /* toSolve */
-                var userIdsList = Array();
+        getUserIdsList: function( callback ) {
+            var userIdsList = new Array();
+            
+            if ( readProperty( 'users' ) ) {
+                var usersArray = readProperty( 'users' );
+                      
+                for ( var i = 0; i < usersArray.length; i++ ) {
+                    userIdsList.push( usersArray[i].id );
+                }
+                
+                callback( userIdsList );
+            } else {
                 initUsers();
                 
-                GPlus.getUsersList( function( error, status, response ) {
+                GPlus.getUserIdsList( function( error, status, response ) {
                     if ( !error && status == 200 ) {
                         var resp = JSON.parse(response);
                         
                         for ( var i = 0; i < resp.items.length; i++ ) {
                             userIdsList.push( resp.items[i].id );
-                            addUser( resp.items[i] );
+                            addUser( resp.items[i].id );
                         }
                         
                         if ( resp.totalItems <= userIdsList.length ) {
@@ -57,35 +134,83 @@ var StorageManager = (function() {
                 });
             }
         },
-        getUserIdsList: function( callback ) {
-            if ( readProperty( 'users' ) ) {
-                var userIdsList = new Array(),
-                      usersArray = readProperty( 'users' );
-                      
-                for ( var i = 0; i < usersArray.length; i++ ) {
-                    userIdsList.push( usersArray[i].id );
-                }
-                
-                callback( userIdsList );
+        getUserInfo: function( id, propsList, callback ) {
+            var user = getUser( id ),
+                  missingProps = checkProperties( id, propsList );
+            if ( missingProps.length == 0 ) {
+                callback( user );
             } else {
-                var userIdsList = Array();
                 initUsers();
                 
-                GPlus.getUsersList( function( error, status, response ) {
+                GPlus.getUserInfo( id, missingProps, function( error, status, response ) {
                     if ( !error && status == 200 ) {
-                        var resp = JSON.parse(response);
+                        var resp = JSON.parse(response),
+                              props = {};
                         
-                        for ( var i = 0; i < resp.items.length; i++ ) {
-                            userIdsList.push( resp.items[i].id );
-                            addUser( resp.items[i] );
+                        for ( var i = 0; i < missingProps.length; i++ ) {
+                            switch ( missingProps[i] ) {
+                                case 'firstName':
+                                    props[missingProps[i]] = ( resp.name != undefined ? resp.name.givenName : undefined );
+                                    break;
+                                case 'lastName':
+                                    props[missingProps[i]] = ( resp.name != undefined ? resp.name.familyName : undefined );
+                                    break;
+                                case 'photo':
+                                    props[missingProps[i]] = ( resp.image != undefined ? resp.image.url : undefined );
+                                    break;
+                                case 'age':
+                                    props[missingProps[i]] = ( resp.ageRange != undefined ? resp.ageRange.min : undefined );
+                                    break;
+                                case 'sex':
+                                    props[missingProps[i]] = ( resp.gender != undefined ? resp.gender : undefined );
+                                    break;
+                                case 'city':
+                                    props[missingProps[i]] = ( resp.placesLived != undefined ? resp.placesLived[0].value : undefined );
+                                    break;
+                                default: break;
+                            }
                         }
                         
-                        if ( resp.totalItems <= userIdsList.length ) {
-                            callback( userIdsList );
-                        }
-                    } 
+                        addUserProperties( id, props, true );
+                        
+                        callback( getUser( id ) );
+                    }
                 });
             }
+        },
+        showStorageUsersFullInfo: function() {
+            var table = document.createElement( 'table' ),
+                  usersArray = readProperty( 'users' );
+            
+            if ( usersArray ) {
+                var tr = document.createElement( 'tr' ),
+                      headers = ['id', 'firstName', 'lastName', 'photo', 'age', 'sex', 'city'];
+                
+                for ( var i = 0; i < headers.length; i++ ) {
+                    var th = document.createElement( 'th' );
+                    th.textContent = headers[i];
+                    tr.appendChild( th );
+                }   
+                
+                table.appendChild( tr );
+                
+                for ( var i = 0; i < usersArray.length; i++ ) {
+                    tr = document.createElement( 'tr' );
+                    
+                    var td = document.createElement( 'td' );
+                    td.textContent = usersArray[i].id;
+                    tr.appendChild( td );
+                    
+                    for ( var j = 1; j < headers.length; j++ ) {
+                        td = document.createElement( 'td' );
+                        td.textContent = ( usersArray[i][headers[j]] != undefined ? usersArray[i][headers[j]].value : '' );
+                        tr.appendChild( td );
+                    }
+                    table.appendChild( tr );
+                }                      
+            }
+            
+            return table;
         }
     }
 })();

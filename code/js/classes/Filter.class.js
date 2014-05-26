@@ -34,8 +34,11 @@ function Filter( filterBlock, resultBlock ) {
         $( exportButton ).addClass( 'button' );        
         topGroupBlock.appendChild( exportButton );
         
-        exportButton.addEventListener( 'click', function() {-
-            console.log( filter.filterSetList[0].filterOptionList );
+        exportButton.addEventListener( 'click', function() {
+            $( '#testzone' ).empty();
+            $( '#testzone' )[0].appendChild( StorageManager.showStorageUsersFullInfo() );
+            $( '#testzone table' ).addClass( 'table' );
+            $( '#testzone table' ).addClass( 'table-bordered' );
         });
         
         importIcon.src = 'images/load.png';    
@@ -68,7 +71,7 @@ function Filter( filterBlock, resultBlock ) {
                 applyFilterSetIteration( 
                     filterSetList, 
                     function( userId ) {
-                        StorageManager.getUserInfo( userId, function( user ) {
+                        StorageManager.getUserInfo( userId, User.propertiesForShow, function( user ) {
                             filter.result.append( user );
                         });
                     }, 

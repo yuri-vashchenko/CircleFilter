@@ -67,5 +67,17 @@
     },
     "exportToCsv": {
         "message": "В CSV"
+    },
+    "filterByAge": {
+        "message": "по Возрасту"
+    },
+    "from": {
+        "message": "От"
+    },
+    "to": {
+        "message": "До"
+    },
+    "anyAge": {
+        "message": "Любой возраст"
     }
 }
