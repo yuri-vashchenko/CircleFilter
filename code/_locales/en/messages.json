@@ -67,5 +67,17 @@
     },
     "exportToCsv": {
         "message": "exportToCsv"
+    },
+    "filterByAge": {
+        "message": "by Age"
+    },
+    "from": {
+        "message": "From"
+    },
+    "to": {
+        "message": "To"
+    },
+    "anyAge": {
+        "message": "Any Age"
     }
 }

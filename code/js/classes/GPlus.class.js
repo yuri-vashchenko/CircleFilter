@@ -1,10 +1,15 @@
 var GPlus = (function() {
-    function xhrWithAuth( method, url, interactive, callback ) {
+    function xhrWithAuth( method, url, interactive, callback, waitTime ) {
         var access_token,
               result = {},
-              retry = true;
-
-        getToken();
+              retry = true,
+              waitTime = waitTime || 0; 
+        
+        if ( waitTime > 16 ) {
+            retry = false;
+        }
+        
+        setTimeout( getToken, ( waitTime == 0 ? waitTime : ( waitTime + Math.random() ) ) * 1000 );
         
         function getToken() {
             chrome.identity.getAuthToken( { interactive : interactive }, function( token ) {
@@ -26,11 +31,13 @@ var GPlus = (function() {
             xhr.send();
         }
 
-        function requestComplete() {
+        function requestComplete() { console.log( waitTime )
             if ( this.status == 401 && retry ) {
                 retry = false;
                 chrome.identity.removeCachedAuthToken( { token: access_token }, getToken );
-            } else {
+            } else if ( this.status == 403 && retry ) { 
+                xhrWithAuth( method, url, interactive, callback, ( waitTime == 0 ? 1 : waitTime * 2 ) );
+            } else  {
                 callback( null, this.status, this.response );
             }
         }
@@ -42,7 +49,54 @@ var GPlus = (function() {
         }
     }
 
-    return {        
+    return {
+        getUserIdsList : function( onUserIdsListPageFetched, maxResults, nextPageToken ) {
+            
+            xhrWithAuth( 'GET', 'https://www.googleapis.com/plus/v1/people/me/people/visible?fields=items%2Fid%2CnextPageToken%2CtotalItems&'
+                + $.param({ 
+                    'maxResults' : 100 || maxResults, 
+                    'pageToken' : nextPageToken
+                }), 
+                false, 
+                nextIteration 
+            );
+            
+            function nextIteration( error, status, response ) {
+                onUserIdsListPageFetched( error, status, response );
+                if ( !error && status == 200 && JSON.parse( response ).nextPageToken ) {
+                    GPlus.getUserIdsList( onUserIdsListPageFetched, maxResults, JSON.parse( response ).nextPageToken );
+                }
+            }
+        },
+        getUserInfo : function( id, properties, callback ) {
+            var params = '';
+            
+            for ( var i = 0; i < properties.length; i++ ) {
+                switch ( properties[i] ) {
+                    case 'firstName':
+                        params += 'name(givenName)';
+                        break;
+                    case 'lastName':
+                        params += 'name(familyName)';
+                        break;
+                    case 'photo':
+                        params += 'image';
+                        break;
+                    case 'age':
+                        params += 'ageRange';
+                        break;
+                    case 'sex':
+                        params += 'gender';
+                        break;
+                    case 'city':
+                        params += 'placesLived';
+                        break;
+                    default: break;
+                }
+                params += ( i < properties.length - 1 ? '%2C' : '' );
+            }
+            xhrWithAuth( 'GET', 'https://www.googleapis.com/plus/v1/people/' + id + '?fields=' + params, false, callback );
+        },
         getUsersList : function( onUsersListPageFetched, maxResults, nextPageToken ) {
             
             xhrWithAuth( 'GET', 'https://www.googleapis.com/plus/v1/people/me/people/visible?'

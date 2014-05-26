@@ -53,9 +53,10 @@
         function( userId, accept, decline ) {     
             var configuration = this.configuration;
             
-            StorageManager.getUserAge( userId, function( age ) {
-                if ( ( configuration.ageFrom && configuration.ageFrom > age )  
-                   || ( configuration.ageTo && configuration.ageTo < age ) ) ( 
+            StorageManager.getUserInfo( userId, ['age'], function( user ) {
+                if ( ( configuration.ageFrom && configuration.ageFrom > user.age )  
+                   || ( configuration.ageTo && configuration.ageTo < user.age )
+                   || user.age == undefined ) {
                     
                     decline( userId );                    
                 } else {

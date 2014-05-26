@@ -30,7 +30,7 @@
         function( userId, accept, decline ) {     
             var configuration = this.configuration;
             
-            StorageManager.getUserInfo( userId, function( user ) {
+            StorageManager.getUserInfo( userId, ['firstName', 'lastName'], function( user ) {
                 if ( user.firstName.indexOf( configuration.name ) != -1 ) {
                     accept( userId );
                 }
