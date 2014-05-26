@@ -1,4 +1,8 @@
 var StorageManager = (function() {
+    function getStorageSize() {
+        return ( 3 + ( ( localStorage.users.length * 16 ) / ( 8 * 1024 ) ) );
+    }
+    
     function getCurrentTime() {
         var d=new Date(),
               day=d.getDate(),
@@ -33,18 +37,7 @@ var StorageManager = (function() {
         
         return userIndex;
     }
-    
-    function addUserProperty( id, property, value, override ) {
-        var userIndex = addUser( id ),
-              users = readProperty( 'users' );       
-        
-        if ( users[userIndex][property] == undefined || override ) {
-            users[userIndex][property] = { 'value': value, 'date': getCurrentTime() };
-        }
-        
-        writeProperty( 'users', users );
-    }
-    
+       
     /* @param propArray { property1: value1, property2: value2 ... } */
     function addUserProperties( id, propArray, override ) {
     
@@ -52,7 +45,7 @@ var StorageManager = (function() {
               users = readProperty( 'users' );       
         
         for ( property in propArray ) {
-            if ( users[userIndex][property] == undefined || override ) {
+            if ( propArray[property] != undefined && users[userIndex][property] == undefined || override ) {
                 users[userIndex][property] = { 'value': propArray[property], 'date': getCurrentTime() };
             }
         }
@@ -107,7 +100,7 @@ var StorageManager = (function() {
         getUserIdsList: function( callback ) {
             var userIdsList = new Array();
             
-            if ( readProperty( 'users' ) ) {
+            if ( false && readProperty( 'users' ) ) {
                 var usersArray = readProperty( 'users' );
                       
                 for ( var i = 0; i < usersArray.length; i++ ) {
@@ -180,7 +173,11 @@ var StorageManager = (function() {
         },
         showStorageUsersFullInfo: function() {
             var table = document.createElement( 'table' ),
+                  sizeSpan = document.createElement( 'span' ),
                   usersArray = readProperty( 'users' );
+            
+            sizeSpan.textContent = getStorageSize() + ' bytes';
+            table.appendChild( sizeSpan );
             
             if ( usersArray ) {
                 var tr = document.createElement( 'tr' ),
@@ -211,6 +208,9 @@ var StorageManager = (function() {
             }
             
             return table;
+        },
+        getStorageSize: function() {
+            return getStorageSize();
         }
     }
 })();
