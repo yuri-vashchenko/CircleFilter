@@ -28,14 +28,16 @@
             return string;
         },
         function( userId, accept, decline ) {     
-            var configuration = this.configuration;
+            var configuration = this.configuration,
+                  requiredUserFields = this.requiredUserFields;
             
-            StorageManager.getUserInfo( userId, ['firstName', 'lastName'], function( user ) {
+            StorageManager.getUserInfo( userId, requiredUserFields, function( user ) {
                 if ( user.firstName.indexOf( configuration.name ) != -1 ) {
                     accept( userId );
                 }
                 decline( userId );
             });
-        }
+        },
+        ['firstName', 'lastName']
         ) );
 })();

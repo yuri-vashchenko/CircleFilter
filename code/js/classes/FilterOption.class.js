@@ -1,12 +1,17 @@
-function FilterOption( icon, name, configurationBlock, getConfigurationFunc, configurationToStringFunc, applyFunc, configuration ) {
+function FilterOption( icon, name, configurationBlock, getConfigurationFunc, configurationToStringFunc, applyFunc, requiredUserFields, configuration ) {
     this.icon = icon;
     this.name = name;
     this.configuration = configuration;
+    this.requiredUserFields = requiredUserFields;
     
     this.configurationBlock = configurationBlock;
     this.getConfigurationFunc = getConfigurationFunc;
     this.configurationToStringFunc = configurationToStringFunc;
     this.applyFunc = applyFunc;
+    
+    this.getRequiredUserFields = function() {
+        return this.requiredUserFields.clone();
+    }
     
     this.show = function() {
         var filterOptionBlock = document.createElement( 'div' );

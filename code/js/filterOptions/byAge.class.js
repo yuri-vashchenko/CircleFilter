@@ -51,9 +51,10 @@
             return string;
         },
         function( userId, accept, decline ) {     
-            var configuration = this.configuration;
+            var configuration = this.configuration,
+                  requiredUserFields = this.requiredUserFields;
             
-            StorageManager.getUserInfo( userId, ['age'], function( user ) {
+            StorageManager.getUserInfo( userId, requiredUserFields, function( user ) {
                 if ( ( configuration.ageFrom && configuration.ageFrom > user.age )  
                    || ( configuration.ageTo && configuration.ageTo < user.age )
                    || user.age == undefined ) {
@@ -63,6 +64,7 @@
                     accept( userId );
                 }
             });
-        }        
+        },
+        ['age']
         ) );
 })();

@@ -54,7 +54,8 @@ function FilterSet() {
                                                 filterOptionsList[index].configurationBlock, 
                                                 filterOptionsList[index].getConfigurationFunc, 
                                                 filterOptionsList[index].configurationToStringFunc, 
-                                                filterOptionsList[index].applyFunc, 
+                                                filterOptionsList[index].applyFunc,
+                                                filterOptionsList[index].requiredUserFields,
                                                 configuration 
                                               ),
                                               filterOptionBlock = showAddFilterOptionBlock( configuredFilterOption.show(), filterSet );
