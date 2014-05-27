@@ -79,5 +79,8 @@
     },
     "anyAge": {
         "message": "Any Age"
+    },
+    "stop": {
+        "message": "Stop"
     }
 }
