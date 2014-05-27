@@ -5,7 +5,7 @@ function Main() {
     
     GPlus.getUserEmail( putUserEmail );
     
-    var filter = new Filter( document.querySelector('.left-sidebar'), document.querySelector( '.content' ) );
+    var filter = new Filter( document.querySelector('.left-sidebar'), document.querySelector( '.content>div' ) );
     
     function putUserEmail( error, status, response ) {
         if ( !error && status == 200 ) {            

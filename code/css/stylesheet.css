@@ -118,14 +118,15 @@ span#user-email {
 }
 
 .container {
+    height: 100%;
     width: 100%;
     float: left;
     overflow: hidden;
     margin-right: -100%;
+    padding: 0;
 }
 
 .content {
-    padding: 0 20px;
 }
 
 /* Left Sidebar
@@ -139,13 +140,6 @@ span#user-email {
     background: white;
     border-right: 1px solid grey;
     left: -500px;
-}
-
-/* Footer
------------------------------------------------------------------------------*/
-.footer {
-    border-top: 1px solid grey;
-    height: 64px;
 }
 
 /* Dropdown

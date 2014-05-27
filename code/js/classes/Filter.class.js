@@ -66,6 +66,7 @@ function Filter( filterBlock, resultBlock ) {
         
         applyButton.addEventListener( 'click', function() {
             filter.result.reset();
+            filter.result.processing();
             var operationID = setTimeout( function() {
                 var filterSetList = filter.filterSetList.clone();
                 applyFilterSetIteration( 
