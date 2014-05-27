@@ -1,6 +1,6 @@
 var StorageManager = (function() {
     function getStorageSize() {
-        return ( 3 + ( ( localStorage.users.length * 16 ) / ( 8 * 1024 ) ) );
+        return ( localStorage.users ? ( 3 + ( ( localStorage.users.length * 16 ) / ( 8 * 1024 ) ) ) : 0 );
     }
     
     function getCurrentTime() {
@@ -45,7 +45,7 @@ var StorageManager = (function() {
               users = readProperty( 'users' );       
         
         for ( property in propArray ) {
-            if ( propArray[property] != undefined && users[userIndex][property] == undefined || override ) {
+            if ( propArray[property] != undefined && ( users[userIndex][property] == undefined || override ) ) {
                 users[userIndex][property] = { 'value': propArray[property], 'date': getCurrentTime() };
             }
         }
@@ -176,7 +176,7 @@ var StorageManager = (function() {
                   sizeSpan = document.createElement( 'span' ),
                   usersArray = readProperty( 'users' );
             
-            sizeSpan.textContent = getStorageSize() + ' bytes';
+            sizeSpan.textContent = getStorageSize() + ' kBytes';
             table.appendChild( sizeSpan );
             
             if ( usersArray ) {
