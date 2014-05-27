@@ -55,8 +55,14 @@ function FilterOption( icon, name, configurationBlock, getConfigurationFunc, con
         $( acceptButton ).addClass( 'but-icon' );   
         
         acceptButton.addEventListener( 'click', function() {
-            onApply( getConfigurationFunc( configurationBlock ) );
-            onClose();
+            var configuration = getConfigurationFunc( configurationBlock );
+            
+            if ( configuration ) {
+                onApply( getConfigurationFunc( configurationBlock ) );
+                onClose();
+            } else {
+                /* paste your errorShow code here */
+            }
         });
         
         editInterfaceBlock.appendChild( headerBlock );

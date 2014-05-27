@@ -1,9 +1,10 @@
 function Filter( filterBlock, resultBlock ) {
     this.result = new Result( resultBlock );
+    this.process = { id: null };
     
     this.filterSetList = new Array();  
     
-    this.filterBlock = filterBlock;    
+    this.filterBlock = filterBlock;
     
     $( this.filterBlock ).addClass( 'filter' );
          
@@ -65,38 +66,42 @@ function Filter( filterBlock, resultBlock ) {
         bottomGroupBlock.appendChild( applyButton );
         
         applyButton.addEventListener( 'click', function() {
-            filter.result.reset();
-            filter.result.processing();
-            var operationID = setTimeout( function() {
-                var filterSetList = filter.filterSetList.clone();
-                applyFilterSetIteration( 
-                    filterSetList, 
-                    function( userId ) {
-                        StorageManager.getUserInfo( userId, User.propertiesForShow, function( user ) {
-                            filter.result.append( user );
-                        });
-                    }, 
-                    function() { 
-                        filter.result.finish(); 
+            if ( filter.process.id == null ) {
+                startProcessing( filter, applyButton, function() {
+                    var filterSetList = filter.filterSetList.clone();
+                    applyFilterSetIteration( 
+                        filterSetList, 
+                        function( userId ) {
+                            StorageManager.getUserInfo( userId, User.propertiesForShow, function( user ) {
+                                filter.result.append( user );
+                            });
+                        }, 
+                        function() { 
+                            stopProcessing( filter, applyButton );
+                        },
+                        filter.process
+                    );
+                    
+                    function applyFilterSetIteration( filterSetList, callback, onSuccess, filterProcess ) {
+                        if ( !filterSetList.length || filterProcess.id == null ) {
+                            onSuccess();
+                        } else {
+                            filterSetList.shift().apply( 
+                                callback,
+                                
+                                function() {
+                                    applyFilterSetIteration( filterSetList, callback, onSuccess, filterProcess )
+                                }, 
+                                filterProcess
+                            );
+                        }
                     }
-                );
-                
-                function applyFilterSetIteration( filterSetList, callback, onSuccess ) {
-                    if ( !filterSetList.length ) {
-                        onSuccess();
-                    } else {
-                        filterSetList.shift().apply( 
-                            callback,
-                            
-                            function() {
-                                applyFilterSetIteration( filterSetList, callback, onSuccess )
-                            }
-                        );
-                    }
-                }
-            }, 0);
+                } );
+            } else {
+                clearTimeout( filter.process.id );
+                stopProcessing( filter, applyButton );
+            }
             
-            //clearTimeout(operationID)
         });        
 
         controlBlock.appendChild( bottomGroupBlock );
@@ -105,6 +110,19 @@ function Filter( filterBlock, resultBlock ) {
         $( controlBlock ).addClass( 'control' );
         
         return controlBlock;
+    }
+    
+    function startProcessing( filter, applyButton, processingFunc ) {
+        applyButton.textContent = getMessage( 'stop' );
+        filter.result.reset();
+        filter.result.processing();
+        filter.process.id = setTimeout( processingFunc, 0);
+    }
+    
+    function stopProcessing( filter, applyButton ) {
+        filter.process.id = null;
+        filter.result.finish(); 
+        applyButton.textContent = getMessage( 'apply' );
     }
     
     function showFormulaBlock( filter ) {
@@ -117,7 +135,7 @@ function Filter( filterBlock, resultBlock ) {
         addFilterSetButton.textContent = getMessage( 'or' );
         formulaBlock.appendChild( addFilterSetButton );
         
-        addFilterSetButton.addEventListener( 'click', function() {
+        addFilterSetButton.addEventListener( 'click', function() {            
             var filterSet = new FilterSet();
                   orText = document.createElement( 'div' ); 
                    

@@ -34,8 +34,9 @@
             StorageManager.getUserInfo( userId, requiredUserFields, function( user ) {
                 if ( user.firstName.indexOf( configuration.name ) != -1 ) {
                     accept( userId );
+                } else {
+                    decline( userId );
                 }
-                decline( userId );
             });
         },
         ['firstName', 'lastName']
