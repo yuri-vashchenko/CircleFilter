@@ -27,9 +27,7 @@
     },
   
     "permissions": [
-        "tabs", 
         "identity",
-        "http://www.google.com/*",
         "https://plus.google.com/*",
         "https://accounts.google.com/*",
         "https://www.googleapis.com/*"
