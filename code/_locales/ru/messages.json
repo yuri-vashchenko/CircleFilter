@@ -88,5 +88,14 @@
     },
     "lastNav": {
         "message": ">>|"
+    },
+    "sex": {
+        "message": "Пол"
+    },
+    "male": {
+        "message": "Мужской"
+    },
+    "female": {
+        "message": "Женский"
     }
 }
