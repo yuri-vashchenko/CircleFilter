@@ -31,9 +31,10 @@
             
             if ( this.configuration.id == userId ) {
                 accept( userId );
+            } else {
+                decline( userId );
             }
-            
-            decline( userId );
-        }
+        },
+        []
         ) );
 })();

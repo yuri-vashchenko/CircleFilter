@@ -1,12 +1,17 @@
-function FilterOption( icon, name, configurationBlock, getConfigurationFunc, configurationToStringFunc, applyFunc, configuration ) {
+function FilterOption( icon, name, configurationBlock, getConfigurationFunc, configurationToStringFunc, applyFunc, requiredUserFields, configuration ) {
     this.icon = icon;
     this.name = name;
     this.configuration = configuration;
+    this.requiredUserFields = requiredUserFields;
     
     this.configurationBlock = configurationBlock;
     this.getConfigurationFunc = getConfigurationFunc;
     this.configurationToStringFunc = configurationToStringFunc;
     this.applyFunc = applyFunc;
+    
+    this.getRequiredUserFields = function() {
+        return this.requiredUserFields.clone();
+    }
     
     this.show = function() {
         var filterOptionBlock = document.createElement( 'div' );
@@ -50,8 +55,14 @@ function FilterOption( icon, name, configurationBlock, getConfigurationFunc, con
         $( acceptButton ).addClass( 'but-icon' );   
         
         acceptButton.addEventListener( 'click', function() {
-            onApply( getConfigurationFunc( configurationBlock ) );
-            onClose();
+            var configuration = getConfigurationFunc( configurationBlock );
+            
+            if ( configuration ) {
+                onApply( getConfigurationFunc( configurationBlock ) );
+                onClose();
+            } else {
+                /* paste your errorShow code here */
+            }
         });
         
         editInterfaceBlock.appendChild( headerBlock );

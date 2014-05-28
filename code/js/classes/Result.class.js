@@ -12,6 +12,7 @@ function Result( block ) {
         if ( !user ) return;
         
         if ( this.usersList.addUser( user ) != false ) {
+            $( this.block ).removeClass( 'text' );
             switch ( this.state ) {
                 case STATE.FULL : {
                     this.block.querySelector( 'ul' ).appendChild( user.show() );
@@ -43,18 +44,25 @@ function Result( block ) {
         this.usersList = new UsersList();
         this.state = STATE.EMPTY;
         this.block.innerHTML = getMessage( 'emptyResultBlock' );
+        $( this.block ).addClass( 'text' );
     }
     
     this.finish = function() {
         if ( this.state == STATE.DEFAULT ) {
             this.clear();
         }
+        $( '#loading' ).removeClass( 'loading' );
+    }
+    
+    this.processing = function() {
+        $( '#loading' ).addClass( 'loading' );
     }
     
     this.reset = function() {
         this.usersList = new UsersList();
         this.state = STATE.DEFAULT;
         this.block.innerHTML = getMessage( 'defaultResultBlockContent' );
+        $( this.block ).addClass( 'text' );
     }
     
     this.reset();

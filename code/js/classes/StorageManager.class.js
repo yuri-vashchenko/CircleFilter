@@ -1,4 +1,20 @@
 var StorageManager = (function() {
+    function writeProperty( property, value ) {
+        localStorage.setItem( property, JSON.stringify( value ) );
+    }
+
+    function readProperty( property ) {
+        return JSON.parse( localStorage.getItem( property ) );
+    }
+
+    function removeProperty( property ) {
+        localStorage.removeItem( property ); 
+    }
+    
+    function getStorageSize() {
+        return ( localStorage.users ? ( 3 + ( localStorage.users.length / 512 ) ) : 0 );
+    }
+    
     function getCurrentTime() {
         var d=new Date(),
               day=d.getDate(),
@@ -8,6 +24,13 @@ var StorageManager = (function() {
               m = d.getMinutes();
         
         return day + '.' + month + '.' + year + ' ' + h + ':' + m;
+    }
+    
+    function compareDates( d1, d2 ) {
+        if ( d1 == d2 ) {
+            return 0;
+        }
+        return -1;
     }
     
     function initUsers() {
@@ -33,18 +56,7 @@ var StorageManager = (function() {
         
         return userIndex;
     }
-    
-    function addUserProperty( id, property, value, override ) {
-        var userIndex = addUser( id ),
-              users = readProperty( 'users' );       
-        
-        if ( users[userIndex][property] == undefined || override ) {
-            users[userIndex][property] = { 'value': value, 'date': getCurrentTime() };
-        }
-        
-        writeProperty( 'users', users );
-    }
-    
+       
     /* @param propArray { property1: value1, property2: value2 ... } */
     function addUserProperties( id, propArray, override ) {
     
@@ -52,7 +64,7 @@ var StorageManager = (function() {
               users = readProperty( 'users' );       
         
         for ( property in propArray ) {
-            if ( users[userIndex][property] == undefined || override ) {
+            if ( propArray[property] != undefined && ( users[userIndex][property] == undefined || override ) ) {
                 users[userIndex][property] = { 'value': propArray[property], 'date': getCurrentTime() };
             }
         }
@@ -72,13 +84,16 @@ var StorageManager = (function() {
         return -1;
     }
     
-    function checkProperties( id, propList ) {
+    function checkProperties( id, propList, expiredDate ) {
         var userIndex = addUser( id ),
               users = readProperty( 'users' ),
               missingProps = new Array();
         
         for ( var i = 0; i < propList.length; i++ ) {
-            if ( users[userIndex][propList[i]] == undefined ) {
+            if ( users[userIndex][propList[i]] == undefined 
+                || ( users[userIndex][propList[i]] != undefined 
+                    && expiredDate != undefined && compareDates( users[userIndex][propList[i]].date, expiredDate ) < 0 ) ) {
+                    
                 missingProps.push( propList[i] );
             }
         }
@@ -107,7 +122,7 @@ var StorageManager = (function() {
         getUserIdsList: function( callback ) {
             var userIdsList = new Array();
             
-            if ( readProperty( 'users' ) ) {
+            if ( false && readProperty( 'users' ) ) {
                 var usersArray = readProperty( 'users' );
                       
                 for ( var i = 0; i < usersArray.length; i++ ) {
@@ -134,6 +149,7 @@ var StorageManager = (function() {
                 });
             }
         },
+        
         getUserInfo: function( id, propsList, callback ) {
             var user = getUser( id ),
                   missingProps = checkProperties( id, propsList );
@@ -178,8 +194,10 @@ var StorageManager = (function() {
                 });
             }
         },
+        
         showStorageUsersFullInfo: function() {
             var table = document.createElement( 'table' ),
+                  sizeSpan = document.createElement( 'span' ),
                   usersArray = readProperty( 'users' );
             
             if ( usersArray ) {
@@ -203,7 +221,7 @@ var StorageManager = (function() {
                     
                     for ( var j = 1; j < headers.length; j++ ) {
                         td = document.createElement( 'td' );
-                        td.textContent = ( usersArray[i][headers[j]] != undefined ? usersArray[i][headers[j]].value : '' );
+                        td.textContent = ( usersArray[i][headers[j]] != undefined ? usersArray[i][headers[j]].value + ' : ' + usersArray[i][headers[j]].date : '' );
                         tr.appendChild( td );
                     }
                     table.appendChild( tr );
@@ -211,18 +229,57 @@ var StorageManager = (function() {
             }
             
             return table;
+        },
+        
+        getExpiredInfo: function( userIdsList, filterOptionList, expiredDate ) {
+            var expiredInfo = new Array(),
+                  uidList = userIdsList.clone(),
+                  userId, foReq;
+            
+            while ( userId = uidList.shift() ) {
+                var user = { id: userId, expiredFileds: new Array() },
+                      foList = filterOptionList.clone()
+                
+                while ( foReq = foList.shift() ) {                    
+                    foReq = foReq.getRequiredUserFields();
+                    
+                    user.expiredFileds = unionArrays( user.expiredFileds, checkProperties( user.id, foReq, expiredDate ) );
+                    
+                    function unionArrays( arr1, arr2 ) {
+                        
+                        var temp = arr1.concat( arr2 ),
+                              result = new Array();
+                              
+                        temp.sort();
+                        
+                        if ( temp.length ) {
+                            result.push( temp.shift() ); 
+                        }
+                        
+                        while ( currentElement = temp.shift() ) {
+                            if ( currentElement != result[result.length - 1] ) {
+                                result.push( currentElement );
+                            }
+                        }
+                        
+                        return result;
+                    }
+                }
+                
+                if ( user.expiredFileds.length ) {
+                    expiredInfo.push( user );
+                }
+            }
+            
+            return expiredInfo;
+        },
+        
+        clearUsers: function() {
+            return clearUsers();
+        },
+        
+        getStorageSize: function() {
+            return getStorageSize();
         }
     }
 })();
-
-function writeProperty( property, value ) {
-    localStorage.setItem( property, JSON.stringify( value ) );
-}
-
-function readProperty( property ) {
-    return JSON.parse( localStorage.getItem( property ) );
-}
-
-function removeProperty( property ) {
-    localStorage.removeItem( property ); 
-}

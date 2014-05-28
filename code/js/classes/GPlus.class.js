@@ -31,7 +31,7 @@ var GPlus = (function() {
             xhr.send();
         }
 
-        function requestComplete() { console.log( waitTime )
+        function requestComplete() {
             if ( this.status == 401 && retry ) {
                 retry = false;
                 chrome.identity.removeCachedAuthToken( { token: access_token }, getToken );

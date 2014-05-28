@@ -54,7 +54,8 @@ function FilterSet() {
                                                 filterOptionsList[index].configurationBlock, 
                                                 filterOptionsList[index].getConfigurationFunc, 
                                                 filterOptionsList[index].configurationToStringFunc, 
-                                                filterOptionsList[index].applyFunc, 
+                                                filterOptionsList[index].applyFunc,
+                                                filterOptionsList[index].requiredUserFields,
                                                 configuration 
                                               ),
                                               filterOptionBlock = showAddFilterOptionBlock( configuredFilterOption.show(), filterSet );
@@ -97,21 +98,21 @@ function FilterSet() {
         return filterSetBlock;
     }
     
-    this.apply = function( callback, onSuccess ) {
-        if ( this.filterOptionList.length ) {
+    this.apply = function( callback, onSuccess, filterProcess ) {
+        if ( this.filterOptionList.length && filterProcess.id != null ) {
             var filterOptionList = this.filterOptionList.clone();
             
             /* sort filterOptionList by priority here [highest,...., lowest] */
             
             StorageManager.getUserIdsList( function( userIdsList ) {
-                applyUserIteration( filterOptionList, userIdsList, callback, onSuccess );
+                applyUserIteration( filterOptionList, userIdsList, callback, onSuccess, filterProcess );
             });
         } else {
             onSuccess();
         }
         
-        function applyUserIteration( filterOptionList, userIdsList, callback, onSuccess ) {
-            if ( userIdsList.length ) {
+        function applyUserIteration( filterOptionList, userIdsList, callback, onSuccess, filterProcess ) {
+            if ( userIdsList.length && filterProcess.id != null ) {
                 var foList = filterOptionList.clone();
                 
                 applyFilterOptionIteration( 
@@ -119,28 +120,30 @@ function FilterSet() {
                     userIdsList.shift(), 
                     
                     function( userId ) {
-                        applyUserIteration( filterOptionList, userIdsList, callback, onSuccess );
+                        applyUserIteration( filterOptionList, userIdsList, callback, onSuccess, filterProcess );
                     },
                     
                     function( userId ) {
                         callback( userId );
-                        applyUserIteration( filterOptionList, userIdsList, callback, onSuccess );
-                    }
+                        applyUserIteration( filterOptionList, userIdsList, callback, onSuccess, filterProcess );
+                    },
+                    filterProcess
                 );
             } else {
                 onSuccess();
             }
         }
         
-        function applyFilterOptionIteration( filterOptionList, userId, nextUserIteration, callback ) {
-            if ( !filterOptionList.length ) {
+        function applyFilterOptionIteration( filterOptionList, userId, nextUserIteration, callback, filterProcess ) {
+            if ( filterProcess.id == null ) {
+            } else if ( !filterOptionList.length ) {
                 callback( userId );
             } else {
                 filterOptionList.shift().apply( 
                     userId, 
                     
                     function( userId ) {
-                        applyFilterOptionIteration( filterOptionList, userId, nextUserIteration, callback );
+                        applyFilterOptionIteration( filterOptionList, userId, nextUserIteration, callback, filterProcess );
                     },
                     
                     function( userId ) {
