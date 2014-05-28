@@ -134,18 +134,16 @@ var StorageManager = (function() {
                 initUsers();
                 
                 GPlus.getUserIdsList( function( error, status, response ) {
-                    if ( !error && status == 200 ) {
-                        var resp = JSON.parse(response);
-                        
-                        for ( var i = 0; i < resp.items.length; i++ ) {
-                            userIdsList.push( resp.items[i].id );
-                            addUser( resp.items[i].id );
+                    GPlusTranslator.userIdsList( error, status, response, function( uIdList ) {
+                        for ( var i = 0; i < uIdList.length; i++ ) {
+                            userIdsList.push( uIdList[i] );
+                            addUser( uIdList[i] );
                         }
                         
-                        if ( resp.totalItems <= userIdsList.length ) {
+                        if ( JSON.parse(response).totalItems <= userIdsList.length ) {
                             callback( userIdsList );
                         }
-                    } 
+                    });
                 });
             }
         },
@@ -159,38 +157,10 @@ var StorageManager = (function() {
                 initUsers();
                 
                 GPlus.getUserInfo( id, missingProps, function( error, status, response ) {
-                    if ( !error && status == 200 ) {
-                        var resp = JSON.parse(response),
-                              props = {};
-                        
-                        for ( var i = 0; i < missingProps.length; i++ ) {
-                            switch ( missingProps[i] ) {
-                                case 'firstName':
-                                    props[missingProps[i]] = ( resp.name != undefined ? resp.name.givenName : undefined );
-                                    break;
-                                case 'lastName':
-                                    props[missingProps[i]] = ( resp.name != undefined ? resp.name.familyName : undefined );
-                                    break;
-                                case 'photo':
-                                    props[missingProps[i]] = ( resp.image != undefined ? resp.image.url : undefined );
-                                    break;
-                                case 'age':
-                                    props[missingProps[i]] = ( resp.ageRange != undefined ? resp.ageRange.min : undefined );
-                                    break;
-                                case 'sex':
-                                    props[missingProps[i]] = ( resp.gender != undefined ? resp.gender : undefined );
-                                    break;
-                                case 'city':
-                                    props[missingProps[i]] = ( resp.placesLived != undefined ? resp.placesLived[0].value : undefined );
-                                    break;
-                                default: break;
-                            }
-                        }
-                        
-                        addUserProperties( id, props, true );
-                        
-                        callback( getUser( id ) );
-                    }
+                    GPlusTranslator.userInfo( error, status, response, missingProps, function( properties ) {                    
+                        addUserProperties( id, properties, true );
+                        callback( getUser( id ) );                        
+                    });
                 });
             }
         },

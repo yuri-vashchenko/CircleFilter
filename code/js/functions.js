@@ -55,7 +55,19 @@ function closeWindow() {
 }
 
 function loadClasses() {
-    var classesList = ['User', 'UsersList', 'Result', 'GPlus', 'StorageManager', 'FilterOption', 'FilterOptionsLoader', 'Filter', 'FilterSet', 'Main'];          
+    var classesList = [
+        'User',
+        'UsersList',
+        'Result',
+        'GPlus',
+        'GPlusTranslator',
+        'StorageManager',
+        'FilterOption',
+        'FilterOptionsLoader',
+        'Filter',
+        'FilterSet',
+        'Main'
+    ];          
     
     for ( var i = 0; i < classesList.length; i++ ) {
         var script = document.createElement( 'script' );
