@@ -15,22 +15,73 @@ var StorageManager = (function() {
         return ( localStorage.users ? ( 3 + ( localStorage.users.length / 512 ) ) : 0 );
     }
     
-    function getCurrentTime() {
-        var d=new Date(),
-              day=d.getDate(),
-              month=d.getMonth(),
-              year=d.getFullYear(),
-              h = d.getHours(),
-              m = d.getMinutes();
+    function getCurrentDate() {        
+        return convertDate( new Date() );
+    }
+    
+    function convertDate( date ) {
+        var day = date.getDate(),
+              month = date.getMonth(),
+              year = date.getFullYear(),
+              h = date.getHours(),
+              m = date.getMinutes();
         
         return day + '.' + month + '.' + year + ' ' + h + ':' + m;
     }
     
-    function compareDates( d1, d2 ) {
-        if ( d1 == d2 ) {
-            return 0;
+    /* 
+     * @return  
+     * -1 if date1 < date 2
+     * 0 if date1 = date 2
+     * 1 if date1 > date 2    
+    */
+    function compareDates( date1, date2 ) {
+        var day1 = date1.substring(0,date1.indexOf('.')),
+              temp = date1.substring(date1.indexOf('.')+1),
+              month1 = temp.substring(0,temp.indexOf('.')),
+              year1 = temp.substring(temp.indexOf('.')+1, temp.indexOf(' ')),
+              hour1 = temp.substring(temp.indexOf(' ')+1,temp.indexOf(':')),
+              min1 = temp.substring(temp.indexOf(':')+1);
+        
+        temp = date2.substring(date2.indexOf('.')+1);
+        
+        var day2 = date2.substring(0,date2.indexOf('.')),        
+              month2 = temp.substring(0,temp.indexOf('.')),
+              year2 = temp.substring(temp.indexOf('.')+1, temp.indexOf(' ')),
+              hour2 = temp.substring(temp.indexOf(' ')+1,temp.indexOf(':')),
+              min2 = temp.substring(temp.indexOf(':')+1);
+	
+        if ( year1 < year2 ) {
+            return -1;
+        } else if ( year1 > year2 ) {
+            return 1;
+        }	
+		
+        if ( month1 < month2 ) {
+            return -1;
+        } else if ( month1 > month2 ) {
+            return 1;
+        }	
+		
+        if ( day1 < day2 ) {
+            return -1;
+        } else if ( day1 > day2 ) {
+            return 1;
         }
-        return -1;
+
+        if ( hour1 < hour2 ) {
+            return -1;
+        } else if ( hour1 > hour2 ) {
+            return 1;
+        }
+
+        if ( min1 < min2 ) {
+            return -1;
+        } else if ( min1 > min2 ) {
+            return 1;
+        }
+        
+        return 0;
     }
     
     function initUsers() {
@@ -65,7 +116,7 @@ var StorageManager = (function() {
         
         for ( property in propArray ) {
             if ( propArray[property] != undefined && ( users[userIndex][property] == undefined || override ) ) {
-                users[userIndex][property] = { 'value': propArray[property], 'date': getCurrentTime() };
+                users[userIndex][property] = { 'value': propArray[property], 'date': getCurrentDate() };
             }
         }
         
@@ -92,7 +143,7 @@ var StorageManager = (function() {
         for ( var i = 0; i < propList.length; i++ ) {
             if ( users[userIndex][propList[i]] == undefined 
                 || ( users[userIndex][propList[i]] != undefined 
-                    && expiredDate != undefined && compareDates( users[userIndex][propList[i]].date, expiredDate ) < 0 ) ) {
+                    && expiredDate != undefined && compareDates( users[userIndex][propList[i]].date, expiredDate ) > 0 ) ) {
                     
                 missingProps.push( propList[i] );
             }
