@@ -82,5 +82,11 @@
     },
     "stop": {
         "message": "Stop"
+    },
+    "firstNav": {
+        "message": "|<<"
+    },
+    "lastNav": {
+        "message": ">>|"
     }
 }

@@ -82,5 +82,11 @@
     },
     "stop": {
         "message": "Остановить"
+    },
+    "firstNav": {
+        "message": "|<<"
+    },
+    "lastNav": {
+        "message": ">>|"
     }
 }

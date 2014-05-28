@@ -3,7 +3,8 @@ function Result( block ) {
         "DEFAULT" : 1,
         "EMPTY" : 2,
         "FULL" : 3
-    }
+    }, perPage = 5;
+    
     
     this.block = block;
     $( this.block ).addClass( 'result' );
@@ -11,37 +12,29 @@ function Result( block ) {
     this.append = function( user ) {
         if ( !user ) return;
         
-        if ( this.usersList.addUser( user ) != false ) {
+        if ( this.state != STATE.FULL ) {
+            this.block.innerHTML = '';
+            this.block.appendChild( this.usersList.show() );
+            var uList = this.usersList;
+            
+            $( this.block.querySelector( '.pagesNav' ) ).pageFun({
+                count: 1,
+                start: 1,
+                display: 10,
+                border: true,
+                mouse: 'press',
+                onChange: function( page ) { uList.updateUsersOnPage( page ); }
+            });
+        }
+            
+        if ( this.usersList.addUser( user ) != false ) {       
             $( this.block ).removeClass( 'text' );
-            switch ( this.state ) {
-                case STATE.FULL : {
-                    this.block.querySelector( 'ul' ).appendChild( user.show() );
-                    break;
-                }
-                
-                default : {
-                    this.block.innerHTML = '';
-                    this.block.appendChild( this.usersList.show() );
-                    this.state = STATE.FULL;
-                    break;
-                }                
-            }
+            this.state = STATE.FULL;
         };
     }
     
-    this.update = function( usersList ) {
-        if ( usersList.length > 0 ) {
-            this.block.innerHTML = '';
-            this.state = STATE.FULL;
-            this.block.appendChild( usersList.show() );
-        } else {
-            this.state = STATE.EMPTY;
-            this.block.innerHTML = getMessage( 'emptyResultBlock' );
-        }
-    }
-    
     this.clear = function() {
-        this.usersList = new UsersList();
+        this.usersList = new UsersList( perPage );
         this.state = STATE.EMPTY;
         this.block.innerHTML = getMessage( 'emptyResultBlock' );
         $( this.block ).addClass( 'text' );
@@ -59,7 +52,7 @@ function Result( block ) {
     }
     
     this.reset = function() {
-        this.usersList = new UsersList();
+        this.usersList = new UsersList( perPage );
         this.state = STATE.DEFAULT;
         this.block.innerHTML = getMessage( 'defaultResultBlockContent' );
         $( this.block ).addClass( 'text' );

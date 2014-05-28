@@ -16,6 +16,6 @@ function Main() {
     });
     
     var filter = new Filter( document.querySelector('.left-sidebar'), document.querySelector( '.content>div' ) );
-};
+}
 
 window.onload = Main;
