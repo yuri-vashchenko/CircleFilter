@@ -27,10 +27,53 @@ var StorageManager = (function() {
     }
     
     function compareDates( d1, d2 ) {
-        if ( d1 == d2 ) {
-            return 0;
-        }
+    dd1 = d1.substring(0,d1.indexOf('.')); temp = d1.substring(d1.indexOf('.')+1);
+    mm1 = temp.substring(0,temp.indexOf('.'));
+    yy1 = temp.substring(temp.indexOf('.')+1, temp.indexOf(' '));
+    hour1 = temp.substring(temp.indexOf(' ')+1,d1.indexOf(':'));
+    min1 = temp.substring(temp.indexOf(':'));
+	
+    dd2 = d2.substring(0,d2.indexOf('.')); temp = d2.substring(d2.indexOf('.')+1);
+    mm2 = temp.substring(0,temp.indexOf('.'));
+    yy2 = temp.substring(temp.indexOf('.')+1, temp.indexOf(' '));
+    hour2 = temp.substring(temp.indexOf(' ')+1,d2.indexOf(':'));
+    min2 = temp.substring(temp.indexOf(':'));
+	
+    if ( yy1 < yy2 ) {
+    return -1;
+    }
+    else if ( yy1 > yy2 ) {
+    return 1;
+    }	
+		
+        if ( mm1 < mm2 ) {
         return -1;
+        }
+        else if ( mm1 > mm2 ) {
+        return 1;
+        }	
+		
+            if ( dd1 < dd2 ) {
+            return -1;
+            }
+            else if ( dd1 > dd2 ) {
+            return 1;
+            }
+			
+                if ( hour1 < hour2 ) {
+                return -1;
+                }
+                else if ( hour1 > hour2 ) {
+                return 1;
+                }
+				
+                    if ( min1 < min2 ) {
+                    return -1;
+                    }
+                    else if ( min1 > min2 ) {
+                    return 1;
+                    }
+	return 0;
     }
     
     function initUsers() {
@@ -134,16 +177,18 @@ var StorageManager = (function() {
                 initUsers();
                 
                 GPlus.getUserIdsList( function( error, status, response ) {
-                    GPlusTranslator.userIdsList( error, status, response, function( uIdList ) {
-                        for ( var i = 0; i < uIdList.length; i++ ) {
-                            userIdsList.push( uIdList[i] );
-                            addUser( uIdList[i] );
+                    if ( !error && status == 200 ) {
+                        var resp = JSON.parse(response);
+                        
+                        for ( var i = 0; i < resp.items.length; i++ ) {
+                            userIdsList.push( resp.items[i].id );
+                            addUser( resp.items[i].id );
                         }
                         
-                        if ( JSON.parse(response).totalItems <= userIdsList.length ) {
+                        if ( resp.totalItems <= userIdsList.length ) {
                             callback( userIdsList );
                         }
-                    });
+                    } 
                 });
             }
         },
@@ -157,10 +202,38 @@ var StorageManager = (function() {
                 initUsers();
                 
                 GPlus.getUserInfo( id, missingProps, function( error, status, response ) {
-                    GPlusTranslator.userInfo( error, status, response, missingProps, function( properties ) {                    
-                        addUserProperties( id, properties, true );
-                        callback( getUser( id ) );                        
-                    });
+                    if ( !error && status == 200 ) {
+                        var resp = JSON.parse(response),
+                              props = {};
+                        
+                        for ( var i = 0; i < missingProps.length; i++ ) {
+                            switch ( missingProps[i] ) {
+                                case 'firstName':
+                                    props[missingProps[i]] = ( resp.name != undefined ? resp.name.givenName : undefined );
+                                    break;
+                                case 'lastName':
+                                    props[missingProps[i]] = ( resp.name != undefined ? resp.name.familyName : undefined );
+                                    break;
+                                case 'photo':
+                                    props[missingProps[i]] = ( resp.image != undefined ? resp.image.url : undefined );
+                                    break;
+                                case 'age':
+                                    props[missingProps[i]] = ( resp.ageRange != undefined ? resp.ageRange.min : undefined );
+                                    break;
+                                case 'sex':
+                                    props[missingProps[i]] = ( resp.gender != undefined ? resp.gender : undefined );
+                                    break;
+                                case 'city':
+                                    props[missingProps[i]] = ( resp.placesLived != undefined ? resp.placesLived[0].value : undefined );
+                                    break;
+                                default: break;
+                            }
+                        }
+                        
+                        addUserProperties( id, props, true );
+                        
+                        callback( getUser( id ) );
+                    }
                 });
             }
         },
