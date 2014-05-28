@@ -23,7 +23,7 @@
             sexBlock.appendChild( sexLabel );
             sexBlock.appendChild( sex );
                   
-            return sex;
+            return sexBlock;
         }(),
         function( configurationBlock ) {
             var configuration = {};
