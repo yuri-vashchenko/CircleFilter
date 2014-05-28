@@ -4,41 +4,37 @@
     <title>CircleFilter</title>
     <link rel = "stylesheet" type = "text/css" href = "css/bootstrap.min.css">
     <link rel = "stylesheet" type = "text/css" href = "css/stylesheet.css">
-    <script type = "text/javascript" src = "js/JQuery/jquery.js"></script>
-    <script type = "text/javascript" src = "js/general.js"></script>
-    <script src="https://apis.google.com/js/client:plus.js"></script>  
+    <script type = "text/javascript" src = "js/jquery.js"></script>
+    <script type = "text/javascript" src = "js/jquery.simplemodal-1.4.4.js"></script>
+    <script type = "text/javascript" src = "js/bootstrap.min.js"></script>
+    <script type = "text/javascript" src = "js/functions.js"></script>    
 </head>
 <body>
-    <div class = "header">
-        <img src = "icons/logo64.png">
-  
-        <div class = "account">
-            <div id="gConnect">
-                <button class="g-signin"
-                    data-scope="https://www.googleapis.com/auth/plus.login"
-                    data-requestvisibleactions="http://schemas.google.com/AddActivity"
-                    data-clientId="108705996217-lf35tgsg3r8hi6n9cgos1mpjo8ncsa2h.apps.googleusercontent.com"
-                    data-callback="onSignInCallback"
-                    data-theme="dark"
-                    data-cookiepolicy="single_host_origin">
-                </button>
+    <div class="wrapper">
+        <div class = "header">
+            <img src = "icons/logo64.png">
+      
+            <div id = "account">
+                <span id="user-email"></span>
+                <button id="revoke"></button>
             </div>
-            <button id="disconnect" style="display:none">Выйти</button>
-        </div>
-        <div class = "nav">
-            <a href = '#' class='button' id = "help"><img class='but-icon' src='images/help.png'/>Помощь</a>
-            <a href = '#' class='button' id = "config"><img class='but-icon' src='images/config.png'/>Настройки</a>
-        </div>
-    </div>
-    <div id = "content">
-        <div id = "left-block"></div>
-        <div id = "right-block">
-            <div id="authOps" style="display:none">
-                <div id="visiblePeople"></div>
+            
+            <div class = "nav">
+                <a href = '#' class='button' id = "help"><img class='but-icon' src='images/help.png'/><span></span></a>
+                <a href = '#' class='button' id = "config"><img class='but-icon' src='images/config.png'/><span></span></a>
             </div>
         </div>
+        
+        <div class="middle">
+            <div class = "container">
+                <div class = "content">
+                    <b id = "loading"></b>
+                    <div></div>
+                </div>
+                <div id = "testzone"></div>
+            </div>
+            <div class = "left-sidebar"></div>
+        </div>
     </div>
-    <div id = "footer"></div>
 </body>
-    <script type="text/javascript" src="js/gplus.js" ></script>
 </html>
