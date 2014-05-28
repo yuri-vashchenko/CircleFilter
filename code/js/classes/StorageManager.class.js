@@ -36,19 +36,20 @@ var StorageManager = (function() {
      * 1 if date1 > date 2    
     */
     function compareDates( date1, date2 ) {
-        day1 = date1.substring(0,date1.indexOf('.'));
-        temp = date1.substring(date1.indexOf('.')+1);
-        month1 = temp.substring(0,temp.indexOf('.'));
-        year1 = temp.substring(temp.indexOf('.')+1, temp.indexOf(' '));
-        hour1 = temp.substring(temp.indexOf(' ')+1,temp.indexOf(':'));
-        min1 = temp.substring(temp.indexOf(':')+1);
+        var day1 = date1.substring(0,date1.indexOf('.')),
+              temp = date1.substring(date1.indexOf('.')+1),
+              month1 = temp.substring(0,temp.indexOf('.')),
+              year1 = temp.substring(temp.indexOf('.')+1, temp.indexOf(' ')),
+              hour1 = temp.substring(temp.indexOf(' ')+1,temp.indexOf(':')),
+              min1 = temp.substring(temp.indexOf(':')+1);
         
-        day2 = date2.substring(0,date2.indexOf('.')); 
         temp = date2.substring(date2.indexOf('.')+1);
-        month2 = temp.substring(0,temp.indexOf('.'));
-        year2 = temp.substring(temp.indexOf('.')+1, temp.indexOf(' '));
-        hour2 = temp.substring(temp.indexOf(' ')+1,temp.indexOf(':'));
-        min2 = temp.substring(temp.indexOf(':')+1);
+        
+        var day2 = date2.substring(0,date2.indexOf('.')),        
+              month2 = temp.substring(0,temp.indexOf('.')),
+              year2 = temp.substring(temp.indexOf('.')+1, temp.indexOf(' ')),
+              hour2 = temp.substring(temp.indexOf(' ')+1,temp.indexOf(':')),
+              min2 = temp.substring(temp.indexOf(':')+1);
 	
         if ( year1 < year2 ) {
             return -1;
@@ -142,7 +143,7 @@ var StorageManager = (function() {
         for ( var i = 0; i < propList.length; i++ ) {
             if ( users[userIndex][propList[i]] == undefined 
                 || ( users[userIndex][propList[i]] != undefined 
-                    && expiredDate != undefined && compareDates( expiredDate, users[userIndex][propList[i]].date ) < 0 ) ) {
+                    && expiredDate != undefined && compareDates( users[userIndex][propList[i]].date, expiredDate ) > 0 ) ) {
                     
                 missingProps.push( propList[i] );
             }
@@ -184,18 +185,16 @@ var StorageManager = (function() {
                 initUsers();
                 
                 GPlus.getUserIdsList( function( error, status, response ) {
-                    if ( !error && status == 200 ) {
-                        var resp = JSON.parse(response);
-                        
-                        for ( var i = 0; i < resp.items.length; i++ ) {
-                            userIdsList.push( resp.items[i].id );
-                            addUser( resp.items[i].id );
+                    GPlusTranslator.userIdsList( error, status, response, function( uIdList ) {
+                        for ( var i = 0; i < uIdList.length; i++ ) {
+                            userIdsList.push( uIdList[i] );
+                            addUser( uIdList[i] );
                         }
                         
-                        if ( resp.totalItems <= userIdsList.length ) {
+                        if ( JSON.parse(response).totalItems <= userIdsList.length ) {
                             callback( userIdsList );
                         }
-                    } 
+                    });
                 });
             }
         },
@@ -209,38 +208,10 @@ var StorageManager = (function() {
                 initUsers();
                 
                 GPlus.getUserInfo( id, missingProps, function( error, status, response ) {
-                    if ( !error && status == 200 ) {
-                        var resp = JSON.parse(response),
-                              props = {};
-                        
-                        for ( var i = 0; i < missingProps.length; i++ ) {
-                            switch ( missingProps[i] ) {
-                                case 'firstName':
-                                    props[missingProps[i]] = ( resp.name != undefined ? resp.name.givenName : undefined );
-                                    break;
-                                case 'lastName':
-                                    props[missingProps[i]] = ( resp.name != undefined ? resp.name.familyName : undefined );
-                                    break;
-                                case 'photo':
-                                    props[missingProps[i]] = ( resp.image != undefined ? resp.image.url : undefined );
-                                    break;
-                                case 'age':
-                                    props[missingProps[i]] = ( resp.ageRange != undefined ? resp.ageRange.min : undefined );
-                                    break;
-                                case 'sex':
-                                    props[missingProps[i]] = ( resp.gender != undefined ? resp.gender : undefined );
-                                    break;
-                                case 'city':
-                                    props[missingProps[i]] = ( resp.placesLived != undefined ? resp.placesLived[0].value : undefined );
-                                    break;
-                                default: break;
-                            }
-                        }
-                        
-                        addUserProperties( id, props, true );
-                        
-                        callback( getUser( id ) );
-                    }
+                    GPlusTranslator.userInfo( error, status, response, missingProps, function( properties ) {                    
+                        addUserProperties( id, properties, true );
+                        callback( getUser( id ) );                        
+                    });
                 });
             }
         },
