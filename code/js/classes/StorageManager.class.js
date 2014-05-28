@@ -274,6 +274,10 @@ var StorageManager = (function() {
             return expiredInfo;
         },
         
+        clearUsers: function() {
+            return clearUsers();
+        },
+        
         getStorageSize: function() {
             return getStorageSize();
         }
