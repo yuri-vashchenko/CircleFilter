@@ -1,6 +1,18 @@
 var StorageManager = (function() {
+    function writeProperty( property, value ) {
+        localStorage.setItem( property, JSON.stringify( value ) );
+    }
+
+    function readProperty( property ) {
+        return JSON.parse( localStorage.getItem( property ) );
+    }
+
+    function removeProperty( property ) {
+        localStorage.removeItem( property ); 
+    }
+    
     function getStorageSize() {
-        return ( localStorage.users ? ( 3 + ( ( localStorage.users.length * 16 ) / ( 8 * 1024 ) ) ) : 0 );
+        return ( localStorage.users ? ( 3 + ( localStorage.users.length / 512 ) ) : 0 );
     }
     
     function getCurrentTime() {
@@ -12,6 +24,13 @@ var StorageManager = (function() {
               m = d.getMinutes();
         
         return day + '.' + month + '.' + year + ' ' + h + ':' + m;
+    }
+    
+    function compareDates( d1, d2 ) {
+        if ( d1 == d2 ) {
+            return 0;
+        }
+        return -1;
     }
     
     function initUsers() {
@@ -65,13 +84,16 @@ var StorageManager = (function() {
         return -1;
     }
     
-    function checkProperties( id, propList ) {
+    function checkProperties( id, propList, expiredDate ) {
         var userIndex = addUser( id ),
               users = readProperty( 'users' ),
               missingProps = new Array();
         
         for ( var i = 0; i < propList.length; i++ ) {
-            if ( users[userIndex][propList[i]] == undefined ) {
+            if ( users[userIndex][propList[i]] == undefined 
+                || ( users[userIndex][propList[i]] != undefined 
+                    && expiredDate != undefined && compareDates( users[userIndex][propList[i]].date, expiredDate ) < 0 ) ) {
+                    
                 missingProps.push( propList[i] );
             }
         }
@@ -127,6 +149,7 @@ var StorageManager = (function() {
                 });
             }
         },
+        
         getUserInfo: function( id, propsList, callback ) {
             var user = getUser( id ),
                   missingProps = checkProperties( id, propsList );
@@ -171,13 +194,11 @@ var StorageManager = (function() {
                 });
             }
         },
+        
         showStorageUsersFullInfo: function() {
             var table = document.createElement( 'table' ),
                   sizeSpan = document.createElement( 'span' ),
                   usersArray = readProperty( 'users' );
-            
-            sizeSpan.textContent = getStorageSize() + ' kBytes';
-            table.appendChild( sizeSpan );
             
             if ( usersArray ) {
                 var tr = document.createElement( 'tr' ),
@@ -200,7 +221,7 @@ var StorageManager = (function() {
                     
                     for ( var j = 1; j < headers.length; j++ ) {
                         td = document.createElement( 'td' );
-                        td.textContent = ( usersArray[i][headers[j]] != undefined ? usersArray[i][headers[j]].value : '' );
+                        td.textContent = ( usersArray[i][headers[j]] != undefined ? usersArray[i][headers[j]].value + ' : ' + usersArray[i][headers[j]].date : '' );
                         tr.appendChild( td );
                     }
                     table.appendChild( tr );
@@ -209,20 +230,52 @@ var StorageManager = (function() {
             
             return table;
         },
+        
+        getExpiredInfo: function( userIdsList, filterOptionList, expiredDate ) {
+            var expiredInfo = new Array(),
+                  uidList = userIdsList.clone(),
+                  userId, foReq;
+            
+            while ( userId = uidList.shift() ) {
+                var user = { id: userId, expiredFileds: new Array() },
+                      foList = filterOptionList.clone()
+                
+                while ( foReq = foList.shift() ) {                    
+                    foReq = foReq.getRequiredUserFields();
+                    
+                    user.expiredFileds = unionArrays( user.expiredFileds, checkProperties( user.id, foReq, expiredDate ) );
+                    
+                    function unionArrays( arr1, arr2 ) {
+                        
+                        var temp = arr1.concat( arr2 ),
+                              result = new Array();
+                              
+                        temp.sort();
+                        
+                        if ( temp.length ) {
+                            result.push( temp.shift() ); 
+                        }
+                        
+                        while ( currentElement = temp.shift() ) {
+                            if ( currentElement != result[result.length - 1] ) {
+                                result.push( currentElement );
+                            }
+                        }
+                        
+                        return result;
+                    }
+                }
+                
+                if ( user.expiredFileds.length ) {
+                    expiredInfo.push( user );
+                }
+            }
+            
+            return expiredInfo;
+        },
+        
         getStorageSize: function() {
             return getStorageSize();
         }
     }
 })();
-
-function writeProperty( property, value ) {
-    localStorage.setItem( property, JSON.stringify( value ) );
-}
-
-function readProperty( property ) {
-    return JSON.parse( localStorage.getItem( property ) );
-}
-
-function removeProperty( property ) {
-    localStorage.removeItem( property ); 
-}
