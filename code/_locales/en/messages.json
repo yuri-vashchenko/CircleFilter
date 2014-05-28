@@ -89,6 +89,9 @@
     "lastNav": {
         "message": ">>|"
     },
+    "filterBySex": {
+        "message": "by Sex"
+    },
     "sex": {
         "message": "Sex"
     },
