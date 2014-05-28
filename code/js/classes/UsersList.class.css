@@ -5,3 +5,55 @@ ul.usersList {
 ul.usersList li {
     display: inline;
 }
+
+/* pages by BochkarevAS */
+.paginate  {
+    height: 34px;
+    position: relative;
+    color: #a5a5a5;
+    font-size: small;   
+	width: 100%;
+}
+
+.paginate a  {/*Как выглядят цифры*/
+    line-height: 15px;
+    height: 18px;
+    cursor: pointer;
+    padding: 2px 5px;
+    margin: 2px;
+    float: left;
+}
+
+.pageControlBack  {
+	position: absolute;
+	left: 0px;
+}
+
+.pagControlFront  {
+	position: absolute;
+	top: 0px;
+}
+
+ul.pages  {/*Распологаю списк(список цифор)*/
+    float: left;
+    list-style-type: none;
+    margin: 0px 0px 0px 0px;
+    padding: 0px;
+}
+
+ul.pages li  {/*Отоброжаю длину списка(список цифор)*/
+    display: inline;
+    float: left;
+    padding: 0px;
+    margin: 0px;
+}
+
+span.pagCurrent  { /*Что будет происходить с цифрой при нажатии*/
+    cursor: default;
+    font-weight: normal;
+    line-height: 15px;
+    height: 18px;
+    padding: 2px 5px;
+    margin: 2px;
+    float: left;
+}
