@@ -88,5 +88,17 @@
     },
     "lastNav": {
         "message": ">>|"
+    },
+    "filterBySex": {
+        "message": "по Полу"
+    },
+    "sex": {
+        "message": "Пол"
+    },
+    "male": {
+        "message": "Мужской"
+    },
+    "female": {
+        "message": "Женский"
     }
 }

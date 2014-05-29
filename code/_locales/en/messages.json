@@ -88,5 +88,17 @@
     },
     "lastNav": {
         "message": ">>|"
+    },
+    "filterBySex": {
+        "message": "by Sex"
+    },
+    "sex": {
+        "message": "Sex"
+    },
+    "male": {
+        "message": "Male"
+    },
+    "female": {
+        "message": "Female"
     }
 }
