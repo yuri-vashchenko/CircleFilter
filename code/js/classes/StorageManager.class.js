@@ -109,13 +109,18 @@ var StorageManager = (function() {
     }
        
     /* @param propArray { property1: value1, property2: value2 ... } */
-    function addUserProperties( id, propArray, override ) {
+    function addUserProperties( id, propArray, override, expiredDate ) {
     
         var userIndex = addUser( id ),
               users = readProperty( 'users' );       
         
         for ( property in propArray ) {
-            if ( propArray[property] != undefined && ( users[userIndex][property] == undefined || override ) ) {
+            if ( propArray[property] != undefined 
+                && ( users[userIndex][property] == undefined
+                    || ( override && expiredDate == undefined )
+                    || ( override && compareDates( users[userIndex][property].date, expiredDate ) > 0 )
+                    ) 
+               ) {
                 users[userIndex][property] = { 'value': propArray[property], 'date': getCurrentDate() };
             }
         }

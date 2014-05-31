@@ -28,7 +28,22 @@ function showDropdownBlock( title, contentBlock, state ) {
 
     return dropdownBlock;
 }
+
+function writeStringToFile( string, fileName ) {
+    window.webkitRequestFileSystem( window.TEMPORARY, string.length * 16 , function( fs ) {
+        fs.root.getFile( fileName, { create: true }, function( fileEntry ) {
+            fileEntry.createWriter( function( fileWriter ) {
+            
+                fileWriter.addEventListener( "writeend", function() {
+                    location.href = fileEntry.toURL();
+                }, false );
     
+                fileWriter.write( new Blob( [string] ) );
+            }, function() {});
+        }, function() {});
+    }, function() {});
+}
+
 function getMessage( label ) {
     if ( label == null ) {
         return 'undefined';
