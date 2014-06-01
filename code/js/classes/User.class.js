@@ -1,4 +1,4 @@
-function User( id, firstName, lastName, photo, age, sex, city ) {
+function User( id, firstName, lastName, photo, age, sex, city, circles ) {
     this.id = id;
     this.firstName = firstName;
     this.lastName = lastName;
@@ -6,6 +6,7 @@ function User( id, firstName, lastName, photo, age, sex, city ) {
     this.age = age;
     this.sex = sex;
     this.city = city;
+    this.circles = circles;
     
     this.show = function() {
         var userBlock = document.createElement( 'div' ),

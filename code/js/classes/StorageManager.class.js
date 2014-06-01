@@ -37,18 +37,24 @@ var StorageManager = (function() {
         return day + '.' + month + '.' + year + ' ' + h + ':' + m;
     }
     
-	function uncouplePropertiesList( missingProps ) {
-		var circlesPropsArray = [];
-		var usersPropsArray = [];
+	function uncouplePropertiesList( properties ) {
+		var circlesPropsArray = [],
+		      usersPropsArray = [];
+              
 		for ( var i = 0; i < properties.length; i++ ) {
                 switch ( properties[i] ) {
                     case 'circles':
                         circlesPropsArray.push(properties[i]);
                         break;
-                    default: usersPropsArray.push(properties[i]); break;
+                    default: 
+                        usersPropsArray.push(properties[i]);
                 }
-            }
-		return { circlesProps: circlesPropsArray, usersProps: usersPropsArray };
+        }
+        
+		return { 
+            circlesProps: circlesPropsArray, 
+            usersProps: usersPropsArray 
+        };
 	}	
     /* 
      * @return  
@@ -236,7 +242,8 @@ var StorageManager = (function() {
                 ( users[userIndex].photo != undefined ? users[userIndex].photo.value : null ),
                 ( users[userIndex].age != undefined ? users[userIndex].age.value : null ),
                 ( users[userIndex].sex != undefined ? users[userIndex].sex.value : null ),
-                ( users[userIndex].city != undefined ? users[userIndex].city.value : null )
+                ( users[userIndex].city != undefined ? users[userIndex].city.value : null ),
+                ( users[userIndex].circles != undefined ? users[userIndex].circles.value : [] )
             )
         }
     }
@@ -304,42 +311,49 @@ var StorageManager = (function() {
         },
         
         getUserInfo: function( id, propsList, callback ) {
+            initUsers();
+            
             var user = getUser( id ),
                   missingProps = checkUserProperties( id, propsList );
             if ( missingProps.length == 0 ) {
                 callback( user );
             } else {
-				missingProps = uncouplePropertiesList(missingProps);
-				
-                initUsers();
+				missingProps = uncouplePropertiesList(missingProps);    
                 
-                GPlus.getUserInfo( id, missingProps.usersProps, function( error, status, response ) {
-                    GPlusTranslator.userInfo( error, status, response, missingProps.usersProps, function( properties ) {                    
-                        addUserProperties( id, properties, true );
-                        callback( getUser( id ) );                        
+                var getUserInfoFunc = function( id, usersProps, callback ) {
+                    GPlus.getUserInfo( id, usersProps, function( error, status, response ) {
+                        GPlusTranslator.userInfo( error, status, response, usersProps, function( properties ) {                    
+                            addUserProperties( id, properties, true );
+                            callback( getUser( id ) );                        
+                        });
                     });
-                });
-				
-				/*GPlus.getCirclesAndUsersList( function( error, status, response ) {
-					GPlusTranslator.userInfoCircles( error, status, response, missingProps.circlesProps ,function( user ) {
-						addUserProperties( user.id, {circles: user.circles}, false);
-						callback( getUser( user.id ) );
-					});
-				});
-		});
-        });
-    });*/
+                };
+                
+                if ( missingProps.circlesProps.length > 0 ) {
+                    GPlus.getCirclesAndUsersList( function( error, status, response ) {
+                        GPlusTranslator.usersWithFetchedCirclesList( error, status, response, function( usersList ) {
+                            for ( var i = 0; i < usersList.length; i++ ) {
+                                addUserProperties( usersList[i].id, { circles: usersList[i].circles }, true);
+                            }                        
+                            
+                            getUserInfoFunc( id, missingProps.usersProps, callback );
+                            
+                        });
+                    });
+                } else {
+                    getUserInfoFunc( id, missingProps.usersProps, callback );
+                }
             }
         },
         
         getCircleInfo: function( id, callback ) {
+            initCircles();
+            
             var circle = getCircle( id );
-е            
+            
             if ( circle ) {
                 callback( circle );
             } else {
-                initCircles();
-                
                 GPlus.getCirclesList( function( error, status, response ) {
                     GPlusTranslator.circlesList( error, status, response, function( cList ) {
                         for ( var i = 0; i < cList.length; i++ ) {
@@ -365,7 +379,7 @@ var StorageManager = (function() {
             
             if ( usersArray ) {
                 var tr = document.createElement( 'tr' ),
-                      headers = ['id', 'firstName', 'lastName', 'photo', 'age', 'sex', 'city'];
+                      headers = ['id', 'firstName', 'lastName', 'photo', 'age', 'sex', 'city', 'circles'];
                 
                 for ( var i = 0; i < headers.length; i++ ) {
                     var th = document.createElement( 'th' );

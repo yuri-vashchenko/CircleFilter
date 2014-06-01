@@ -81,23 +81,7 @@ var GPlusTranslator = (function() {
             }
         },
 		
-		/*userInfoCircles: function( error, status, response, properties, callback ) {
-            if ( !error && status == 200 ) {
-              
-                for ( var i = 0; i < properties.length; i++ ) {
-                    switch ( properties[i] ) {
-                        case 'circles':
-                            usersWithFetchedCirclesList( error, status, response, callback );
-                            break;
-                        default: break;
-                    }
-					//тут нужно дописать - сделать алгоритм универсальным для всех полей
-                }
-				
-            }
-        },*/
-		
-		usersWithFetchedCirclesList: function( error, status, response, callback ){
+		usersWithFetchedCirclesList: function( error, status, response, callback ) {
 			var dirtyRes = parseDirtyJSON( response.substring( 4 ) ),
                   dirtyCirclesList = Array.isArray( dirtyRes ) ? dirtyRes[0] : dirtyRes,
 				  userList = [];
