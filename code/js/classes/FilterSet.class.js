@@ -1,7 +1,18 @@
 function FilterSet() {
     
-    this.filterOptionList = new Array();
+    this.toJSON = function() {
+        var string = '[';
+        
+        for ( var i = 0; i < this.filterOptionList.length; i++ ) {
+            string += this.filterOptionList[i].toJSON() + ( i != this.filterOptionList.length - 1 ? ',' : '' );
+        }
+        string += ']';
+        
+        return string;
+    }
     
+    this.filterOptionList = new Array();
+
     this.show = function() {
         var filterSetBlock = document.createElement( 'div' ),
               addBlock = document.createElement( 'div' ),
@@ -20,22 +31,15 @@ function FilterSet() {
             var dropdownList = showFilterOptionList(),
                   editInterfaceBlock = null,
                   index = null;
-                  
+            addIcon.src = 'images/trigger-down.png';      
                 
             $.modal( $( dropdownList ), { 
                 overlayClose : true,
                 position : [$( addBlock ).offset().top + $( addBlock ).outerHeight() - 1 - $( document ).scrollTop(), $( addBlock ).offset().left],
                 onOpen: function ( dialog ) {
                     dialog.overlay.fadeIn( 'fast' );
-<<<<<<< HEAD
-                    dialog.data.hide();
-                    dialog.container.slideDown( 'fast', function () {
-                        dialog.data.slideDown( 'fast' );	
-                    });
-=======
                     dialog.container.slideDown( 'fast' );
                     dialog.data.slideDown( 'fast' );
->>>>>>> master
                 },
                 onShow: function( dialog ) {
                     $( dropdownList.querySelectorAll( 'li' ) ).click( function() {
@@ -46,39 +50,6 @@ function FilterSet() {
                 onClose: function ( dialog ) {
                     dialog.data.slideUp( 'fast', function () {
                         dialog.container.slideUp( 'fast', function () {
-<<<<<<< HEAD
-                            dialog.overlay.fadeOut( 'fast', function () {
-                                $.modal.close();
-                                if ( index != null ) {
-                                    $.modal( $( editInterfaceBlock ), { 
-                                        overlayClose : true, 
-                                        position : [$( addBlock ).offset().top + $( addBlock ).outerHeight() - 1 - $( document ).scrollTop(), $( addBlock ).offset().left],
-                                        onOpen: function ( dialog ) {
-                                            dialog.overlay.fadeIn( 'fast' );
-                                            dialog.data.hide();
-                                            dialog.container.slideDown( 'fast', function () {
-                                                dialog.data.slideDown( 'fast' );	 
-                                            });
-                                        },
-                                        onClose: function ( dialog ) {
-                                            dialog.data.slideUp( 'fast', function () {
-                                                dialog.container.slideUp( 'fast', function () {
-                                                    dialog.overlay.fadeOut( 'fast', function () {
-                                                        var configuredFilterOption = filterOptionsList[index].show(),
-                                                              filterOptionBlock = showAddFilterOptionBlock( configuredFilterOption );
-                                                              
-                                                        filterSetBlock.insertBefore( filterOptionBlock, addBlock );                                        
-                                                        $.modal.close();
-                                                    });
-                                                });
-                                            });
-                                        }
-                                    });
-                                }
-                            });
-                        });
-                    });
-=======
                             dialog.overlay.fadeOut( 'fast' );
                             $.modal.close();
                             if ( index != null ) {
@@ -127,7 +98,6 @@ function FilterSet() {
                             }
                         }); 
                     }); 
->>>>>>> master
                 }
             });            
         });
