@@ -17,16 +17,25 @@
 }
 
 .close {
+    display: none;
     position: absolute;
     right: -16px;
     top: -16px;
-    opacity: 0.6;
+    opacity: 0.6 !important;
+}
+
+.filterSetBlock:hover .close {
+    display: block;
 }
 
 .close:hover {
-    opacity: 1;
+    display: block;
+    opacity: 1 !important;
 }
 
+.filterSetBlock:only-of-type:hover .close{
+    display: none;
+}
 .remove {
     position: absolute;
     right: 8px;

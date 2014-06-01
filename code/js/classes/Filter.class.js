@@ -1,12 +1,10 @@
 function Filter( filterBlock, resultBlock ) {
     this.result = new Result( resultBlock );
+    this.process = { id: null };
     
-    this.filterSetList = Array(); /* toSolve */
-    this.addFilterSet = function( filterSet ) { /* toSolve */
-        this.filterSetList.push( filterSet );
-    }
+    this.filterSetList = new Array();  
     
-    this.filterBlock = filterBlock;    
+    this.filterBlock = filterBlock;
     
     $( this.filterBlock ).addClass( 'filter' );
          
@@ -38,7 +36,10 @@ function Filter( filterBlock, resultBlock ) {
         topGroupBlock.appendChild( exportButton );
         
         exportButton.addEventListener( 'click', function() {
-            console.log( filter.filterSetList );
+            $( '#testzone' ).empty();
+            $( '#testzone' )[0].appendChild( StorageManager.showStorageUsersFullInfo() );
+            $( '#testzone table' ).addClass( 'table' );
+            $( '#testzone table' ).addClass( 'table-bordered' );
         });
         
         importIcon.src = 'images/load.png';    
@@ -53,21 +54,56 @@ function Filter( filterBlock, resultBlock ) {
         clearButton.textContent = getMessage( 'clear' );
         bottomGroupBlock.appendChild( clearButton );
         
+        clearButton.addEventListener( 'click', function() {
+            var parentContent = filter.filterBlock.querySelector( '.formula' ).parentElement;
+            
+            filter.filterSetList = new Array();            
+            parentContent.querySelector( '.formula' ).remove();
+            parentContent.insertBefore( showFormulaBlock( filter ), parentContent.querySelector( '.control' ) );
+        });
+        
         applyButton.textContent = getMessage( 'apply' );
         bottomGroupBlock.appendChild( applyButton );
         
         applyButton.addEventListener( 'click', function() {
-            filter.result.reset();
-            GPlus.getUsersList( function( error, status, response ) {
-                if ( !error && status == 200 ) {
-                    var users = JSON.parse(response).items;
-                    for ( var i = 0; i < users.length; i++ ) {
-                        filter.result.append( new User( users[i].id, users[i].displayName, "", users[i].image.url ) );
+            if ( filter.process.id == null ) {
+                startProcessing( filter, applyButton, function() {
+                    var filterSetList = filter.filterSetList.clone();
+                    applyFilterSetIteration( 
+                        filterSetList, 
+                        function( userId ) {
+                            StorageManager.getUserInfo( userId, User.propertiesForShow, function( user ) {
+                                filter.result.append( user );
+                            });
+                        }, 
+                        function() { 
+                            stopProcessing( filter, applyButton );
+                        },
+                        filter.process
+                    );
+                    
+                    function applyFilterSetIteration( filterSetList, callback, onSuccess, filterProcess ) {
+                        if ( !filterSetList.length || filterProcess.id == null ) {
+                            onSuccess();
+                        } else {
+                            filterSetList.shift().apply( 
+                                callback,
+                                
+                                function() {
+                                    applyFilterSetIteration( filterSetList, callback, onSuccess, filterProcess )
+                                }, 
+                                filterProcess
+                            );
+                        }
                     }
-                }
-            }); 
+                } );
+            } else {
+                clearTimeout( filter.process.id );
+                stopProcessing( filter, applyButton );
+            }
+            
         });        
-        
+
         controlBlock.appendChild( bottomGroupBlock );
         $( bottomGroupBlock ).addClass( 'bottomGroupBlock' );
         
@@ -76,29 +112,38 @@ function Filter( filterBlock, resultBlock ) {
         return controlBlock;
     }
     
+    function startProcessing( filter, applyButton, processingFunc ) {
+        applyButton.textContent = getMessage( 'stop' );
+        filter.result.reset();
+        filter.result.processing();
+        filter.process.id = setTimeout( processingFunc, 0);
+    }
+    
+    function stopProcessing( filter, applyButton ) {
+        filter.process.id = null;
+        filter.result.finish(); 
+        applyButton.textContent = getMessage( 'apply' );
+    }
+    
     function showFormulaBlock( filter ) {
         var formulaBlock = document.createElement( 'div' ),
               addFilterSetButton = document.createElement( 'button' ),
               filterSet = new FilterSet();
               
-        filter.addFilterSet( filterSet );
-        
-        formulaBlock.appendChild( filterSet.show() );     
+        formulaBlock.appendChild( addFilterSet( filter, filterSet ) );     
         
         addFilterSetButton.textContent = getMessage( 'or' );
         formulaBlock.appendChild( addFilterSetButton );
         
-        addFilterSetButton.addEventListener( 'click', function() {
-            var filterSet = new FilterSet(),
+        addFilterSetButton.addEventListener( 'click', function() {            
+            var filterSet = new FilterSet();
                   orText = document.createElement( 'div' ); 
-                  
-            filter.addFilterSet( filterSet );
                    
             orText.textContent = getMessage( 'or' );
             $( orText ).addClass( 'orText' );
             
             formulaBlock.insertBefore( orText, this );
-            formulaBlock.insertBefore( filterSet.show(), this );
+            formulaBlock.insertBefore( addFilterSet( filter, filterSet ), this );
         });
         
         $( formulaBlock ).addClass( 'formula' );
@@ -148,5 +193,49 @@ function Filter( filterBlock, resultBlock ) {
         $( chooseActionBlock ).addClass( 'action' );
         
         return chooseActionBlock;
+    }
+        
+    function showRemoveFilterSetButton( filter ) {
+        var removeButton = document.createElement( 'a' ),
+              removeIcon = document.createElement( 'img' );
+              
+        removeIcon.src = 'images/cross-btn.png';   
+        removeButton.appendChild( removeIcon );             
+        $( removeButton ).addClass( 'close' );
+        $( removeButton ).addClass( 'but-icon' );      
+        
+        removeButton.addEventListener( 'click', function() {
+            var index = $( this.parentElement ).index() / 2;
+            
+            if ( this.parentElement.nextSibling.nodeName != 'BUTTON' ) {
+                this.parentElement.nextSibling.remove();
+                this.parentElement.remove();
+                removeFilterSet( filter, index );
+            } else  if ( this.parentElement.previousElementSibling ) {
+                this.parentElement.previousElementSibling.remove();
+                this.parentElement.remove();
+                removeFilterSet( filter, index );
+            }
+        });
+        
+        return removeButton;
+    }
+    
+    /*
+     * return filterSetBlock
+     */
+    function addFilterSet( filter, filterSet ) {
+        var filterSetBlock = filterSet.show(),
+              removeButton = showRemoveFilterSetButton( filter, filter.filterSetList.length )
+              
+        filterSetBlock.appendChild( removeButton );
+    
+        filter.filterSetList.push( filterSet );
+        
+        return filterSetBlock;
+    }
+    
+    function removeFilterSet( filter, index ) {
+        filter.filterSetList.splice( index, 1 );
     }
 }

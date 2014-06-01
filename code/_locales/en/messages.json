@@ -67,5 +67,38 @@
     },
     "exportToCsv": {
         "message": "exportToCsv"
+    },
+    "filterByAge": {
+        "message": "by Age"
+    },
+    "from": {
+        "message": "From"
+    },
+    "to": {
+        "message": "To"
+    },
+    "anyAge": {
+        "message": "Any Age"
+    },
+    "stop": {
+        "message": "Stop"
+    },
+    "firstNav": {
+        "message": "|<<"
+    },
+    "lastNav": {
+        "message": ">>|"
+    },
+    "filterBySex": {
+        "message": "by Sex"
+    },
+    "sex": {
+        "message": "Sex"
+    },
+    "male": {
+        "message": "Male"
+    },
+    "female": {
+        "message": "Female"
     }
 }

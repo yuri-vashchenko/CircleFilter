@@ -3,23 +3,13 @@ function Main() {
     var revoke_button = document.querySelector('#revoke');
     revoke_button.addEventListener( 'click', function() { GPlus.revokeToken( closeWindow ); } );
     
-    GPlus.getUserEmail( putUserEmail );
-    GPlus.testQuery( 'https://www.googleapis.com/plusDomains/v1/people/me/circles', print);
+    GPlus.getUserEmail( function( error, status, response ) {
+        GPlusTranslator.userEmail( error, status, response, function( email ) {
+            document.querySelector( '#user-email' ).textContent = email;
+        });
+    });
     
-    var filter = new Filter( document.querySelector('.left-sidebar'), document.querySelector( '.content' ) );
-    
-    function putUserEmail( error, status, response ) {
-        if ( !error && status == 200 ) {            
-            var userEmailBlock = document.querySelector('#user-email');
-            userEmailBlock.textContent = JSON.parse( response ).email;
-        }
-    }
-    
-    function print( error, status, response ) {
-        if ( !error && status == 200 ) {            
-            return console.log(JSON.parse( response ));
-        }
-    }    
-};
+    var filter = new Filter( document.querySelector('.left-sidebar'), document.querySelector( '.content>div' ) );
+}
 
 window.onload = Main;

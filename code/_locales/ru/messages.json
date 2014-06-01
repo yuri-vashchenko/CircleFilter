@@ -67,5 +67,38 @@
     },
     "exportToCsv": {
         "message": "В CSV"
+    },
+    "filterByAge": {
+        "message": "по Возрасту"
+    },
+    "from": {
+        "message": "От"
+    },
+    "to": {
+        "message": "До"
+    },
+    "anyAge": {
+        "message": "Любой возраст"
+    },
+    "stop": {
+        "message": "Остановить"
+    },
+    "firstNav": {
+        "message": "|<<"
+    },
+    "lastNav": {
+        "message": ">>|"
+    },
+    "filterBySex": {
+        "message": "по Полу"
+    },
+    "sex": {
+        "message": "Пол"
+    },
+    "male": {
+        "message": "Мужской"
+    },
+    "female": {
+        "message": "Женский"
     }
 }
