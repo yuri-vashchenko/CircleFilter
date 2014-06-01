@@ -100,5 +100,8 @@
     },
     "female": {
         "message": "Женский"
+    },
+    "importFromFile": {
+        "message": "Импорт из файла"
     }
 }

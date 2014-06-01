@@ -36,7 +36,7 @@ function Result( block ) {
     this.clear = function() {
         this.usersList = new UsersList( perPage );
         this.state = STATE.EMPTY;
-        this.block.innerHTML = getMessage( 'emptyResultBlock' );
+        this.block.appendChild( showText( getMessage( 'emptyResultBlock' ) ) );
         $( this.block ).addClass( 'text' );
     }
     
@@ -54,9 +54,27 @@ function Result( block ) {
     this.reset = function() {
         this.usersList = new UsersList( perPage );
         this.state = STATE.DEFAULT;
-        this.block.innerHTML = getMessage( 'defaultResultBlockContent' );
+        
+        
+        this.block.appendChild( showText( getMessage( 'defaultResultBlockContent' ) ) );
+        this.block.appendChild( showImportButton( this ) );
         $( this.block ).addClass( 'text' );
     }
     
     this.reset();
+    
+    function showImportButton( result ) {
+        var importButton = document.createElement( 'button' );
+        
+        importButton.textContent = getMessage( 'importFromFile' );
+        $( importButton ).addClass( 'importFromFile' );        
+        
+        return importButton;
+    }
+    
+    function showText( text ) {
+        var textBlock = document.createElement( 'span' );
+        textBlock.textContent = text;
+        return textBlock;
+    }
 }

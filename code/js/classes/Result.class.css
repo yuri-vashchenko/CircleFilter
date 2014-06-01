@@ -24,3 +24,8 @@
     height: 64px;
     width: 64px;
 }
+
+.result button.importFromFile {
+    display: block;
+    margin: 0 auto;
+}
