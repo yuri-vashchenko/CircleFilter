@@ -29,9 +29,13 @@
 }
 
 .close:hover {
+    display: block;
     opacity: 1 !important;
 }
 
+.filterSetBlock:only-of-type:hover .close{
+    display: none;
+}
 .remove {
     position: absolute;
     right: 8px;
