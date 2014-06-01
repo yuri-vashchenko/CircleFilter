@@ -9,12 +9,6 @@ function Main() {
         });
     });
     
-    GPlus.getCirclesList( function( error, status, response ) {
-        GPlusTranslator.circlesList( error, status, response, function( circlesList ) {
-            console.log( circlesList );
-        });
-    });
-    
     var filter = new Filter( document.querySelector('.left-sidebar'), document.querySelector( '.content>div' ) );
 }
 

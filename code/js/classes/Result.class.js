@@ -3,7 +3,7 @@ function Result( block ) {
         "DEFAULT" : 1,
         "EMPTY" : 2,
         "FULL" : 3
-    }, perPage = 5;
+    }, perPage = 20;
     
     
     this.block = block;

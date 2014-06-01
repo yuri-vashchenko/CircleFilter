@@ -12,7 +12,15 @@ var StorageManager = (function() {
     }
     
     function getStorageSize() {
-        return ( localStorage.users ? ( 3 + ( localStorage.users.length / 512 ) ) : 0 );
+        return ( 3 + getUsersSize() + getCirclesSize() );
+    }
+    
+    function getUsersSize() {
+        return ( localStorage.users ? ( localStorage.users.length / 512 ) : 0 );
+    }
+    
+    function getCirclesSize() {
+        return ( localStorage.circles ? ( localStorage.circles.length / 512 ) : 0 );
     }
     
     function getCurrentDate() {        
@@ -21,7 +29,7 @@ var StorageManager = (function() {
     
     function convertDate( date ) {
         var day = date.getDate(),
-              month = date.getMonth(),
+              month = date.getMonth()+1,
               year = date.getFullYear(),
               h = date.getHours(),
               m = date.getMinutes();
@@ -90,8 +98,18 @@ var StorageManager = (function() {
         }
     }
     
+    function initCircles() {
+        if ( !readProperty( 'circles' ) ) {
+            writeProperty( 'circles', [] );
+        }
+    }
+    
     function clearUsers() {
         removeProperty( 'users' );  
+    }
+    
+    function clearCircles() {
+        removeProperty( 'circles' );  
     }
     
     function addUser( id ) {
@@ -108,6 +126,26 @@ var StorageManager = (function() {
         return userIndex;
     }
        
+    function addCircle( id, name, description, position ) {
+        var circles = readProperty( 'circles' ),
+              circleIndex = getCircleIndex( id );
+        
+        if ( circleIndex < 0 ) {
+            var circle = { 
+                id: id,
+                name: name,
+                description: description,
+                position: position
+            };
+            
+            circles.push( circle );
+            writeProperty( 'circles', circles );
+            circleIndex = circles.length - 1;
+        }
+        
+        return circleIndex;
+    }
+    
     /* @param propArray { property1: value1, property2: value2 ... } */
     function addUserProperties( id, propArray, override, expiredDate ) {
     
@@ -131,16 +169,32 @@ var StorageManager = (function() {
     function getUserIndex( id ) {
         var users = readProperty( 'users' );
         
-        for ( var i = 0; i < users.length; i++ ) {
-            if ( users[i].id == id ) {
-                return i;
-            }            
+        if ( users ) {
+            for ( var i = 0; i < users.length; i++ ) {
+                if ( users[i].id == id ) {
+                    return i;
+                }            
+            }
         }
         
         return -1;
     }
     
-    function checkProperties( id, propList, expiredDate ) {
+    function getCircleIndex( id ) {
+        var circles = readProperty( 'circles' );
+        
+        if ( circles ) {
+            for ( var i = 0; i < circles.length; i++ ) {
+                if ( circles[i].id == id ) {
+                    return i;
+                }            
+            }
+        }
+        
+        return -1;
+    }
+    
+    function checkUserProperties( id, propList, expiredDate ) {
         var userIndex = addUser( id ),
               users = readProperty( 'users' ),
               missingProps = new Array();
@@ -174,11 +228,20 @@ var StorageManager = (function() {
         }
     }
     
+    function getCircle( id ) {
+        var circles = readProperty( 'circles' ),
+              circleIndex = getCircleIndex( id );
+              
+        if ( circleIndex >= 0 ) {
+            return circles[circleIndex];
+        }
+    }
+    
     return {
         getUserIdsList: function( callback ) {
             var userIdsList = new Array();
             
-            if ( false && readProperty( 'users' ) ) {
+            if ( readProperty( 'users' ) ) {
                 var usersArray = readProperty( 'users' );
                       
                 for ( var i = 0; i < usersArray.length; i++ ) {
@@ -204,9 +267,32 @@ var StorageManager = (function() {
             }
         },
         
+        getCirclesList: function( callback ) {
+            var circlesList = new Array();
+            
+            if ( readProperty( 'circles' ) ) {
+                var circlesArray = readProperty( 'circles' );
+                
+                callback( circlesArray );
+            } else {
+                initCircles();
+                
+                GPlus.getCirclesList( function( error, status, response ) {
+                    GPlusTranslator.circlesList( error, status, response, function( cList ) {
+                        for ( var i = 0; i < cList.length; i++ ) {
+                            circlesList.push( cList[i] );
+                            addCircle( cList[i].id, cList[i].name, cList[i].description, cList[i].position );
+                        }
+                        
+                        callback( circlesList );
+                    });
+                });
+            }
+        },
+        
         getUserInfo: function( id, propsList, callback ) {
             var user = getUser( id ),
-                  missingProps = checkProperties( id, propsList );
+                  missingProps = checkUserProperties( id, propsList );
             if ( missingProps.length == 0 ) {
                 callback( user );
             } else {
@@ -218,6 +304,32 @@ var StorageManager = (function() {
                         callback( getUser( id ) );                        
                     });
                 });
+            }
+        },
+        
+        getCircleInfo: function( id, callback ) {
+            var circle = getCircle( id );
+            
+            if ( circle ) {
+                callback( circle );
+            } else {
+                initCircles();
+                
+                GPlus.getCirclesList( function( error, status, response ) {
+                    GPlusTranslator.circlesList( error, status, response, function( cList ) {
+                        for ( var i = 0; i < cList.length; i++ ) {
+                            addCircle( cList[i].id, cList[i].name, cList[i].description, cList[i].position );
+                        }
+                        /* Put your check code here */
+                        callback( getCircle( id ) );
+                    });
+                });
+            }
+        },
+        
+        updateUsersInfo: function( info, override, expiredDate ) {
+            for ( var i = 0; i < info.length; i++ ) {
+                addUserProperties( info[i].id, info[i].propArray, override, expiredDate );
             }
         },
         
@@ -269,7 +381,7 @@ var StorageManager = (function() {
                 while ( foReq = foList.shift() ) {                    
                     foReq = foReq.getRequiredUserFields();
                     
-                    user.expiredFileds = unionArrays( user.expiredFileds, checkProperties( user.id, foReq, expiredDate ) );
+                    user.expiredFileds = unionArrays( user.expiredFileds, checkUserProperties( user.id, foReq, expiredDate ) );
                     
                     function unionArrays( arr1, arr2 ) {
                         
@@ -302,6 +414,10 @@ var StorageManager = (function() {
         
         clearUsers: function() {
             return clearUsers();
+        },
+        
+        clearCircles: function() {
+            return clearCircles();
         },
         
         getStorageSize: function() {
