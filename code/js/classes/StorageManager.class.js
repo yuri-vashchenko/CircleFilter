@@ -221,6 +221,12 @@ var StorageManager = (function() {
             }
         },
         
+        updateUsersInfo( info, override, expiredDate ) {
+            for ( var i = 0; i < info.length; i++ ) {
+            addUserProperties( info[i].id, info[i].propArray, override, expiredDate );
+            }
+        }	
+        
         showStorageUsersFullInfo: function() {
             var table = document.createElement( 'table' ),
                   sizeSpan = document.createElement( 'span' ),
