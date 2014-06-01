@@ -37,6 +37,25 @@ var StorageManager = (function() {
         return day + '.' + month + '.' + year + ' ' + h + ':' + m;
     }
     
+	function uncouplePropertiesList( properties ) {
+		var circlesPropsArray = [],
+		      usersPropsArray = [];
+              
+		for ( var i = 0; i < properties.length; i++ ) {
+                switch ( properties[i] ) {
+                    case 'circles':
+                        circlesPropsArray.push(properties[i]);
+                        break;
+                    default: 
+                        usersPropsArray.push(properties[i]);
+                }
+        }
+        
+		return { 
+            circlesProps: circlesPropsArray, 
+            usersProps: usersPropsArray 
+        };
+	}	
     /* 
      * @return  
      * -1 if date1 < date 2
@@ -223,7 +242,8 @@ var StorageManager = (function() {
                 ( users[userIndex].photo != undefined ? users[userIndex].photo.value : null ),
                 ( users[userIndex].age != undefined ? users[userIndex].age.value : null ),
                 ( users[userIndex].sex != undefined ? users[userIndex].sex.value : null ),
-                ( users[userIndex].city != undefined ? users[userIndex].city.value : null )
+                ( users[userIndex].city != undefined ? users[userIndex].city.value : null ),
+                ( users[userIndex].circles != undefined ? users[userIndex].circles.value : [] )
             )
         }
     }
@@ -291,30 +311,49 @@ var StorageManager = (function() {
         },
         
         getUserInfo: function( id, propsList, callback ) {
+            initUsers();
+            
             var user = getUser( id ),
                   missingProps = checkUserProperties( id, propsList );
             if ( missingProps.length == 0 ) {
                 callback( user );
             } else {
-                initUsers();
+				missingProps = uncouplePropertiesList(missingProps);    
                 
-                GPlus.getUserInfo( id, missingProps, function( error, status, response ) {
-                    GPlusTranslator.userInfo( error, status, response, missingProps, function( properties ) {                    
-                        addUserProperties( id, properties, true );
-                        callback( getUser( id ) );                        
+                var getUserInfoFunc = function( id, usersProps, callback ) {
+                    GPlus.getUserInfo( id, usersProps, function( error, status, response ) {
+                        GPlusTranslator.userInfo( error, status, response, usersProps, function( properties ) {                    
+                            addUserProperties( id, properties, true );
+                            callback( getUser( id ) );                        
+                        });
                     });
-                });
+                };
+                
+                if ( missingProps.circlesProps.length > 0 ) {
+                    GPlus.getCirclesAndUsersList( function( error, status, response ) {
+                        GPlusTranslator.usersWithFetchedCirclesList( error, status, response, function( usersList ) {
+                            for ( var i = 0; i < usersList.length; i++ ) {
+                                addUserProperties( usersList[i].id, { circles: usersList[i].circles }, true);
+                            }                        
+                            
+                            getUserInfoFunc( id, missingProps.usersProps, callback );
+                            
+                        });
+                    });
+                } else {
+                    getUserInfoFunc( id, missingProps.usersProps, callback );
+                }
             }
         },
         
         getCircleInfo: function( id, callback ) {
+            initCircles();
+            
             var circle = getCircle( id );
             
             if ( circle ) {
                 callback( circle );
             } else {
-                initCircles();
-                
                 GPlus.getCirclesList( function( error, status, response ) {
                     GPlusTranslator.circlesList( error, status, response, function( cList ) {
                         for ( var i = 0; i < cList.length; i++ ) {
@@ -340,7 +379,7 @@ var StorageManager = (function() {
             
             if ( usersArray ) {
                 var tr = document.createElement( 'tr' ),
-                      headers = ['id', 'firstName', 'lastName', 'photo', 'age', 'sex', 'city'];
+                      headers = ['id', 'firstName', 'lastName', 'photo', 'age', 'sex', 'city', 'circles'];
                 
                 for ( var i = 0; i < headers.length; i++ ) {
                     var th = document.createElement( 'th' );

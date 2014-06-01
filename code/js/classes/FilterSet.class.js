@@ -1,7 +1,18 @@
 function FilterSet() {
     
-    this.filterOptionList = new Array();
+    this.toJSON = function() {
+        var string = '[';
+        
+        for ( var i = 0; i < this.filterOptionList.length; i++ ) {
+            string += this.filterOptionList[i].toJSON() + ( i != this.filterOptionList.length - 1 ? ',' : '' );
+        }
+        string += ']';
+        
+        return string;
+    }
     
+    this.filterOptionList = new Array();
+
     this.show = function() {
         var filterSetBlock = document.createElement( 'div' ),
               addBlock = document.createElement( 'div' ),

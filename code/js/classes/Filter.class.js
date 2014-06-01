@@ -22,31 +22,46 @@ function Filter( filterBlock, resultBlock ) {
         var controlBlock = document.createElement( 'div' ),
               importButton = document.createElement( 'a' ),
               importIcon = document.createElement( 'img' ),
+              importInput = document.createElement( 'input' ),
               exportButton = document.createElement( 'a' ),              
               exportIcon = document.createElement( 'img' ),
               clearButton = document.createElement( 'button' ),
               applyButton = document.createElement( 'button' ),
               topGroupBlock = document.createElement( 'div'),
               bottomGroupBlock = document.createElement( 'div');
-              
-        exportIcon.src = 'images/save.png';
+          
+        importIcon.src = 'images/import.png';    
+        importIcon.title = getMessage( 'import' );        
+        importButton.appendChild( importIcon );
+        
+        importInput.type = 'file';        
+        importInput.addEventListener( 'change', function( e ) {
+            readStringFromFile( importInput.files[0], function( data ) {
+                console.log( JSON.parse( data ) )
+            });
+        });
+        
+        importButton.appendChild( importInput );
+        
+        $( importIcon ).addClass( 'but-icon' );
+        $( importButton ).addClass( 'button' );
+        topGroupBlock.appendChild( importButton );
+        
+        importButton.addEventListener( 'click', function( e ) {
+            importInput.click( e );
+        });
+        
+        exportIcon.src = 'images/export.png';
+        exportIcon.title = getMessage( 'export' );
+        
         exportButton.appendChild( exportIcon );
         $( exportIcon ).addClass( 'but-icon' );
         $( exportButton ).addClass( 'button' );        
         topGroupBlock.appendChild( exportButton );
         
         exportButton.addEventListener( 'click', function() {
-            $( '#testzone' ).empty();
-            $( '#testzone' )[0].appendChild( StorageManager.showStorageUsersFullInfo() );
-            $( '#testzone table' ).addClass( 'table' );
-            $( '#testzone table' ).addClass( 'table-bordered' );
+            writeStringToFile( filterSetListToString( filter.filterSetList ), "formula("+( new Date() )+").dat" );
         });
-        
-        importIcon.src = 'images/load.png';    
-        importButton.appendChild( importIcon );
-        $( importIcon ).addClass( 'but-icon' );
-        $( importButton ).addClass( 'button' );
-        topGroupBlock.appendChild( importButton );
         
         controlBlock.appendChild( topGroupBlock );
         $( topGroupBlock ).addClass( 'topGroupBlock' );
@@ -237,5 +252,16 @@ function Filter( filterBlock, resultBlock ) {
     
     function removeFilterSet( filter, index ) {
         filter.filterSetList.splice( index, 1 );
+    }
+    
+    function filterSetListToString( filterSetList ) {
+        var string = '[';
+        
+        for ( var i = 0; i < filterSetList.length; i++ ) {
+            string += filterSetList[i].toJSON() + ( i != filterSetList.length - 1 ? ',' : '' );
+        }
+        string += ']';
+        
+        return string;
     }
 }

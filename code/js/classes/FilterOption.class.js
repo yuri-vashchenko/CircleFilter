@@ -79,6 +79,23 @@ function FilterOption( icon, name, configurationBlock, getConfigurationFunc, con
         this.applyFunc( userId, accept, decline );
     }
     
+    this.toJSON = function() {
+        var string = '{';
+        
+        string += '"icon": "' + this.icon +'",';
+        string += '"name": "' + this.name +'",';
+        string += '"configuration": ' + JSON.stringify( this.configuration ) +',';
+        string += '"requiredUserFields": ' + JSON.stringify( this.requiredUserFields ) +',';
+        string += '"configurationBlock": "' + this.configurationBlock.outerHTML.replace(/"/g, "'") +'",';
+        string += '"getConfigurationFunc": "(' + this.getConfigurationFunc.toString().replace(/\s/g, " ") +')",';
+        string += '"configurationToStringFunc": "(' + this.configurationToStringFunc.toString().replace(/\s/g, " ") +')",';
+        string += '"applyFunc": "(' + this.applyFunc.toString().replace(/\s/g, " ") +')"';
+    
+        string += '}';
+        
+        return string;
+    }
+    
     function showConfiguration( filterOption ) {
         var configurationBlock = document.createElement( 'div' );
         

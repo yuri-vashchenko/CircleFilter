@@ -44,6 +44,19 @@ function writeStringToFile( string, fileName ) {
     }, function() {});
 }
 
+function readStringFromFile( file, callback ) {
+    window.webkitRequestFileSystem( window.TEMPORARY, 1024 * 1024 , function( fs ) {
+        var reader = new FileReader();
+
+        reader.onloadend = function( e ) {
+            callback( this.result );
+        };
+
+        reader.readAsText( file );
+
+    }, function() {});
+}
+
 function getMessage( label ) {
     if ( label == null ) {
         return 'undefined';
