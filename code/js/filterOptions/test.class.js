@@ -1,6 +1,6 @@
 (function(){
     filterOptionsList.push( new FilterOption( 
-        '/images/load.png', 
+        '/images/export.png', 
         'Filter by name', 
         function() {
             var testBlock = document.createElement( 'div' ),
