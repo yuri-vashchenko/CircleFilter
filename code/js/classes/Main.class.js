@@ -8,7 +8,13 @@ function Main() {
             document.querySelector( '#user-email' ).textContent = email;
         });
     });
-    
+    GPlus.getCirclesAndUsersList( function( error, status, response ) {
+        GPlusTranslator.usersWithFetchedCirclesList( error, status, response, function( circlesList ) {
+			for( var i = 0; i < circlesList.lenght; i++ )
+            StorageMenager.addUserProperties(userList[i].id, {circles: userList[i].circles}, true);
+			console.log(circlesList);
+        });
+    });
     var filter = new Filter( document.querySelector('.left-sidebar'), document.querySelector( '.content>div' ) );
 }
 

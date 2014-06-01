@@ -37,6 +37,19 @@ var StorageManager = (function() {
         return day + '.' + month + '.' + year + ' ' + h + ':' + m;
     }
     
+	function uncouplePropertiesList( missingProps ) {
+		var circlesPropsArray = [];
+		var usersPropsArray = [];
+		for ( var i = 0; i < properties.length; i++ ) {
+                switch ( properties[i] ) {
+                    case 'circles':
+                        circlesPropsArray.push(properties[i]);
+                        break;
+                    default: usersPropsArray.push(properties[i]); break;
+                }
+            }
+		return { circlesProps: circlesPropsArray, usersProps: usersPropsArray };
+	}	
     /* 
      * @return  
      * -1 if date1 < date 2
@@ -296,20 +309,32 @@ var StorageManager = (function() {
             if ( missingProps.length == 0 ) {
                 callback( user );
             } else {
+				missingProps = uncouplePropertiesList(missingProps);
+				
                 initUsers();
                 
-                GPlus.getUserInfo( id, missingProps, function( error, status, response ) {
-                    GPlusTranslator.userInfo( error, status, response, missingProps, function( properties ) {                    
+                GPlus.getUserInfo( id, missingProps.usersProps, function( error, status, response ) {
+                    GPlusTranslator.userInfo( error, status, response, missingProps.usersProps, function( properties ) {                    
                         addUserProperties( id, properties, true );
                         callback( getUser( id ) );                        
                     });
                 });
+				
+				/*GPlus.getCirclesAndUsersList( function( error, status, response ) {
+					GPlusTranslator.userInfoCircles( error, status, response, missingProps.circlesProps ,function( user ) {
+						addUserProperties( user.id, {circles: user.circles}, false);
+						callback( getUser( user.id ) );
+					});
+				});
+		});
+        });
+    });*/
             }
         },
         
         getCircleInfo: function( id, callback ) {
             var circle = getCircle( id );
-            
+е            
             if ( circle ) {
                 callback( circle );
             } else {

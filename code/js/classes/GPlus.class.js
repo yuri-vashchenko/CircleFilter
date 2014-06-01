@@ -116,7 +116,9 @@ var GPlus = (function() {
         getCirclesList : function( callback ) {            
             xhrWithAuth( 'GET', 'https://plus.google.com/u/0/_/socialgraph/lookup/circles', false, callback );
         },
-        
+        getCirclesAndUsersList : function( callback ) {            
+            xhrWithAuth( 'GET', 'https://plus.google.com/u/0/_/socialgraph/lookup/circles?m=true', false, callback );
+        },
         getUserEmail : function( callback ) {
             xhrWithAuth( 'GET', 'https://www.googleapis.com/userinfo/v2/me?fields=email', false, callback );
         },
