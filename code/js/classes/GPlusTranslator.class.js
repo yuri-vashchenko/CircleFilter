@@ -80,27 +80,27 @@ var GPlusTranslator = (function() {
                 callback( props )
             }
         },
-		
-		usersWithFetchedCirclesList: function( error, status, response, callback ) {
-			var dirtyRes = parseDirtyJSON( response.substring( 4 ) ),
+        
+        usersWithFetchedCirclesList: function( error, status, response, callback ) {
+            var dirtyRes = parseDirtyJSON( response.substring( 4 ) ),
                   dirtyCirclesList = Array.isArray( dirtyRes ) ? dirtyRes[0] : dirtyRes,
-				  userList = [];
-			
+                  userList = [];
+            
             dirtyCirclesList[2].forEach( function( element, index ) {
-				userList.push({
-					id: element[0][2],
-					circles: []
-				});
-				element[3].forEach( function( elementCircle, indexCircle ) {
-					userList[index].circles.push(
-						elementCircle[2]
-					);
-				});
-				
+                userList.push({
+                    id: element[0][2],
+                    circles: []
+                });
+                element[3].forEach( function( elementCircle, indexCircle ) {
+                    userList[index].circles.push(
+                        elementCircle[2]
+                    );
+                });
+                
             });
-			
-			callback( userList );
-		}
-		
+            
+            callback( userList );
+        }
+        
     }
 })();

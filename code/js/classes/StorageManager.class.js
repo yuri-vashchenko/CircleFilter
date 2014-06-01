@@ -37,11 +37,11 @@ var StorageManager = (function() {
         return day + '.' + month + '.' + year + ' ' + h + ':' + m;
     }
     
-	function uncouplePropertiesList( properties ) {
-		var circlesPropsArray = [],
-		      usersPropsArray = [];
+    function uncouplePropertiesList( properties ) {
+        var circlesPropsArray = [],
+              usersPropsArray = [];
               
-		for ( var i = 0; i < properties.length; i++ ) {
+        for ( var i = 0; i < properties.length; i++ ) {
                 switch ( properties[i] ) {
                     case 'circles':
                         circlesPropsArray.push(properties[i]);
@@ -51,11 +51,11 @@ var StorageManager = (function() {
                 }
         }
         
-		return { 
+        return { 
             circlesProps: circlesPropsArray, 
             usersProps: usersPropsArray 
         };
-	}	
+    }    
     /* 
      * @return  
      * -1 if date1 < date 2
@@ -77,19 +77,19 @@ var StorageManager = (function() {
               year2 = temp.substring(temp.indexOf('.')+1, temp.indexOf(' ')),
               hour2 = temp.substring(temp.indexOf(' ')+1,temp.indexOf(':')),
               min2 = temp.substring(temp.indexOf(':')+1);
-	
+    
         if ( year1 < year2 ) {
             return -1;
         } else if ( year1 > year2 ) {
             return 1;
-        }	
-		
+        }    
+        
         if ( month1 < month2 ) {
             return -1;
         } else if ( month1 > month2 ) {
             return 1;
-        }	
-		
+        }    
+        
         if ( day1 < day2 ) {
             return -1;
         } else if ( day1 > day2 ) {
@@ -318,7 +318,7 @@ var StorageManager = (function() {
             if ( missingProps.length == 0 ) {
                 callback( user );
             } else {
-				missingProps = uncouplePropertiesList(missingProps);    
+                missingProps = uncouplePropertiesList(missingProps);    
                 
                 var getUserInfoFunc = function( id, usersProps, callback ) {
                     GPlus.getUserInfo( id, usersProps, function( error, status, response ) {
