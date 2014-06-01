@@ -11,23 +11,52 @@ function FilterSet() {
         return string;
     }
     
+    this.importFilterSet = function( filterSet ) {   
+        
+        for ( var i = 0; i < filterSet.length; i++ ) {
+            var configuredFilterOption = new FilterOption(
+                  filterSet[i].icon, 
+                  filterSet[i].name, 
+                  function() {
+                        var temp = document.createElement('div');
+                        temp.innerHTML = filterSet[i].configurationBlock;
+                        return temp.firstChild;
+                  }(),
+                  eval( filterSet[i].getConfigurationFunc ), 
+                  eval( filterSet[i].configurationToStringFunc ), 
+                  eval( filterSet[i].applyFunc ),
+                  filterSet[i].requiredUserFields,
+                  filterSet[i].configuration 
+            );
+            
+            
+            filterOptionBlock = showAddFilterOptionBlock( configuredFilterOption.show(), this );
+            
+            this.filterSetBlock.insertBefore( filterOptionBlock, this.addBlock );  
+            this.filterOptionList.push( configuredFilterOption );
+        }
+    }
+    
     this.filterOptionList = new Array();
-
+    this.filterSetBlock;
+    this.addBlock;
+    
     this.show = function() {
-        var filterSetBlock = document.createElement( 'div' ),
-              addBlock = document.createElement( 'div' ),
-              addButton = document.createElement( 'a' ),
+        var addButton = document.createElement( 'a' ),
               addIcon = document.createElement( 'img' ),
               filterSet = this;
         
+        filterSet.filterSetBlock = document.createElement( 'div' );
+        filterSet.addBlock = document.createElement( 'div' ),
+        
         addIcon.src = 'images/plus-btn.png';
         addButton.appendChild( addIcon );
-        addBlock.appendChild( addButton );
+        filterSet.addBlock.appendChild( addButton );
         $( addButton ).addClass( 'add' );
         $( addButton ).addClass( 'but-icon' );   
-        $( addBlock ).addClass( 'addFilterOption' );
+        $( filterSet.addBlock ).addClass( 'addFilterOption' );
         
-        addBlock.addEventListener( 'click', function( e ) {
+        filterSet.addBlock.addEventListener( 'click', function( e ) {
             var dropdownList = showFilterOptionList(),
                   editInterfaceBlock = null,
                   index = null;
@@ -35,7 +64,7 @@ function FilterSet() {
                 
             $.modal( $( dropdownList ), { 
                 overlayClose : true,
-                position : [$( addBlock ).offset().top + $( addBlock ).outerHeight() - 1 - $( document ).scrollTop(), $( addBlock ).offset().left],
+                position : [$( filterSet.addBlock ).offset().top + $( filterSet.addBlock ).outerHeight() - 1 - $( document ).scrollTop(), $( filterSet.addBlock ).offset().left],
                 onOpen: function ( dialog ) {
                     dialog.overlay.fadeIn( 'fast' );
                     dialog.container.slideDown( 'fast' );
@@ -71,13 +100,13 @@ function FilterSet() {
                                               ),
                                               filterOptionBlock = showAddFilterOptionBlock( configuredFilterOption.show(), filterSet );
                                               
-                                        filterSetBlock.insertBefore( filterOptionBlock, addBlock );  
+                                        filterSet.filterSetBlock.insertBefore( filterOptionBlock, filterSet.addBlock );  
                                         filterSet.filterOptionList.push( configuredFilterOption );
                                     }
                                 );
                                 $.modal( $( editInterfaceBlock ), { 
                                     overlayClose : true, 
-                                    position : [$( addBlock ).offset().top + $( addBlock ).outerHeight() - 1 - $( document ).scrollTop(), $( addBlock ).offset().left],
+                                    position : [$( filterSet.addBlock ).offset().top + $( filterSet.addBlock ).outerHeight() - 1 - $( document ).scrollTop(), $( filterSet.addBlock ).offset().left],
                                     onOpen: function ( dialog ) {
                                         dialog.overlay.fadeIn( 'fast' );
                                         dialog.container.slideDown( 'fast' );
@@ -102,11 +131,11 @@ function FilterSet() {
             });            
         });
         
-        filterSetBlock.appendChild( addBlock );
+        filterSet.filterSetBlock.appendChild( filterSet.addBlock );
         
-        $( filterSetBlock ).addClass( 'filterSetBlock' );
+        $( filterSet.filterSetBlock ).addClass( 'filterSetBlock' );
         
-        return filterSetBlock;
+        return filterSet.filterSetBlock;
     }
     
     this.apply = function( callback, onSuccess, filterProcess ) {

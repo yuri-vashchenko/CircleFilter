@@ -5,6 +5,7 @@ function Filter( filterBlock, resultBlock ) {
     this.filterSetList = new Array();  
     
     this.filterBlock = filterBlock;
+    this.addFilterSetButton;
     
     $( this.filterBlock ).addClass( 'filter' );
          
@@ -37,7 +38,16 @@ function Filter( filterBlock, resultBlock ) {
         importInput.type = 'file';        
         importInput.addEventListener( 'change', function( e ) {
             readStringFromFile( importInput.files[0], function( data ) {
-                console.log( JSON.parse( data ) )
+                var formula = JSON.parse( data );
+                
+                if ( formula && formula.length > 0 ) {
+                    for ( var i = 0; i < formula.length; i++ ) {
+                        filter.filterSetList[i].importFilterSet( formula[i] );
+                        if ( i != formula.length - 1 ) {
+                            filter.addFilterSetButton.click();
+                        }
+                    }
+                }
             });
         });
         
@@ -142,15 +152,17 @@ function Filter( filterBlock, resultBlock ) {
     
     function showFormulaBlock( filter ) {
         var formulaBlock = document.createElement( 'div' ),
-              addFilterSetButton = document.createElement( 'button' ),
               filterSet = new FilterSet();
-              
+        
+        
+        filter.addFilterSetButton = document.createElement( 'button' );
+        
         formulaBlock.appendChild( addFilterSet( filter, filterSet ) );     
         
-        addFilterSetButton.textContent = getMessage( 'or' );
-        formulaBlock.appendChild( addFilterSetButton );
+        filter.addFilterSetButton.textContent = getMessage( 'or' );
+        formulaBlock.appendChild( filter.addFilterSetButton );
         
-        addFilterSetButton.addEventListener( 'click', function() {            
+        filter.addFilterSetButton.addEventListener( 'click', function() {            
             var filterSet = new FilterSet();
                   orText = document.createElement( 'div' ); 
                    
