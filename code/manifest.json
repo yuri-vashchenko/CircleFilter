@@ -28,6 +28,7 @@
   
     "permissions": [
         "identity",
+        "downloads",
         "https://plus.google.com/*",
         "https://accounts.google.com/*",
         "https://www.googleapis.com/*"

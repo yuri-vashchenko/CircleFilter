@@ -22,21 +22,7 @@ var StorageManager = (function() {
     function getCirclesSize() {
         return ( localStorage.circles ? ( localStorage.circles.length / 512 ) : 0 );
     }
-    
-    function getCurrentDate() {        
-        return convertDate( new Date() );
-    }
-    
-    function convertDate( date ) {
-        var day = date.getDate(),
-              month = date.getMonth()+1,
-              year = date.getFullYear(),
-              h = date.getHours(),
-              m = date.getMinutes();
         
-        return day + '.' + month + '.' + year + ' ' + h + ':' + m;
-    }
-    
     function uncouplePropertiesList( properties ) {
         var circlesPropsArray = [],
               usersPropsArray = [];

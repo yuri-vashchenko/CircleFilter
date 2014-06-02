@@ -70,7 +70,7 @@ function Filter( filterBlock, resultBlock ) {
         topGroupBlock.appendChild( exportButton );
         
         exportButton.addEventListener( 'click', function() {
-            writeStringToFile( filterSetListToString( filter.filterSetList ), "formula("+( new Date() )+").dat" );
+            writeStringToFile( filterSetListToString( filter.filterSetList ), 'formula(' + getCurrentDate() + ').dat' );
         });
         
         controlBlock.appendChild( topGroupBlock );
