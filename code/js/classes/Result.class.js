@@ -36,6 +36,7 @@ function Result( block ) {
     this.clear = function() {
         this.usersList = new UsersList( perPage );
         this.state = STATE.EMPTY;
+        this.block.innerHTML = '';
         this.block.appendChild( showText( getMessage( 'emptyResultBlock' ) ) );
         $( this.block ).addClass( 'text' );
     }
@@ -49,13 +50,16 @@ function Result( block ) {
     
     this.processing = function() {
         $( '#loading' ).addClass( 'loading' );
+        this.block.innerHTML = '';
+        this.block.appendChild( showText( getMessage( 'defaultResultBlockContent' ) ) );
+        $( this.block ).addClass( 'text' );
     }
     
     this.reset = function() {
         this.usersList = new UsersList( perPage );
         this.state = STATE.DEFAULT;
         
-        
+        this.block.innerHTML = '';
         this.block.appendChild( showText( getMessage( 'defaultResultBlockContent' ) ) );
         this.block.appendChild( showImportButton( this ) );
         $( this.block ).addClass( 'text' );
