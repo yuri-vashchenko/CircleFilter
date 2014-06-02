@@ -1,5 +1,6 @@
 (function(){
     filterOptionsList.push( new FilterOption( 
+        5,
         '/images/export.png', 
         'Filter by name', 
         function() {

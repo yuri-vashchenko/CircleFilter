@@ -41,10 +41,14 @@ function Filter( filterBlock, resultBlock ) {
                 var formula = JSON.parse( data );
                 
                 if ( formula && formula.length > 0 ) {
+                    clearButton.click();
+                    var k = 0;
+                    
                     for ( var i = 0; i < formula.length; i++ ) {
-                        filter.filterSetList[i].importFilterSet( formula[i] );
-                        if ( i != formula.length - 1 ) {
+                        filter.filterSetList[k].importFilterSet( formula[i] );
+                        if ( i != formula.length - 1 && formula[i].length > 0 ) {
                             filter.addFilterSetButton.click();
+                            k++;
                         }
                     }
                 }

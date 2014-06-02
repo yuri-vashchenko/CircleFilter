@@ -22,6 +22,18 @@ function loadFilterOptions() {
     }
 };
 
+function getFilterOptionById( id ) {
+    var filterOption;
+    
+    for ( var i = 0; i < filterOptionsList.length; i++ ) {
+        if ( filterOptionsList[i].id == id ) {
+            return filterOptionsList[i];
+        }
+    }
+    
+    return;
+}
+
 (function(){
     loadFilterOptions();
 })();

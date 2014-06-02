@@ -14,18 +14,16 @@ function FilterSet() {
     this.importFilterSet = function( filterSet ) {   
         
         for ( var i = 0; i < filterSet.length; i++ ) {
-            var configuredFilterOption = new FilterOption(
-                  filterSet[i].icon, 
-                  filterSet[i].name, 
-                  function() {
-                        var temp = document.createElement('div');
-                        temp.innerHTML = filterSet[i].configurationBlock;
-                        return temp.firstChild;
-                  }(),
-                  eval( filterSet[i].getConfigurationFunc ), 
-                  eval( filterSet[i].configurationToStringFunc ), 
-                  eval( filterSet[i].applyFunc ),
-                  filterSet[i].requiredUserFields,
+            var filterOption = getFilterOptionById( filterSet[i].id ),
+                  configuredFilterOption = new FilterOption(
+                  filterSet[i].id,
+                  filterOption.icon, 
+                  filterOption.name, 
+                  filterOption.configurationBlock,
+                  filterOption.getConfigurationFunc, 
+                  filterOption.configurationToStringFunc, 
+                  filterOption.applyFunc,
+                  filterOption.requiredUserFields,
                   filterSet[i].configuration 
             );
             
@@ -89,6 +87,7 @@ function FilterSet() {
                                     },
                                     function( configuration ) {
                                         var configuredFilterOption = new FilterOption(
+                                                filterOptionsList[index].id, 
                                                 filterOptionsList[index].icon, 
                                                 filterOptionsList[index].name, 
                                                 filterOptionsList[index].configurationBlock, 
