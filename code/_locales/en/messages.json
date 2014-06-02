@@ -100,5 +100,17 @@
     },
     "female": {
         "message": "Female"
-    }
+    },
+    "importFromFile": {
+        "message": "Import from file"
+    },
+	"AddFilterOption": {
+		"message": "Add filter option"
+	},
+	"Cancel": {
+		"message": "Cancel"
+	},
+	"RemoveFilterOption": {
+		"message": "Remove filter option"
+	}
 }

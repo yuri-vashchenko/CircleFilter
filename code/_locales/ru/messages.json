@@ -100,5 +100,17 @@
     },
     "female": {
         "message": "Женский"
-    }
+    },
+    "importFromFile": {
+        "message": "Импорт из файла"
+    },
+	"AddFilterOption": {
+		"message": "Добавить критерий фильтрации"
+	},
+	"Cancel": {
+		"message": "Отменить"
+	},
+	"RemoveFilterOption": {
+		"message": "Удалить критерий фильтрации"
+	}
 }
