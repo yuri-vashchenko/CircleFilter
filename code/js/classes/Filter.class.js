@@ -125,7 +125,7 @@ function Filter( filterBlock, resultBlock ) {
                             );
                         }
                     }
-                } );
+                });
             } else {
                 clearTimeout( filter.process.id );
                 stopProcessing( filter, applyButton );

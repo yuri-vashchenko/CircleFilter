@@ -100,6 +100,7 @@ function loadClasses() {
     var classesList = [
         'User',
         'UsersList',
+        'Options',
         'Result',
         'GPlus',
         'GPlusTranslator',
@@ -132,10 +133,3 @@ function loadClasses() {
 (function(){
     loadClasses();
 })();
-
-$(function() {
-    document.querySelector( 'head>title' ).textContent = getMessage( 'extName' );
-    document.querySelector( '#revoke' ).textContent = getMessage( 'revoke' );
-    document.querySelector( '#help>span' ).textContent = getMessage( 'help' );
-    document.querySelector( '#config>span' ).textContent = getMessage( 'config' );
-});

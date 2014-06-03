@@ -38,6 +38,7 @@ function Result( block ) {
         this.state = STATE.EMPTY;
         this.block.innerHTML = '';
         this.block.appendChild( showText( getMessage( 'emptyResultBlock' ) ) );
+        this.block.appendChild( showImportButton( this ) );
         $( this.block ).addClass( 'text' );
     }
     
