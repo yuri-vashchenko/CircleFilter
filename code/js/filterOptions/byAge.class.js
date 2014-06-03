@@ -1,5 +1,6 @@
 (function(){
     filterOptionsList.push( new FilterOption( 
+        6,
         '/images/plus-btn.png', 
         getMessage( 'filterByAge' ),
         function() {

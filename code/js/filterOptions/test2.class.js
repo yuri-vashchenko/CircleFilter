@@ -1,5 +1,6 @@
 (function(){
     filterOptionsList.push( new FilterOption( 
+        4,
         '/images/plus-btn.png', 
         'Filter by id',
         function() {

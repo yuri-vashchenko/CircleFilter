@@ -1,4 +1,5 @@
-function FilterOption( icon, name, configurationBlock, getConfigurationFunc, configurationToStringFunc, applyFunc, requiredUserFields, configuration ) {
+function FilterOption( id, icon, name, configurationBlock, getConfigurationFunc, configurationToStringFunc, applyFunc, requiredUserFields, configuration ) {
+    this.id = id;
     this.icon = icon;
     this.name = name;
     this.configuration = configuration;
@@ -43,6 +44,7 @@ function FilterOption( icon, name, configurationBlock, getConfigurationFunc, con
         headerBlock.appendChild( showName( this ) );
         
         cancelIcon.src = 'images/cross-btn.png';
+		cancelIcon.title = getMessage( 'Cancel' );
         cancelButton.appendChild( cancelIcon );
         controlBlock.appendChild( cancelButton );        
         $( cancelButton ).addClass( 'but-icon' );   
@@ -50,6 +52,7 @@ function FilterOption( icon, name, configurationBlock, getConfigurationFunc, con
         cancelButton.addEventListener( 'click', onClose );
         
         acceptIcon.src = 'images/plus-btn.png';
+		acceptIcon.title = getMessage( 'AddFilterOption' );
         acceptButton.appendChild( acceptIcon );
         controlBlock.appendChild( acceptButton );        
         $( acceptButton ).addClass( 'but-icon' );   
@@ -82,14 +85,8 @@ function FilterOption( icon, name, configurationBlock, getConfigurationFunc, con
     this.toJSON = function() {
         var string = '{';
         
-        string += '"icon": "' + this.icon +'",';
-        string += '"name": "' + this.name +'",';
-        string += '"configuration": ' + JSON.stringify( this.configuration ) +',';
-        string += '"requiredUserFields": ' + JSON.stringify( this.requiredUserFields ) +',';
-        string += '"configurationBlock": "' + this.configurationBlock.outerHTML.replace(/"/g, "'") +'",';
-        string += '"getConfigurationFunc": "(' + this.getConfigurationFunc.toString().replace(/\s/g, " ") +')",';
-        string += '"configurationToStringFunc": "(' + this.configurationToStringFunc.toString().replace(/\s/g, " ") +')",';
-        string += '"applyFunc": "(' + this.applyFunc.toString().replace(/\s/g, " ") +')"';
+        string += '"id": "' + this.id +'",';
+        string += '"configuration": ' + JSON.stringify( this.configuration );
     
         string += '}';
         

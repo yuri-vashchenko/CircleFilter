@@ -14,21 +14,18 @@ function FilterSet() {
     this.importFilterSet = function( filterSet ) {   
         
         for ( var i = 0; i < filterSet.length; i++ ) {
-            var configuredFilterOption = new FilterOption(
-                  filterSet[i].icon, 
-                  filterSet[i].name, 
-                  function() {
-                        var temp = document.createElement('div');
-                        temp.innerHTML = filterSet[i].configurationBlock;
-                        return temp.firstChild;
-                  }(),
-                  eval( filterSet[i].getConfigurationFunc ), 
-                  eval( filterSet[i].configurationToStringFunc ), 
-                  eval( filterSet[i].applyFunc ),
-                  filterSet[i].requiredUserFields,
+            var filterOption = getFilterOptionById( filterSet[i].id ),
+                  configuredFilterOption = new FilterOption(
+                  filterSet[i].id,
+                  filterOption.icon, 
+                  filterOption.name, 
+                  filterOption.configurationBlock,
+                  filterOption.getConfigurationFunc, 
+                  filterOption.configurationToStringFunc, 
+                  filterOption.applyFunc,
+                  filterOption.requiredUserFields,
                   filterSet[i].configuration 
             );
-            
             
             filterOptionBlock = showAddFilterOptionBlock( configuredFilterOption.show(), this );
             
@@ -50,6 +47,7 @@ function FilterSet() {
         filterSet.addBlock = document.createElement( 'div' ),
         
         addIcon.src = 'images/plus-btn.png';
+		addIcon.title = getMessage( 'AddFilterOption' );
         addButton.appendChild( addIcon );
         filterSet.addBlock.appendChild( addButton );
         $( addButton ).addClass( 'add' );
@@ -85,10 +83,12 @@ function FilterSet() {
                                 editInterfaceBlock = filterOptionsList[index].showEditInterface( 
                                     function() {
                                         addIcon.src = 'images/plus-btn.png';
+										addIcon.title = getMessage( 'AddFilterOption' );
                                         $.modal.close();
                                     },
                                     function( configuration ) {
                                         var configuredFilterOption = new FilterOption(
+                                                filterOptionsList[index].id, 
                                                 filterOptionsList[index].icon, 
                                                 filterOptionsList[index].name, 
                                                 filterOptionsList[index].configurationBlock, 
@@ -117,6 +117,7 @@ function FilterSet() {
                                             dialog.container.slideUp( 'fast', function () {
                                                 dialog.overlay.fadeOut( 'fast' );
                                                 addIcon.src = 'images/plus-btn.png';
+												addIcon.title = getMessage( 'AddFilterOption' );
                                                 $.modal.close();
                                             });
                                         });
@@ -124,6 +125,7 @@ function FilterSet() {
                                 });
                             } else {
                                 addIcon.src = 'images/plus-btn.png';
+								addIcon.title = getMessage( 'AddFilterOption' );
                             }
                         }); 
                     }); 
@@ -200,6 +202,7 @@ function FilterSet() {
               removeIcon = document.createElement( 'img' );
               
         removeIcon.src = 'images/grey-cross-btn.png';
+		removeIcon.title = getMessage( 'RemoveFilterOption' );
         removeButton.appendChild( removeIcon );        
         $( removeButton ).addClass( 'remove' );
         $( removeButton ).addClass( 'but-icon' );

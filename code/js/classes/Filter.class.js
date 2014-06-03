@@ -29,8 +29,8 @@ function Filter( filterBlock, resultBlock ) {
               clearButton = document.createElement( 'button' ),
               applyButton = document.createElement( 'button' ),
               topGroupBlock = document.createElement( 'div'),
-              bottomGroupBlock = document.createElement( 'div');
-          
+              bottomGroupBlock = document.createElement( 'div');           
+        
         importIcon.src = 'images/import.png';    
         importIcon.title = getMessage( 'import' );        
         importButton.appendChild( importIcon );
@@ -41,10 +41,14 @@ function Filter( filterBlock, resultBlock ) {
                 var formula = JSON.parse( data );
                 
                 if ( formula && formula.length > 0 ) {
+                    clearButton.click();
+                    var k = 0;
+                    
                     for ( var i = 0; i < formula.length; i++ ) {
-                        filter.filterSetList[i].importFilterSet( formula[i] );
-                        if ( i != formula.length - 1 ) {
+                        filter.filterSetList[k].importFilterSet( formula[i] );
+                        if ( i != formula.length - 1 && formula[i].length > 0 ) {
                             filter.addFilterSetButton.click();
+                            k++;
                         }
                     }
                 }
@@ -70,13 +74,14 @@ function Filter( filterBlock, resultBlock ) {
         topGroupBlock.appendChild( exportButton );
         
         exportButton.addEventListener( 'click', function() {
-            writeStringToFile( filterSetListToString( filter.filterSetList ), "formula("+( new Date() )+").dat" );
+            writeStringToFile( filterSetListToString( filter.filterSetList ), 'formula(' + getCurrentDate() + ').dat' );
         });
         
         controlBlock.appendChild( topGroupBlock );
         $( topGroupBlock ).addClass( 'topGroupBlock' );
         
         clearButton.textContent = getMessage( 'clear' );
+        clearButton.title = getMessage( 'Clear' );
         bottomGroupBlock.appendChild( clearButton );
         
         clearButton.addEventListener( 'click', function() {
@@ -88,6 +93,8 @@ function Filter( filterBlock, resultBlock ) {
         });
         
         applyButton.textContent = getMessage( 'apply' );
+        applyButton.title = getMessage( 'Apply' );  
+        
         bottomGroupBlock.appendChild( applyButton );
         
         applyButton.addEventListener( 'click', function() {
@@ -121,7 +128,7 @@ function Filter( filterBlock, resultBlock ) {
                             );
                         }
                     }
-                } );
+                });
             } else {
                 clearTimeout( filter.process.id );
                 stopProcessing( filter, applyButton );
@@ -139,6 +146,7 @@ function Filter( filterBlock, resultBlock ) {
     
     function startProcessing( filter, applyButton, processingFunc ) {
         applyButton.textContent = getMessage( 'stop' );
+        applyButton.title = getMessage( 'stop' );
         filter.result.reset();
         filter.result.processing();
         filter.process.id = setTimeout( processingFunc, 0);
@@ -148,6 +156,7 @@ function Filter( filterBlock, resultBlock ) {
         filter.process.id = null;
         filter.result.finish(); 
         applyButton.textContent = getMessage( 'apply' );
+        applyButton.title = getMessage( 'apply' );
     }
     
     function showFormulaBlock( filter ) {
@@ -206,6 +215,14 @@ function Filter( filterBlock, resultBlock ) {
         exportToXmlButton.textContent = getMessage( 'exportToXml' );
         exportToCsvButton.textContent = getMessage( 'exportToCsv' );
         
+        addToCircleButton.title = getMessage( 'addToCircle' );
+        moveToCircleButton.title = getMessage( 'moveToCircle' );
+        deleteFromCircleButton.title = getMessage( 'deleteFromCircle' );
+        deleteAllFromCircleButton.title = getMessage( 'deleteAllFromCircle' );
+        exportToFileTitle.title = getMessage( 'exportToFile' );
+        exportToXmlButton.title = getMessage( 'exportToXml' );
+        exportToCsvButton.title = getMessage( 'exportToCsv' );
+        
         chooseActionBlock.appendChild( addToCircleButton );
         chooseActionBlock.appendChild( moveToCircleButton );
         chooseActionBlock.appendChild( deleteFromCircleButton );
@@ -226,7 +243,8 @@ function Filter( filterBlock, resultBlock ) {
         var removeButton = document.createElement( 'a' ),
               removeIcon = document.createElement( 'img' );
               
-        removeIcon.src = 'images/cross-btn.png';   
+        removeIcon.src = 'images/cross-btn.png';
+        removeIcon.title = getMessage( 'RemoveFilterOption' );
         removeButton.appendChild( removeIcon );             
         $( removeButton ).addClass( 'close' );
         $( removeButton ).addClass( 'but-icon' );      

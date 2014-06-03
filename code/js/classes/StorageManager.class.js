@@ -22,21 +22,7 @@ var StorageManager = (function() {
     function getCirclesSize() {
         return ( localStorage.circles ? ( localStorage.circles.length / 512 ) : 0 );
     }
-    
-    function getCurrentDate() {        
-        return convertDate( new Date() );
-    }
-    
-    function convertDate( date ) {
-        var day = date.getDate(),
-              month = date.getMonth()+1,
-              year = date.getFullYear(),
-              h = date.getHours(),
-              m = date.getMinutes();
         
-        return day + '.' + month + '.' + year + ' ' + h + ':' + m;
-    }
-    
     function uncouplePropertiesList( properties ) {
         var circlesPropsArray = [],
               usersPropsArray = [];
@@ -56,6 +42,7 @@ var StorageManager = (function() {
             usersProps: usersPropsArray 
         };
     }    
+    
     /* 
      * @return  
      * -1 if date1 < date 2
@@ -257,6 +244,10 @@ var StorageManager = (function() {
         }
     }
     
+    function setUserEmail( email ) {
+        writeProperty( 'email', email );
+    }
+        
     return {
         getUserIdsList: function( callback ) {
             var userIdsList = new Array();
@@ -451,12 +442,33 @@ var StorageManager = (function() {
             return expiredInfo;
         },
         
+        getUserEmail: function( callback ) {
+            var email = readProperty( 'email' );
+            
+            if ( email ) {
+                callback( email );
+            } else {
+                GPlus.getUserEmail( function( error, status, response ) {
+                    GPlusTranslator.userEmail( error, status, response, function( email ) {
+                        setUserEmail( email );
+                        callback( email )
+                    });
+                });
+            }
+        },
+        
         clearUsers: function() {
             return clearUsers();
         },
         
         clearCircles: function() {
             return clearCircles();
+        },
+        
+        clear: function() {
+            clearUsers();
+            clearCircles();
+            removeProperty( 'email' );
         },
         
         getStorageSize: function() {

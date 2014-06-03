@@ -1,5 +1,6 @@
 (function(){
     filterOptionsList.push( new FilterOption( 
+        7,
         '/images/sex-icon.png', 
         getMessage( 'filterBySex' ),
         function() {

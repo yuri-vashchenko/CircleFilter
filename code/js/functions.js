@@ -29,13 +29,27 @@ function showDropdownBlock( title, contentBlock, state ) {
     return dropdownBlock;
 }
 
+function getCurrentDate() {        
+    return convertDate( new Date() );
+}
+
+function convertDate( date ) {
+    var day = date.getDate(),
+          month = date.getMonth()+1,
+          year = date.getFullYear(),
+          h = date.getHours(),
+          m = date.getMinutes();
+    
+    return day + '.' + month + '.' + year + ' ' + h + ':' + m;
+}
+    
 function writeStringToFile( string, fileName ) {
     window.webkitRequestFileSystem( window.TEMPORARY, string.length * 16 , function( fs ) {
         fs.root.getFile( fileName, { create: true }, function( fileEntry ) {
             fileEntry.createWriter( function( fileWriter ) {
             
                 fileWriter.addEventListener( "writeend", function() {
-                    location.href = fileEntry.toURL();
+                    chrome.downloads.download({ url: fileEntry.toURL() }, function() {});
                 }, false );
     
                 fileWriter.write( new Blob( [string] ) );
@@ -86,6 +100,7 @@ function loadClasses() {
     var classesList = [
         'User',
         'UsersList',
+        'Options',
         'Result',
         'GPlus',
         'GPlusTranslator',
@@ -118,10 +133,3 @@ function loadClasses() {
 (function(){
     loadClasses();
 })();
-
-$(function() {
-    document.querySelector( 'head>title' ).textContent = getMessage( 'extName' );
-    document.querySelector( '#revoke' ).textContent = getMessage( 'revoke' );
-    document.querySelector( '#help>span' ).textContent = getMessage( 'help' );
-    document.querySelector( '#config>span' ).textContent = getMessage( 'config' );
-});
