@@ -44,6 +44,7 @@ function FilterOption( id, icon, name, configurationBlock, getConfigurationFunc,
         headerBlock.appendChild( showName( this ) );
         
         cancelIcon.src = 'images/cross-btn.png';
+		cancelIcon.title = getMessage( 'Cancel' );
         cancelButton.appendChild( cancelIcon );
         controlBlock.appendChild( cancelButton );        
         $( cancelButton ).addClass( 'but-icon' );   
@@ -51,6 +52,7 @@ function FilterOption( id, icon, name, configurationBlock, getConfigurationFunc,
         cancelButton.addEventListener( 'click', onClose );
         
         acceptIcon.src = 'images/plus-btn.png';
+		acceptIcon.title = getMessage( 'AddFilterOption' );
         acceptButton.appendChild( acceptIcon );
         controlBlock.appendChild( acceptButton );        
         $( acceptButton ).addClass( 'but-icon' );   

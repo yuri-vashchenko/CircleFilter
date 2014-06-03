@@ -103,5 +103,14 @@
     },
     "importFromFile": {
         "message": "Импорт из файла"
+    },
+    "addFilterOption": {
+        "message": "Добавить критерий фильтрации"
+    },
+    "cancel": {
+        "message": "Отменить"
+    },
+    "removeFilterOption": {
+        "message": "Удалить критерий фильтрации"
     }
 }

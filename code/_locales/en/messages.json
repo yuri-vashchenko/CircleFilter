@@ -103,5 +103,14 @@
     },
     "importFromFile": {
         "message": "Import from file"
+    },
+    "addFilterOption": {
+        "message": "Add filter option"
+    },
+    "cancel": {
+        "message": "Cancel"
+    },
+    "removeFilterOption": {
+        "message": "Remove filter option"
     }
 }
