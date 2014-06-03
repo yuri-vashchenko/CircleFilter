@@ -37,6 +37,14 @@
 
 .filter .action button {
     display: block;
+    width:65%;
+    height:5%;
+}
+.filter .action  h3{
+    font-size: 25px;
+    font-family: calibri;
+    margin-top: 10px;
+    margin-bottom: 10px; 
 }
 
 .filter .content {
