@@ -103,5 +103,56 @@
     },
     "importFromFile": {
         "message": "Import from file"
+    },
+	"AddFilterOption": {
+		"message": "Add filter option"
+	},
+	"Cancel": {
+		"message": "Cancel"
+	},
+	"RemoveFilterOption": {
+		"message": "Remove filter option"
+	}
+    "AddFilterOption.title": {
+		"message": "Add filter option in the formula"
+	},
+	"RemoveFilterOption.title": {
+		"message": "Remove filter option of the formula"
+	},
+    "clear.title": {
+        "message": "Clear the contents of the formula"
+    },
+    "apply.title": {
+        "message": "Start filtering on a formula"
+    },
+    "import.title": {
+        "message": "Import formula from file"
+    },
+    "export.title": {
+        "message": "Export formula in file"
+    },
+    "stop.title": {
+        "message": "Stop filtering"
+    },
+    "addToCircle.title": {
+        "message": "Add selected users in a circle"
+    },
+    "moveToCircle.title": {
+        "message": "Move selected users in a circle"
+    },
+    "deleteFromCircle.title": {
+        "message": "Delete selected users from the circle"
+    },
+    "deleteAllFromCircle.title": {
+        "message": "Delete all users from the circle"
+    },
+    "exportToFile.title": {
+        "message": "Export filter result to a file"
+    },
+    "exportToXml.title": {
+        "message": "Export filter result to XML"
+    },
+    "exportToCsv.title": {
+        "message": "Export filter result to CSV"
     }
 }

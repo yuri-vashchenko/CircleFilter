@@ -50,6 +50,7 @@ function FilterSet() {
         filterSet.addBlock = document.createElement( 'div' ),
         
         addIcon.src = 'images/plus-btn.png';
+		addIcon.title = getMessage( 'AddFilterOption.title' );
         addButton.appendChild( addIcon );
         filterSet.addBlock.appendChild( addButton );
         $( addButton ).addClass( 'add' );
@@ -85,6 +86,7 @@ function FilterSet() {
                                 editInterfaceBlock = filterOptionsList[index].showEditInterface( 
                                     function() {
                                         addIcon.src = 'images/plus-btn.png';
+										addIcon.title = getMessage( 'AddFilterOption.title' );
                                         $.modal.close();
                                     },
                                     function( configuration ) {
@@ -117,6 +119,7 @@ function FilterSet() {
                                             dialog.container.slideUp( 'fast', function () {
                                                 dialog.overlay.fadeOut( 'fast' );
                                                 addIcon.src = 'images/plus-btn.png';
+												addIcon.title = getMessage( 'AddFilterOption.title' );
                                                 $.modal.close();
                                             });
                                         });
@@ -124,6 +127,7 @@ function FilterSet() {
                                 });
                             } else {
                                 addIcon.src = 'images/plus-btn.png';
+								addIcon.title = getMessage( 'AddFilterOption.title' );
                             }
                         }); 
                     }); 
@@ -200,6 +204,7 @@ function FilterSet() {
               removeIcon = document.createElement( 'img' );
               
         removeIcon.src = 'images/grey-cross-btn.png';
+		removeIcon.title = getMessage( 'RemoveFilterOption.title' );
         removeButton.appendChild( removeIcon );        
         $( removeButton ).addClass( 'remove' );
         $( removeButton ).addClass( 'but-icon' );

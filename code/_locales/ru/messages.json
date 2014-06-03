@@ -103,5 +103,56 @@
     },
     "importFromFile": {
         "message": "Импорт из файла"
+    },
+	"AddFilterOption": {
+		"message": "Добавить критерий фильтрации"
+	},
+	"Cancel": {
+		"message": "Отменить"
+	},
+	"RemoveFilterOption": {
+		"message": "Удалить критерий фильтрации"
+	},
+    "AddFilterOption.title": {
+		"message": "Добавить критерий фильтрации в формулу"
+	},
+	"RemoveFilterOption.title": {
+		"message": "Удалить критерий фильтрации из формулы"
+	},
+    "clear.title": {
+        "message": "Сбросить содержимое формулы"
+    },
+    "apply.title": {
+        "message": "Начать фильтрование по заданной формуле"
+    },
+    "import.title": {
+        "message": "Импорт формулы из файла"
+    },
+    "export.title": {
+        "message": "Экспорт формулы в файл"
+    },
+    "stop.title": {
+        "message": "Остановить фильтрацию"
+    },
+    "addToCircle.title": {
+        "message": "Добавление выбранных пользователей в круг"
+    },
+    "moveToCircle.title": {
+        "message": "Перемещение выбранных пользователей в круг"
+    },
+    "deleteFromCircle.title": {
+        "message": "Удаление выбранных пользователей из круга"
+    },
+    "deleteAllFromCircle.title": {
+        "message": "Удалить всех отфильтрованных пользователей из круга"
+    },
+    "exportToFile.title": {
+        "message": "Экспорт результата фильтрации в файл"
+    },
+    "exportToXml.title": {
+        "message": "Экспорт результата фильтрации в XML"
+    },
+    "exportToCsv.title": {
+        "message": "Экспорт результата фильтрации в CSV"
     }
 }
