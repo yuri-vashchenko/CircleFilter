@@ -1,5 +1,6 @@
 var GPlus = (function() {
     this._session = null;
+	_idTabAvtorization = null;
     function getSession( opt_reset ) {
         if ( !this._session ) {
             var xhr = $.ajax({
@@ -9,12 +10,6 @@ var GPlus = (function() {
                 async: false
             });
 			
-            /*
-            var match = xhr.responseText.match(/,"((?:[a-zA-Z0-9]+_?)+:[0-9]+)",/);
-            if (match) {
-            this._session = (match && match[1]) || null;
-            }
-            */
             // For some reason, the top command is becoming unstable in Chrome. It
             // freezes the entire browser. For now, we will just discover it since
             // indexOf doesn't freeze while search/match/exec freezes.
@@ -38,25 +33,27 @@ var GPlus = (function() {
                 // TODO: Somehow bring that back to the user.
                 this._session = null;
                 console.error('Invalid session, please login to Google+');
-				var xhr = $.ajax({
-					type: 'GET',
-					url: 'https://accounts.google.com/ServiceLogin',
-					data: null,
-					async: false
-				});
-				idGlobal = null;
-				chrome.tabs.create( { 'url' : 'https://accounts.google.com/ServiceLogin', 'selected' : true } , function ( tab ) {
-					idGlobal = tab.id;
-					intervalID = setInterval( function() { 
-											chrome.tabs.get( idGlobal ,function callback( tab ) {
-													if(tab.url == 'https://www.google.com/settings/personalinfo'){
-													chrome.tabs.remove(tab.id, function callback( tab ){
+				if ( _idTabAvtorization == null ) {
+					chrome.tabs.create( { 'url' : 'https://accounts.google.com/ServiceLogin', 'selected' : true } , function ( tab ) {
+						_idTabAvtorization = tab.id;
+						intervalID = setInterval( function() {
+												try {
+												chrome.tabs.get( _idTabAvtorization ,function callback( tab ) {
+														if(tab.url == 'https://www.google.com/settings/personalinfo'){
+														chrome.tabs.remove(tab.id, function callback( tab ){
+														});
+														clearInterval(intervalID);
+														}
 													});
+												}
+												catch( exaption ){
+													console.log(exaption);
 													clearInterval(intervalID);
-													}
-												});
-											} , 1000);
-				});
+													_idTabAvtorization = null;
+												}
+												} , 1000);
+					});
+				}
 			}
         }
         return this._session;
@@ -176,17 +173,21 @@ var GPlus = (function() {
             }
         },
         
-        getCirclesList : function( callback ) {            
-            xhrWithAuth( 'GET', 'https://plus.google.com/u/0/_/socialgraph/lookup/circles', false, callback );
+        getCirclesList : function( callback ) {
+			if ( !this._session ) {
+				xhrWithAuth( 'GET', 'https://plus.google.com/u/0/_/socialgraph/lookup/circles', false, callback );
+			}
         },
         
         getCirclesAndUsersList : function( callback ) {            
-            xhrWithAuth( 'GET', 'https://plus.google.com/u/0/_/socialgraph/lookup/circles?m=true', false, callback );
-        },
+            if ( !this._session ) {
+				xhrWithAuth( 'GET', 'https://plus.google.com/u/0/_/socialgraph/lookup/circles?m=true', false, callback );
+			}
+		},
         
         getUserEmail : function( callback ) {
-            xhrWithAuth( 'GET', 'https://www.googleapis.com/userinfo/v2/me?fields=email', false, callback );
-        },
+			xhrWithAuth( 'GET', 'https://www.googleapis.com/userinfo/v2/me?fields=email', false, callback );
+		},
         /**
          * Add people to a circle in your account.
          * @param {string} circleId the Circle to add the people to.
@@ -194,13 +195,15 @@ var GPlus = (function() {
          * @param {function(string)} callback The ids of the people added.
          */
         addPeopleToCircle : function( circleId, usersIds, callback ) {
-            var usersIdsArray = [];
-            usersIds.forEach( function( element, index ) {
-                usersIdsArray.push('[[null,null,"' + element + '"],null,[]]');
-            });
-            
-            xhrWithAuth( 'POST', 'https://plus.google.com/u/0/_/socialgraph/mutate/modifymemberships/?a=[[["' + circleId + '"]]]&m=[[' + usersIdsArray.join( ',' ) + ']]&at=' + getSession(), false, callback );
-        },
+            if ( !this._session ) {
+				var usersIdsArray = [];
+				usersIds.forEach( function( element, index ) {
+					usersIdsArray.push('[[null,null,"' + element + '"],null,[]]');
+				});
+				
+				xhrWithAuth( 'POST', 'https://plus.google.com/u/0/_/socialgraph/mutate/modifymemberships/?a=[[["' + circleId + '"]]]&m=[[' + usersIdsArray.join( ',' ) + ']]&at=' + getSession(), false, callback );
+			}
+		},
         
         /**
          * Remove people from a circle in your account.
@@ -210,29 +213,34 @@ var GPlus = (function() {
          * @param {function(string)} callback
          */
         removePeopleFromCircle : function( circleId, usersIds, callback ) {
-            var usersIdsArray = [];
-            usersIds.forEach( function( element, index ) {
-                usersIdsArray.push( '[null,null,"' + element + '"]' );
-            });
-            
-            xhrWithAuth( 'POST', 'https://plus.google.com/u/0/_/socialgraph/mutate/removemember/?c=["' + circle + '"]&m=[[' + usersIdsArray.join( ',' ) + ']]&at=' + getSession(), false, callback );
-        },
+            if ( !this._session ) {
+				var usersIdsArray = [];
+				usersIds.forEach( function( element, index ) {
+					usersIdsArray.push( '[null,null,"' + element + '"]' );
+				});
+				xhrWithAuth( 'POST', 'https://plus.google.com/u/0/_/socialgraph/mutate/removemember/?c=["' + circle + '"]&m=[[' + usersIdsArray.join( ',' ) + ']]&at=' + getSession(), false, callback );
+			}
+		},
         /**
          * Create a new empty circle in your account.
          *
          * @param {string} name The circle names.
          * @param {string} opt_description Optional description.
          * @param {function(string)} callback The ID of the circle.
+		 * Example:
+		 *
          */
         createCircle : function( name, opt_description, callback ) {
-            var data = 't=2&n=' + encodeURIComponent( name ) + '&m=[[]]';
-            if ( opt_description ) {
-                data += '&d=' + encodeURIComponent( opt_description );
-            }
-            data += '&at=' + getSession();
-            
-            xhrWithAuth( 'POST', 'https://plus.google.com/u/0/_/socialgraph/mutate/create/?' + data, false, callback );
-        },
+            if ( !this._session ) {
+				var data = 't=2&n=' + encodeURIComponent( name ) + '&m=[[]]';
+				if ( opt_description ) {
+					data += '&d=' + encodeURIComponent( opt_description );
+				}
+				data += '&at=' + getSession();
+				
+				xhrWithAuth( 'POST', 'https://plus.google.com/u/0/_/socialgraph/mutate/create/?' + data, false, callback );
+			}
+		},
         /**
          * Removes a circle from your profile.
          *
@@ -240,8 +248,10 @@ var GPlus = (function() {
          * @param {function(boolean)} callback.
          */
         removeCircle : function( circleId, callback ) {
-            xhrWithAuth( 'POST', 'https://plus.google.com/u/0/_/socialgraph/mutate/delete/?c=["' + circleId + '"]&at=' + getSession(), false, callback );
-        },
+			if ( !this._session ) {
+				xhrWithAuth( 'POST', 'https://plus.google.com/u/0/_/socialgraph/mutate/delete/?c=["' + circleId + '"]&at=' + getSession(), false, callback );
+			}
+		},
 
         testQuery : function( query, callback ) {
             xhrWithAuth( 'GET', query, false, callback );
