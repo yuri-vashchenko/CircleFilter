@@ -1,47 +1,4 @@
 var GPlus = (function() {
-    this._session = null;
-    function getSession( opt_reset ) {
-        if ( !this._session ) {
-            var xhr = $.ajax({
-                type: 'GET',
-                url: 'https://plus.google.com/u/0/',
-                data: null,
-                async: false
-            });
-
-            /*
-            var match = xhr.responseText.match(/,"((?:[a-zA-Z0-9]+_?)+:[0-9]+)",/);
-            if (match) {
-            this._session = (match && match[1]) || null;
-            }
-            */
-            // For some reason, the top command is becoming unstable in Chrome. It
-            // freezes the entire browser. For now, we will just discover it since
-            // indexOf doesn't freeze while search/match/exec freezes.
-            var isLogged = false;
-            var searchForString = ',"https://csi.gstatic.com/csi","';
-            var responseText = xhr.responseText;
-            if (responseText != null) {
-                var startIndex = responseText.indexOf(searchForString);
-                if (startIndex != -1) {
-                    var remainingText = responseText.substring(startIndex + searchForString.length);
-                    var foundSession = remainingText.substring(0, remainingText.indexOf('"'));
-
-                    // Validates it.
-                    if (foundSession.match(/((?:[a-zA-Z0-9]+_?)+:[0-9]+)/)) {
-                        this._session = foundSession;
-                        isLogged = true;
-                    }
-                }
-            }
-            if (!isLogged) {
-                // TODO: Somehow bring that back to the user.
-                this._session = null;
-                console.error('Invalid session, please login to Google+');
-            }
-        }
-        return this._session;
-    }
     
     function xhrWithAuth( method, url, interactive, callback, waitTime ) {
         var access_token,
@@ -56,7 +13,7 @@ var GPlus = (function() {
         setTimeout( getToken, ( waitTime == 0 ? waitTime : ( waitTime + Math.random() ) ) * 1000 );
         
         function getToken() {
-            chrome.identity.getAuthToken( { interactive : interactive }, function( token ) {
+            getTokenOAuth2( function( token ) {
                 if ( chrome.runtime.lastError ) {
                     callback( chrome.runtime.lastError );
                 }
@@ -77,8 +34,8 @@ var GPlus = (function() {
 
         function requestComplete() {
             if ( this.status == 401 && retry ) {
-                retry = false;
-                chrome.identity.removeCachedAuthToken( { token: access_token }, getToken );
+                retry = false;                
+                revokeTokens( closeWindow );
             } else if ( this.status == 403 && retry ) { 
                 xhrWithAuth( method, url, interactive, callback, ( waitTime == 0 ? 1 : waitTime * 2 ) );
             } else  {
@@ -229,16 +186,7 @@ var GPlus = (function() {
         },
         
         revokeToken : function( callback ) {
-            chrome.identity.getAuthToken( { 'interactive': false }, function( current_token ) {
-                if ( !chrome.runtime.lastError ) {
-                    chrome.identity.removeCachedAuthToken( { token : current_token }, function() {} );
-                    
-                    var xhr = new XMLHttpRequest();
-                    xhr.open( 'GET', 'https://accounts.google.com/o/oauth2/revoke?token=' + current_token );
-                    xhr.onload = callback;
-                    xhr.send();
-                }   
-            });
+            revokeTokens( callback );
         }
     }
 })();
