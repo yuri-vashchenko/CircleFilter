@@ -114,6 +114,13 @@ var StorageManager = (function() {
         removeProperty( 'users' );  
     }
     
+	function removeCircle( id ) {
+		var circles = readProperty( 'circles' ),
+			circleIndex = getCircleIndex( id );
+		circles.splice( circleIndex , 1 );
+		writeProperty( 'circles', circles );
+	}
+	
     function clearCircles() {
         removeProperty( 'circles' );  
     }
@@ -234,7 +241,7 @@ var StorageManager = (function() {
             )
         }
     }
-    
+	
     function getCircle( id ) {
         var circles = readProperty( 'circles' ),
               circleIndex = getCircleIndex( id );
@@ -247,7 +254,7 @@ var StorageManager = (function() {
     function setUserEmail( email ) {
         writeProperty( 'email', email );
     }
-        
+    
     return {
         getUserIdsList: function( callback ) {
             var userIdsList = new Array();
@@ -473,6 +480,67 @@ var StorageManager = (function() {
         
         getStorageSize: function() {
             return getStorageSize();
-        }
+        },
+		/**
+         * Add people to a circle in your account.
+         * @param {string} circleId the Circle to add the people to.
+         * @param {{Array.<string>}} usersIds The people to add.
+         * @param {function(string)} callback The ids of the people added.
+         */
+        addPeopleToCircle : function( circleId, usersIds, callback ) {
+			GPlus.addPeopleToCircle( circleId, usersIds, function ( response ) {
+				var dirtyPeople = response[2];
+				var remaining = dirtyPeople.length;
+				dirtyPeople.forEach(function(element, index) {
+				  
+				});
+			});
+		},
+        
+        /**
+         * Remove people from a circle in your account.
+         *
+         * @param {string} circleId the Circle to remove people from.
+         * @param {{Array.<string>}} usersIds The people to add.
+         * @param {function(string)} callback
+         */
+        removePeopleFromCircle : function( circleId, usersIds, callback ) {
+            
+		},
+        /**
+         * Create a new empty circle in your account.
+         *
+         * @param {string} name The circle names.
+         * @param {string} description Optional description.
+         * @param {function(string)} callback The ID of the circle.
+		 * Example:
+		 *
+         */
+        createCircle : function( name, description, callback ) {
+            GPlus.createCircle( name, description, function( response ) { 
+				error = (response != null);
+				if(error){
+					var id = response[1][0];
+					var position = response[2];
+					addCircle(  id, name, description, position  );
+				}
+				callback( id, name, description, position, error );
+			});
+		},
+        /**
+         * Removes a circle from your profile.
+         *
+         * @param {string} circleId The circle ID.
+         * @param {function(boolean)} callback.
+         */
+        removeCircle : function( circleId, callback ) {
+			GPlus.removeCircle( circleId, function( response ) { 
+				error = (response != null);
+				if(error){
+					removeCircle(  circleId  );
+				}
+				callback( circleId, callback  );
+			});
+		},
     }
 })();
