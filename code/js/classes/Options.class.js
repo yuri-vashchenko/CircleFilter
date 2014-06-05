@@ -67,7 +67,7 @@ var Options = ( function() {
         inp2.type = 'radio';
         inp2.name = 'answer';
         help2.textContent = getMessage( 'useActualData' );
-        help2.appendChild(inp2);
+        help2.appendChild(inp2); 
         
         var input = document.createElement('div');
         $(input).addClass('input');
