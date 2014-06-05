@@ -110,9 +110,6 @@
     "cancel": {
         "message": "Отменить"
     }, 
-    "removeFilterOption": {
-        "message": "Удалить критерий фильтрации"
-    },
     "storingLoadingData": {
         "message": "Запоминание ресурсов загрузки данных"
     },
@@ -124,5 +121,8 @@
     }, 
     "useActualData": {
         "message": "Использовать только актуальные данные"
-    }    
+    },    
+    "removeFilterOption": {
+        "message": "Удалить критерий фильтрации"
+    }   
 }

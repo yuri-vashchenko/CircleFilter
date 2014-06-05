@@ -109,9 +109,6 @@
     },
     "cancel": {
         "message": "Cancel"
-    }, 
-    "removeFilterOption": {
-        "message": "Remove filter option"
     },
     "storingDataDownload": {
         "message": "Storing resource data downloading"
@@ -124,5 +121,8 @@
     }, 
     "useActualData": {
         "message": "Use only the actual data"
-    }  
+    },    
+    "removeFilterOption": {
+        "message": "Remove filter option"
+    } 
 }

@@ -10,7 +10,7 @@ var Options = ( function() {
     
     function showName( options ) {
         var nameBlock = document.createElement( 'div' );
-        
+       
         nameBlock.textContent = options.name;
         $( nameBlock ).addClass( 'name' );
         
