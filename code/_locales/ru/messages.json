@@ -27,10 +27,10 @@
         "message": "Данный блок находится в разработке."
     },
     "import": {
-        "message": "Импорт формулы"
+        "message": "Импорт формулы из файла"
     },
     "export": {
-        "message": "Экспорт формулы"
+        "message": "Экспорт формулы в файл"
     },
     "clear": {
         "message": "Сбросить"
@@ -112,5 +112,35 @@
     },
     "removeFilterOption": {
         "message": "Удалить критерий фильтрации"
+    },
+    "clearTitle": {
+        "message": "Сбросить содержимое формулы"
+    },
+    "applyTitle": {
+        "message": "Начать фильтрование по заданной формуле"
+    },
+    "stopTitle": {
+        "message": "Остановить фильтрацию"
+    },
+    "addToCircleTitle": {
+        "message": "Добавление выбранных пользователей в круг"
+    },
+    "moveToCircleTitle": {
+        "message": "Перемещение выбранных пользователей в круг"
+    },
+    "deleteFromCircleTitle": {
+        "message": "Удаление выбранных пользователей из круга"
+    },
+    "deleteAllFromCircleTitle": {
+        "message": "Удалить всех отфильтрованных пользователей из круга"
+    },
+    "exportToFileTitle": {
+        "message": "Экспорт результата фильтрации в файл"
+    },
+    "exportToXmlTitle": {
+        "message": "Экспорт результата фильтрации в XML"
+    },
+    "exportToCsvTitle": {
+        "message": "Экспорт результата фильтрации в CSV"
     }
 }
