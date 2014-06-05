@@ -19,6 +19,103 @@ var Options = ( function() {
     
     function showContentBlock() {
         var contentBlock = document.createElement( 'div' );
+        contentBlock.className = 'optionsShow';
+        document.body.appendChild(contentBlock);
+        
+        var head = document.createElement('div');
+        $(head).addClass('head');
+        contentBlock.appendChild(head);
+        
+        var optionsNew = document.createElement('div');
+        $(optionNew).addClass('optionNew');
+        head.appendChild(optionsNew);
+        
+        var radio = document.createElement('div');
+        $(radio).addClass('radio');
+        center.appendChild(radio);
+        
+        var form1 = document.createElement('form');
+        radio.appendChild(form1);
+        
+        var langName = document.createElement('div');
+        langName.className = 'langName';
+        langName.innerHTML = '<h4>Запоминание ресурсов загруски данных</h4>';
+        form1.appendChild(langName);
+            
+        var help = document.createElement('div');
+        langName.appendChild(help);
+        
+        var inp = document.createElement('input');
+        inp.type = 'radio';
+        inp.name = 'answer';
+        help.innerHTML = 'Всегда спрашивать о выборе загруски';
+        help.appendChild(inp);
+        
+        var help1 = document.createElement('div');
+        langName.appendChild(help1);
+    
+        var inp1 = document.createElement('input');
+        inp1.type = 'radio';
+        inp1.name = 'answer';
+        help1.innerHTML = 'Использовать только локальные даннык';
+        help1.appendChild(inp1);
+    
+        var help2 = document.createElement('div');
+        langName.appendChild(help2);
+            
+        var inp2 = document.createElement('input');
+        inp2.type = 'radio';
+        inp2.name = 'answer';
+        help2.innerHTML = 'Использовать только актуальные даннык';
+        help2.appendChild(inp2);
+        
+        var input = document.createElement('div');
+        $(input).addClass('input');
+        center.appendChild(input);
+    
+        var form2 = document.createElement('form');
+        input.appendChild(form2);
+            
+        var langName1 = document.createElement('div');
+        langName1.className = 'langName';
+        langName1.innerHTML = '<h4>Запоминание ресурсов загруски данных</h4>';
+        form2.appendChild(langName1);
+        
+        var country1 = document.createElement('div');
+        country1.className = 'country1';
+        langName1.appendChild(country1);
+        
+        var input1 = document.createElement('input');
+        input1.size = '40';
+        input1.type = 'text';
+        country1.appendChild(input1);
+    
+        var button2 = document.createElement('div');
+        $(button2).addClass('button2');
+        langName1.appendChild(button2);
+        
+        var input2 = document.createElement('input');
+        input2.value = 'Обзор';
+        input2.type = 'button'
+        button2.appendChild(input2);
+    
+        var button1 = document.createElement('div');
+        $(button1).addClass('button1');
+        center.appendChild(button1);
+    
+        var input3 = document.createElement('input');
+        input3.value = 'Вернуться';
+        input3.type = 'button';
+        button1.appendChild(input3);
+    
+        var button3 = document.createElement('div');
+        $(button3).addClass('button3');
+        center.appendChild(button3);
+        
+        var input4 = document.createElement('input');
+        input4.value = 'Применить';
+        input4.type = 'button';
+        button3.appendChild(input4);
         
         return contentBlock;
     }
@@ -53,6 +150,7 @@ var Options = ( function() {
             
             acceptButton.addEventListener( 'click', function() {
                 /* paste your apply Options code here */
+                
                 
                 onClose();
             });
