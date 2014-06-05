@@ -114,13 +114,13 @@ var StorageManager = (function() {
         removeProperty( 'users' );  
     }
     
-	function removeCircle( id ) {
-		var circles = readProperty( 'circles' ),
-			circleIndex = getCircleIndex( id );
-		circles.splice( circleIndex , 1 );
-		writeProperty( 'circles', circles );
-	}
-	
+    function removeCircle( id ) {
+        var circles = readProperty( 'circles' ),
+            circleIndex = getCircleIndex( id );
+        circles.splice( circleIndex , 1 );
+        writeProperty( 'circles', circles );
+    }
+    
     function clearCircles() {
         removeProperty( 'circles' );  
     }
@@ -193,6 +193,15 @@ var StorageManager = (function() {
         return -1;
     }
     
+    function getIndexByValue( array , value ) {
+        for ( var i = 0; i < array.length; i++ ) {
+            if ( array[i] == value ) {
+                return i;
+            }            
+        }
+        return -1;
+    }
+    
     function getCircleIndex( id ) {
         var circles = readProperty( 'circles' );
         
@@ -241,7 +250,7 @@ var StorageManager = (function() {
             )
         }
     }
-	
+    
     function getCircle( id ) {
         var circles = readProperty( 'circles' ),
               circleIndex = getCircleIndex( id );
@@ -481,21 +490,28 @@ var StorageManager = (function() {
         getStorageSize: function() {
             return getStorageSize();
         },
-		/**
+        /**
          * Add people to a circle in your account.
          * @param {string} circleId the Circle to add the people to.
          * @param {{Array.<string>}} usersIds The people to add.
          * @param {function(string)} callback The ids of the people added.
          */
         addPeopleToCircle : function( circleId, usersIds, callback ) {
-			GPlus.addPeopleToCircle( circleId, usersIds, function ( response ) {
-				var dirtyPeople = response[2];
-				var remaining = dirtyPeople.length;
-				dirtyPeople.forEach(function(element, index) {
-				  
-				});
-			});
-		},
+            GPlus.addPeopleToCircle( circleId, usersIds, function ( response ) {
+                error = (response != null);
+                if(error){
+                    var dirtyPeople = response[2];
+                    var remaining = dirtyPeople.length;
+                    dirtyPeople.forEach(function(element, index) {
+                        users = readProperty( 'users' );
+                        userIndex = getUserIndex( element );
+                        users[userIndex].circles.push(circleId);
+                        writeProperty( 'users', users );
+                    });
+                }
+                callback( circleId, usersIds, error );
+            });
+        },
         
         /**
          * Remove people from a circle in your account.
@@ -505,28 +521,41 @@ var StorageManager = (function() {
          * @param {function(string)} callback
          */
         removePeopleFromCircle : function( circleId, usersIds, callback ) {
-            
-		},
+            GPlus.removePeopleFromCircle( circleId, usersIds, function ( response ) {
+                error = (response != null);
+                if(error){
+                    usersIds.forEach(function(element, index) {
+                        users = readProperty( 'users' );
+                        userIndex = getUserIndex( element );
+                        
+                        indexCircle = getIndexByValue( users[userIndex].circles , circleId );
+                        users[userIndex].circles.splice(indexCircle, 1);
+                        writeProperty( 'users', users );
+                    });
+                }
+                callback( circleId, usersIds, error );
+            });
+        },
         /**
          * Create a new empty circle in your account.
          *
          * @param {string} name The circle names.
          * @param {string} description Optional description.
          * @param {function(string)} callback The ID of the circle.
-		 * Example:
-		 *
+         * Example:
+         *
          */
         createCircle : function( name, description, callback ) {
             GPlus.createCircle( name, description, function( response ) { 
-				error = (response != null);
-				if(error){
-					var id = response[1][0];
-					var position = response[2];
-					addCircle(  id, name, description, position  );
-				}
-				callback( id, name, description, position, error );
-			});
-		},
+                error = (response != null);
+                if(error){
+                    var id = response[1][0];
+                    var position = response[2];
+                    addCircle(  id, name, description, position  );
+                }
+                callback( id, name, description, position, error );
+            });
+        },
         /**
          * Removes a circle from your profile.
          *
@@ -534,13 +563,13 @@ var StorageManager = (function() {
          * @param {function(boolean)} callback.
          */
         removeCircle : function( circleId, callback ) {
-			GPlus.removeCircle( circleId, function( response ) { 
-				error = (response != null);
-				if(error){
-					removeCircle(  circleId  );
-				}
-				callback( circleId, callback  );
-			});
-		},
+            GPlus.removeCircle( circleId, function( response ) { 
+                error = (response != null);
+                if(error){
+                    removeCircle(  circleId  );
+                }
+                callback( circleId, callback  );
+            });
+        },
     }
 })();
