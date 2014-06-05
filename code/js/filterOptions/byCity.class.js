@@ -32,7 +32,8 @@
                   requiredUserFields = this.requiredUserFields;
             
             StorageManager.getUserInfo( userId, requiredUserFields, function( user ) {
-                if ( user.city && configuration.city.match( user.city ) ) {
+                var translit = transliterate( configuration.city );
+                if ( user.city && ( user.city.indexOf( configuration.city ) < 0 || translit.indexOf( configuration.city ) < 0 ) ) {
                     accept( userId );                    
                 } else {
                     decline( userId );
