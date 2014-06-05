@@ -112,5 +112,11 @@
     },
     "removeFilterOption": {
         "message": "Удалить критерий фильтрации"
+    },
+    "filterByCity": {
+        "message": "по Проживанию"
+    },
+    "city": {
+        "message": "Город"
     }
 }

@@ -112,5 +112,11 @@
     },
     "removeFilterOption": {
         "message": "Remove filter option"
+    },
+    "filterByCity": {
+        "message": "by City"
+    },
+    "city": {
+        "message": "City"
     }
 }

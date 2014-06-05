@@ -2,7 +2,7 @@
 var filterOptionsList = Array();
 
 function loadFilterOptions() {
-    var filterOptionsList = ['test', 'test2', 'byAge', 'bySex'];          
+    var filterOptionsList = ['test', 'test2', 'byAge', 'bySex', 'byCity'];          
     
     for ( var i = 0; i < filterOptionsList.length; i++ ) {
         var script = document.createElement( 'script' );
