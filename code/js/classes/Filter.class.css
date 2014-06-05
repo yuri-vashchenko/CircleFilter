@@ -35,11 +35,25 @@
     display: block;
 }
 
+.filter .content.action {
+    padding: 20px 5px;
+}
 .filter .action button {
     display: block;
-    width:65%;
-    height:5%;
+    width: 288px;
+    height: 58px;
+    cursor: pointer;
+    border: 1px solid grey;
+    padding: 13px;
+    margin: 5px 0;
+    background-color: white;
 }
+
+.filter .action button:hover {
+    background: rgb(0, 168, 233);
+}
+
+
 .filter .action  h3{
     font-size: 25px;
     font-family: calibri;
