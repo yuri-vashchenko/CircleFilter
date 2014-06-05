@@ -1,64 +1,5 @@
 var GPlus = (function() {
-    this._session = null;
-	_idTabAvtorization = null;
-    function getSession( opt_reset ) {
-        if ( !this._session ) {
-            var xhr = $.ajax({
-                type: 'GET',
-                url: 'https://plus.google.com/u/0/',
-                data: null,
-                async: false
-            });
-			
-            // For some reason, the top command is becoming unstable in Chrome. It
-            // freezes the entire browser. For now, we will just discover it since
-            // indexOf doesn't freeze while search/match/exec freezes.
-            var isLogged = false;
-            var searchForString = ',"https://csi.gstatic.com/csi","';
-            var responseText = xhr.responseText;
-            if (responseText != null) {
-                var startIndex = responseText.indexOf(searchForString);
-                if (startIndex != -1) {
-                    var remainingText = responseText.substring(startIndex + searchForString.length);
-                    var foundSession = remainingText.substring(0, remainingText.indexOf('"'));
 
-                    // Validates it.
-                    if (foundSession.match(/((?:[a-zA-Z0-9]+_?)+:[0-9]+)/)) {
-                        this._session = foundSession;
-                        isLogged = true;
-                    }
-                }
-            }
-            if (!isLogged) {
-                // TODO: Somehow bring that back to the user.
-                this._session = null;
-                console.error('Invalid session, please login to Google+');
-				if ( _idTabAvtorization == null ) {
-					chrome.tabs.create( { 'url' : 'https://accounts.google.com/ServiceLogin', 'selected' : true } , function ( tab ) {
-						_idTabAvtorization = tab.id;
-						intervalID = setInterval( function() {
-												try {
-												chrome.tabs.get( _idTabAvtorization ,function callback( tab ) {
-														if(tab.url == 'https://www.google.com/settings/personalinfo'){
-														chrome.tabs.remove(tab.id, function callback( tab ){
-														});
-														clearInterval(intervalID);
-														}
-													});
-												}
-												catch( exaption ){
-													console.log(exaption);
-													clearInterval(intervalID);
-													_idTabAvtorization = null;
-												}
-												} , 1000);
-					});
-				}
-			}
-        }
-        return this._session;
-    }
-    
     function xhrWithAuth( method, url, interactive, callback, waitTime ) {
         var access_token,
               result = {},
@@ -72,7 +13,7 @@ var GPlus = (function() {
         setTimeout( getToken, ( waitTime == 0 ? waitTime : ( waitTime + Math.random() ) ) * 1000 );
         
         function getToken() {
-            chrome.identity.getAuthToken( { interactive : interactive }, function( token ) {
+            getTokenOAuth2( function( token ) {
                 if ( chrome.runtime.lastError ) {
                     callback( chrome.runtime.lastError );
                 }
@@ -93,8 +34,8 @@ var GPlus = (function() {
 
         function requestComplete() {
             if ( this.status == 401 && retry ) {
-                retry = false;
-                chrome.identity.removeCachedAuthToken( { token: access_token }, getToken );
+                retry = false;                
+                revokeTokens( closeWindow );
             } else if ( this.status == 403 && retry ) { 
                 xhrWithAuth( method, url, interactive, callback, ( waitTime == 0 ? 1 : waitTime * 2 ) );
             } else  {
@@ -174,20 +115,20 @@ var GPlus = (function() {
         },
         
         getCirclesList : function( callback ) {
-			if ( !this._session ) {
-				xhrWithAuth( 'GET', 'https://plus.google.com/u/0/_/socialgraph/lookup/circles', false, callback );
-			}
+            if ( !this._session ) {
+                xhrWithAuth( 'GET', 'https://plus.google.com/u/0/_/socialgraph/lookup/circles', false, callback );
+            }
         },
         
         getCirclesAndUsersList : function( callback ) {            
             if ( !this._session ) {
-				xhrWithAuth( 'GET', 'https://plus.google.com/u/0/_/socialgraph/lookup/circles?m=true', false, callback );
-			}
-		},
+                xhrWithAuth( 'GET', 'https://plus.google.com/u/0/_/socialgraph/lookup/circles?m=true', false, callback );
+            }
+        },
         
         getUserEmail : function( callback ) {
-			xhrWithAuth( 'GET', 'https://www.googleapis.com/userinfo/v2/me?fields=email', false, callback );
-		},
+            xhrWithAuth( 'GET', 'https://www.googleapis.com/userinfo/v2/me?fields=email', false, callback );
+        },
         /**
          * Add people to a circle in your account.
          * @param {string} circleId the Circle to add the people to.
@@ -196,14 +137,14 @@ var GPlus = (function() {
          */
         addPeopleToCircle : function( circleId, usersIds, callback ) {
             if ( !this._session ) {
-				var usersIdsArray = [];
-				usersIds.forEach( function( element, index ) {
-					usersIdsArray.push('[[null,null,"' + element + '"],null,[]]');
-				});
-				
-				xhrWithAuth( 'POST', 'https://plus.google.com/u/0/_/socialgraph/mutate/modifymemberships/?a=[[["' + circleId + '"]]]&m=[[' + usersIdsArray.join( ',' ) + ']]&at=' + getSession(), false, callback );
-			}
-		},
+                var usersIdsArray = [];
+                usersIds.forEach( function( element, index ) {
+                    usersIdsArray.push('[[null,null,"' + element + '"],null,[]]');
+                });
+                
+                xhrWithAuth( 'POST', 'https://plus.google.com/u/0/_/socialgraph/mutate/modifymemberships/?a=[[["' + circleId + '"]]]&m=[[' + usersIdsArray.join( ',' ) + ']]&at=' + getSession(), false, callback );
+            }
+        },
         
         /**
          * Remove people from a circle in your account.
@@ -214,33 +155,33 @@ var GPlus = (function() {
          */
         removePeopleFromCircle : function( circleId, usersIds, callback ) {
             if ( !this._session ) {
-				var usersIdsArray = [];
-				usersIds.forEach( function( element, index ) {
-					usersIdsArray.push( '[null,null,"' + element + '"]' );
-				});
-				xhrWithAuth( 'POST', 'https://plus.google.com/u/0/_/socialgraph/mutate/removemember/?c=["' + circle + '"]&m=[[' + usersIdsArray.join( ',' ) + ']]&at=' + getSession(), false, callback );
-			}
-		},
+                var usersIdsArray = [];
+                usersIds.forEach( function( element, index ) {
+                    usersIdsArray.push( '[null,null,"' + element + '"]' );
+                });
+                xhrWithAuth( 'POST', 'https://plus.google.com/u/0/_/socialgraph/mutate/removemember/?c=["' + circle + '"]&m=[[' + usersIdsArray.join( ',' ) + ']]&at=' + getSession(), false, callback );
+            }
+        },
         /**
          * Create a new empty circle in your account.
          *
          * @param {string} name The circle names.
          * @param {string} opt_description Optional description.
          * @param {function(string)} callback The ID of the circle.
-		 * Example:
-		 *
+         * Example:
+         *
          */
         createCircle : function( name, opt_description, callback ) {
             if ( !this._session ) {
-				var data = 't=2&n=' + encodeURIComponent( name ) + '&m=[[]]';
-				if ( opt_description ) {
-					data += '&d=' + encodeURIComponent( opt_description );
-				}
-				data += '&at=' + getSession();
-				
-				xhrWithAuth( 'POST', 'https://plus.google.com/u/0/_/socialgraph/mutate/create/?' + data, false, callback );
-			}
-		},
+                var data = 't=2&n=' + encodeURIComponent( name ) + '&m=[[]]';
+                if ( opt_description ) {
+                    data += '&d=' + encodeURIComponent( opt_description );
+                }
+                data += '&at=' + getSession();
+                
+                xhrWithAuth( 'POST', 'https://plus.google.com/u/0/_/socialgraph/mutate/create/?' + data, false, callback );
+            }
+        },
         /**
          * Removes a circle from your profile.
          *
@@ -248,26 +189,17 @@ var GPlus = (function() {
          * @param {function(boolean)} callback.
          */
         removeCircle : function( circleId, callback ) {
-			if ( !this._session ) {
-				xhrWithAuth( 'POST', 'https://plus.google.com/u/0/_/socialgraph/mutate/delete/?c=["' + circleId + '"]&at=' + getSession(), false, callback );
-			}
-		},
+            if ( !this._session ) {
+                xhrWithAuth( 'POST', 'https://plus.google.com/u/0/_/socialgraph/mutate/delete/?c=["' + circleId + '"]&at=' + getSession(), false, callback );
+            }
+        },
 
         testQuery : function( query, callback ) {
             xhrWithAuth( 'GET', query, false, callback );
         },
         
         revokeToken : function( callback ) {
-            chrome.identity.getAuthToken( { 'interactive': false }, function( current_token ) {
-                if ( !chrome.runtime.lastError ) {
-                    chrome.identity.removeCachedAuthToken( { token : current_token }, function() {} );
-                    
-                    var xhr = new XMLHttpRequest();
-                    xhr.open( 'GET', 'https://accounts.google.com/o/oauth2/revoke?token=' + current_token );
-                    xhr.onload = callback;
-                    xhr.send();
-                }   
-            });
+            revokeTokens( callback );
         }
     }
 })();
