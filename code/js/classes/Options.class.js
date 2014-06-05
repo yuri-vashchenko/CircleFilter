@@ -39,7 +39,7 @@ var Options = ( function() {
         
         var langName = document.createElement('div');
         langName.className = 'langName';
-        langName.innerHTML = '<h4>Запоминание ресурсов загруски данных</h4>';
+        langName.textContent = getMessage( 'storingDataDownload' );
         form1.appendChild(langName);
             
         var help = document.createElement('div');
@@ -48,7 +48,7 @@ var Options = ( function() {
         var inp = document.createElement('input');
         inp.type = 'radio';
         inp.name = 'answer';
-        help.innerHTML = 'Всегда спрашивать о выборе загруски';
+        help.textContent = getMessage( 'theChoiceDownload' );
         help.appendChild(inp);
         
         var help1 = document.createElement('div');
@@ -57,7 +57,7 @@ var Options = ( function() {
         var inp1 = document.createElement('input');
         inp1.type = 'radio';
         inp1.name = 'answer';
-        help1.innerHTML = 'Использовать только локальные даннык';
+        help1.textContent = getMessage( 'useLocalData' );
         help1.appendChild(inp1);
     
         var help2 = document.createElement('div');
@@ -66,7 +66,7 @@ var Options = ( function() {
         var inp2 = document.createElement('input');
         inp2.type = 'radio';
         inp2.name = 'answer';
-        help2.innerHTML = 'Использовать только актуальные даннык';
+        help2.textContent = getMessage( 'useActualData' );
         help2.appendChild(inp2);
         
         var input = document.createElement('div');
@@ -78,7 +78,7 @@ var Options = ( function() {
             
         var langName1 = document.createElement('div');
         langName1.className = 'langName';
-        langName1.innerHTML = '<h4>Запоминание ресурсов загруски данных</h4>';
+        langName1.textContent = getMessage( 'storingDataDownload' );
         form2.appendChild(langName1);
         
         var country1 = document.createElement('div');

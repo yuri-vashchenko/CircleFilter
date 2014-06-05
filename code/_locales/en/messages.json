@@ -112,5 +112,17 @@
     },
     "removeFilterOption": {
         "message": "Remove filter option"
-    }
+    },
+    "storingDataDownload": {
+        "message": "Storing resource data downloading"
+    },
+    "theChoiceDownload": {
+        "message": "Always ask about choosing data downloading"
+    },   
+    "useLocalData": {
+        "message": "Use only local data"
+    }, 
+    "useActualData": {
+        "message": "Use only the actual data"
+    }  
 }

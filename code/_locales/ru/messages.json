@@ -112,5 +112,17 @@
     },
     "removeFilterOption": {
         "message": "Удалить критерий фильтрации"
-    }
+    },
+    "storingLoadingData": {
+        "message": "Запоминание ресурсов загрузки данных"
+    },
+    "theChoiceDownload": {
+        "message": "Всегда спрашивать о выборе загрузки"
+    },   
+    "useLocalData": {
+        "message": "Использовать только локальные данные"
+    }, 
+    "useActualData": {
+        "message": "Использовать только актуальные данные"
+    }    
 }
