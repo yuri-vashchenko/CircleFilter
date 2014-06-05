@@ -142,5 +142,11 @@
     },
     "exportToCsvTitle": {
         "message": "Export filter result to CSV"
+    },
+    "filterByCity": {
+        "message": "by City"
+    },
+    "city": {
+        "message": "City"
     }
 }

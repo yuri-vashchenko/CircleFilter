@@ -142,5 +142,11 @@
     },
     "exportToCsvTitle": {
         "message": "Экспорт результата фильтрации в CSV"
+    },
+    "filterByCity": {
+        "message": "по Проживанию"
+    },
+    "city": {
+        "message": "Город"
     }
 }
