@@ -13,5 +13,104 @@
     },
     "defaultResultBlockContent": {
         "message": "Default result block content..."
-    }    
+    },
+    "revoke": {
+        "message": "Logout"
+    },
+    "help": {
+        "message": "Help"
+    },
+    "config": {
+        "message": "Config"
+    },
+    "inDev": {
+        "message": "in dev..."
+    },
+    "import": {
+        "message": "Upload formula filtering"
+    },
+    "export": {
+        "message": "Unload formula filtering"
+    },
+    "clear": {
+        "message": "Clear"
+    },
+    "apply": {
+        "message": "Apply"
+    },
+    "or": {
+        "message": "OR"
+    },
+    "chooseAction": {
+        "message": "Choose an action"
+    },
+    "chooseFilter": {
+        "message": "Choose filter criteria"
+    },
+    "addToCircle": {
+        "message": "addToCircle"
+    },
+    "moveToCircle": {
+        "message": "moveToCircle"
+    },
+    "deleteFromCircle": {
+        "message": "deleteFromCircle"
+    },
+    "deleteAllFromCircle": {
+        "message": "deleteAllFromCircle"
+    },
+    "exportToFile": {
+        "message": "exportToFile"
+    },
+    "exportToXml": {
+        "message": "exportToXml"
+    },
+    "exportToCsv": {
+        "message": "exportToCsv"
+    },
+    "filterByAge": {
+        "message": "by Age"
+    },
+    "from": {
+        "message": "From"
+    },
+    "to": {
+        "message": "To"
+    },
+    "anyAge": {
+        "message": "Any Age"
+    },
+    "stop": {
+        "message": "Stop"
+    },
+    "firstNav": {
+        "message": "|<<"
+    },
+    "lastNav": {
+        "message": ">>|"
+    },
+    "filterBySex": {
+        "message": "by Sex"
+    },
+    "sex": {
+        "message": "Sex"
+    },
+    "male": {
+        "message": "Male"
+    },
+    "female": {
+        "message": "Female"
+    },
+    "importFromFile": {
+        "message": "Import from file"
+    },
+    "addFilterOption": {
+        "message": "Add filter option"
+    },
+    "cancel": {
+        "message": "Cancel"
+    },
+    "removeFilterOption": {
+        "message": "Remove filter option"
+    }
 }

@@ -2,18 +2,28 @@
     display: inline-block;
     height: 72px;
     width: 200px;
-    margin: 5px;
-    border: 1px solid gray;
+    margin: 10px;
+    border: 1px solid silver;
     border-radius: 5px;
+    vertical-align: top;
+    background-color: whitesmoke;
+    color: dodgerblue;
+    font-family: arial, verdana, sans-serif;
+    font-size: 16px;
+    cursor: pointer;
 }
 
 .user .name {    
     margin: 10px 0px 10px 10px;
 }
 
-.user img {    
-    float:left;
+.user img {
+    float: left;
+    height: 62px;
+    width: 62px;
+    margin: 4px;
 }
+
 .user a {   
     cursor: pointer;
 }

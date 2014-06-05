@@ -1,0 +1,92 @@
+.addFilterOption {
+    position: relative;
+    cursor: pointer;
+    display: block;
+    border: 1px solid grey;
+    height: 58px;
+    padding: 13px;
+    margin: 5px 0;
+    background-color: white;
+}
+
+.filterSetBlock {
+    position: relative;
+    display: block;
+    padding: 1px 5px;
+    border: 1px solid grey;
+}
+
+.close {
+    display: none;
+    position: absolute;
+    right: -16px;
+    top: -16px;
+    opacity: 0.6 !important;
+}
+
+.filterSetBlock:hover .close {
+    display: block;
+}
+
+.close:hover {
+    display: block;
+    opacity: 1 !important;
+}
+
+.filterSetBlock:only-of-type:hover .close{
+    display: none;
+}
+.remove {
+    position: absolute;
+    right: 8px;
+    top: 12px;
+    opacity: 0.6;
+}
+
+.remove:hover {
+    opacity: 1;
+}
+
+.add {
+    position: absolute;
+    right: 8px;
+    top: 12px;
+    opacity: 0.6;
+}
+
+.addFilterOption:hover .add {
+    opacity: 1;
+}
+
+/* Dropdown filterOptionsList
+-----------------------------------------------------------------------------*/
+
+ul.filterOptionsList {
+    width: 288px;
+    padding: 0;
+    display: none;
+}
+ul.filterOptionsList li {
+    padding: 6px 9px;
+    list-style-type: none;
+    border-top: 1px solid #efefef;
+}
+ul.filterOptionsList li:hover {
+    cursor: pointer;
+    background: rgb(0, 168, 233);
+}
+
+/* Overlay */
+#simplemodal-overlay {
+}
+
+/* Container */
+#simplemodal-container {
+    height: 300px;
+    width: 288px;
+    color: black;
+    background-color: white;
+    border: 1px solid grey;
+    padding: 0px;
+    position: absolute !important;
+}

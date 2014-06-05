@@ -1,11 +1,13 @@
-﻿{
-    "manifest_version": 2,
-    "default_locale":"en",
-    
+﻿{    
     "name": "__MSG_extName__",
-    "version": "0.4.3",
-    "description": "__MSG_extDescr__",
     
+    "version": "0.5",
+    "manifest_version": 2,
+    "minimum_chrome_version": "29",
+    "key": "MIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEAgb5mUKJGx1VClnS+X6E8/dHhNE9bl6pfwNRsDWkHcQBnJbjZfeyCDrDglHzGJzTcXLW3ixA4UTSPVwwazkwI3IXaNaHxBnOq2tBmRVFoMN96HtPxWp8U6SiPZc1PvfNxTpIDUqSbTUAxhmdz5Ge0o3Oj32JcNu1aiEM5KTqvzrO8GcXMfUQc/uJWLPdNAu4TmjETfUIbB0OE0rN2EgIOXF2Ifmwren7Lc2rhUTa5VvUS0XKuVqUjV3VIavI6iVYAyrr09QP6/RC153cr7yLqgRFRV2SGkyU5L+4dngJr9r0Q2elysxCGs0t2Jf/8chA7Q5J8qWNHBkBmUbKMDWnOBwIDAQAB",
+
+    "description": "__MSG_extDescr__",     
+    "default_locale":"en",    
     
     "icons": {
         "16": "icons/logo16.png",
@@ -13,26 +15,42 @@
         "64": "icons/logo64.png",
         "128": "icons/logo128.png",
         "256": "icons/logo256.png"
-    },
-
-    "permissions": [
-        "tabs",
-        "notifications",
-        "https://plus.google.com/*",
-        "https://apis.google.com/*",
-        "https://accounts.google.com/*"
-    ],
+    },    
     
-    "content_security_policy": "script-src 'self' 'unsafe-eval' https://accounts.google.com https://plus.google.com https://apis.google.com; frame-src 'self' https://apis.google.com https://accounts.google.com https://content.googleapis.com; object-src 'self'",
-
     "background": {
-        "scripts": ["js/background.js"]
+        "scripts": ["background.js"]
     },
     
     "browser_action": {
-        "default_title": "CircleFilter",
+        "default_title": "__MSG_extName__",
         "default_icon": "icons/logo32.png"
     },
-   
-    "options_page": "options.html"
+  
+    "permissions": [
+        "identity",
+        "downloads",
+        "https://plus.google.com/*",
+        "https://accounts.google.com/*",
+        "https://www.googleapis.com/*"
+    ],
+    
+    "content_security_policy": "script-src 'self' 'unsafe-eval'; object-src 'self'",
+    
+    "oauth2": {
+        "client_id" : "192023125772-sr3b1p2c0ip8ig8l3nb4qmml12ht5mtq.apps.googleusercontent.com",
+        "api_key" : "AIzaSyA0DGuMhkHgw1bjH5AEjSZAA4B6g4enDVY",
+        "scopes" : [
+            "https://www.googleapis.com/auth/userinfo.email",
+            "https://www.googleapis.com/auth/plus.login",
+            "https://www.googleapis.com/auth/plus.me",            
+            
+            "https://www.googleapis.com/auth/plus.media.upload",
+            "https://www.googleapis.com/auth/plus.profiles.read",
+            "https://www.googleapis.com/auth/plus.stream.read",
+            "https://www.googleapis.com/auth/plus.stream.write",
+            "https://www.googleapis.com/auth/plus.circles.write",
+            "https://www.googleapis.com/auth/plus.circles.read"
+        ]
+    }
 }
+
