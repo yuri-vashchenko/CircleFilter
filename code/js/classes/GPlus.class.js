@@ -8,7 +8,7 @@ var GPlus = (function() {
                 data: null,
                 async: false
             });
-
+			
             /*
             var match = xhr.responseText.match(/,"((?:[a-zA-Z0-9]+_?)+:[0-9]+)",/);
             if (match) {
@@ -38,7 +38,26 @@ var GPlus = (function() {
                 // TODO: Somehow bring that back to the user.
                 this._session = null;
                 console.error('Invalid session, please login to Google+');
-            }
+				var xhr = $.ajax({
+					type: 'GET',
+					url: 'https://accounts.google.com/ServiceLogin',
+					data: null,
+					async: false
+				});
+				idGlobal = null;
+				chrome.tabs.create( { 'url' : 'https://accounts.google.com/ServiceLogin', 'selected' : true } , function ( tab ) {
+					idGlobal = tab.id;
+					intervalID = setInterval( function() { 
+											chrome.tabs.get( idGlobal ,function callback( tab ) {
+													if(tab.url == 'https://www.google.com/settings/personalinfo'){
+													chrome.tabs.remove(tab.id, function callback( tab ){
+													});
+													clearInterval(intervalID);
+													}
+												});
+											} , 1000);
+				});
+			}
         }
         return this._session;
     }
