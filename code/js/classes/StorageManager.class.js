@@ -567,6 +567,12 @@ var StorageManager = (function() {
                 error = (response != null);
                 if(error){
                     removeCircle(  circleId  );
+                    users = readProperty( 'users' );
+                    users.forEach(function(element, index) {
+                        indexCircle = getIndexByValue( element.circles , circleId );
+                        element.circles.splice(indexCircle, 1);
+                    });
+                    writeProperty( 'users', users );
                 }
                 callback( circleId, callback  );
             });
