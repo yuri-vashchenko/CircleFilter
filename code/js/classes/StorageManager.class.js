@@ -498,18 +498,18 @@ var StorageManager = (function() {
          */
         addPeopleToCircle : function( circleId, usersIds, callback ) {
             GPlus.addPeopleToCircle( circleId, usersIds, function ( response ) {
-                error = (response != null);
-                if(error){
-                    var dirtyPeople = response[2];
-                    var remaining = dirtyPeople.length;
-                    dirtyPeople.forEach(function(element, index) {
-                        users = readProperty( 'users' );
-                        userIndex = getUserIndex( element );
-                        users[userIndex].circles.push(circleId);
-                        writeProperty( 'users', users );
-                    });
-                }
-                callback( circleId, usersIds, error );
+                GPlusTranslator.addPeopleToCircle( function( responseObject ){ 
+                    if( !responseObject.error ){
+                        var dirtyPeople = responseObject.userlist;
+                        dirtyPeople.forEach(function(element, index) {
+                            users = readProperty( 'users' );
+                            userIndex = getUserIndex( element );
+                            users[userIndex].circles.push(circleId);
+                            writeProperty( 'users', users );
+                        });
+                    }
+                    callback( responseObject );
+                });
             });
         },
         
@@ -522,18 +522,19 @@ var StorageManager = (function() {
          */
         removePeopleFromCircle : function( circleId, usersIds, callback ) {
             GPlus.removePeopleFromCircle( circleId, usersIds, function ( response ) {
-                error = (response != null);
-                if(error){
-                    usersIds.forEach(function(element, index) {
-                        users = readProperty( 'users' );
-                        userIndex = getUserIndex( element );
-                        
-                        indexCircle = getIndexByValue( users[userIndex].circles , circleId );
-                        users[userIndex].circles.splice(indexCircle, 1);
-                        writeProperty( 'users', users );
-                    });
-                }
-                callback( circleId, usersIds, error );
+                GPlusTranslator.removePeopleFromCircle( function( responseObject ){ 
+                    if( !responseObject.error ){
+                        usersIds.forEach(function( element, index ) {
+                            users = readProperty( 'users' );
+                            userIndex = getUserIndex( element );
+                            
+                            indexCircle = getIndexByValue( users[userIndex].circles , circleId );
+                            users[userIndex].circles.splice(indexCircle, 1);
+                            writeProperty( 'users', users );
+                        });
+                    }
+                    callback( responseObject );
+                });
             });
         },
         /**
@@ -547,13 +548,12 @@ var StorageManager = (function() {
          */
         createCircle : function( name, description, callback ) {
             GPlus.createCircle( name, description, function( response ) { 
-                error = (response != null);
-                if(error){
-                    var id = response[1][0];
-                    var position = response[2];
-                    addCircle(  id, name, description, position  );
-                }
-                callback( id, name, description, position, error );
+                GPlusTranslator.createCircle( function( responseObject ){
+                    if( !responseObject.error ){
+                        addCircle( responseObject.id, name, description, responseObject.position );
+                    }
+                    callback( responseObject );
+                });
             });
         },
         /**
@@ -564,17 +564,18 @@ var StorageManager = (function() {
          */
         removeCircle : function( circleId, callback ) {
             GPlus.removeCircle( circleId, function( response ) { 
-                error = (response != null);
-                if(error){
-                    removeCircle(  circleId  );
-                    users = readProperty( 'users' );
-                    users.forEach(function(element, index) {
-                        indexCircle = getIndexByValue( element.circles , circleId );
-                        element.circles.splice(indexCircle, 1);
-                    });
-                    writeProperty( 'users', users );
-                }
-                callback( circleId, callback  );
+                GPlusTranslator.createCircle( function( responseObject ){
+                    if( !responseObject.error ){
+                        removeCircle(  circleId  );
+                        users = readProperty( 'users' );
+                        users.forEach(function(element, index) {
+                            indexCircle = getIndexByValue( element.circles , circleId );
+                            element.circles.splice(indexCircle, 1);
+                        });
+                        writeProperty( 'users', users );
+                    }
+                    callback( circleId, callback  );
+                });
             });
         },
     }

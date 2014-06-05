@@ -102,5 +102,79 @@ var GPlusTranslator = (function() {
             callback( userList );
         }
         
+        addPeopleToCircle : function( error, status, response, callback ) {
+            responseObject = { error: 'Bad request' };
+            if ( !error && status == 200 ) {
+                var dirtyRes = parseDirtyJSON( response.substring( 4 ) );
+                responseObject = {
+                    userslist: dirtyRes[2],
+                    error: null
+                };
+            } else if (status == 401) {
+                responseObject = { 
+                    error:'Autorization error' 
+                };
+            } else if (status == 500) {
+                responseObject =  {
+                    error:'People or Circle not found'
+                };
+            } 
+            callback( responseObject );
+        },
+        removePeopleFromCircle : function( error, status, response, callback ) {
+            responseObject = { error: 'Bad request' };
+            if ( !error && status == 200 ) {
+                responseObject = {   
+                    error: null
+                };
+            } else if (status == 401) {
+                responseObject = { 
+                    error:'Autorization error' 
+                };
+            } else if (status == 500) {
+                responseObject = {
+                    error:'Circle already exist'
+                };
+            } 
+            callback( responseObject );
+        },
+        createCircle : function( error, status, response, callback ) {
+            responseObject = { error: 'Bad request' };
+            if ( !error && status == 200 ) {
+                var dirtyRes = parseDirtyJSON( response.substring( 4 ) );
+                responseObject = {  
+                    id: dirtyRes[1][0],
+                    position: dirtyRes[2], 
+                    error: null
+                };
+            } else if (status == 401) {
+                responseObject = { 
+                    error:'Autorization error' 
+                };
+            } else if (status == 500) {
+                responseObject = {
+                    error:'Circle already exist'
+                };
+            } 
+            callback( responseObject );
+        },
+        removeCircle : function( error, status, response, callback ) {
+            responseObject = { error: 'Bad request' };
+            if ( !error && status == 200 ) {
+                responseObject = {
+                    error: null
+                };
+            } else if (status == 401) {
+                responseObject = {
+                    error:'Autorization error'
+                };
+            } else if (status == 500) {
+                responseObject =  {
+                    error:'Circle not found'
+                };
+            } 
+            callback( responseObject );
+        }
+        
     }
 })();
