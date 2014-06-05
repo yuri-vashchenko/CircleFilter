@@ -1,7 +1,7 @@
 (function(){
     filterOptionsList.push( new FilterOption( 
         8,
-        '/images/sex-icon.png', 
+        '/images/habitation.png', 
         getMessage( 'filterByCity' ),
         function() {
             var cityBlock = document.createElement( 'div' ),
