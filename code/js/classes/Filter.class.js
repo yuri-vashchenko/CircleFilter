@@ -205,32 +205,51 @@ function Filter( filterBlock, resultBlock ) {
               moveToCircleButton = document.createElement( 'button' ),
               deleteFromCircleButton = document.createElement( 'button' ),
               deleteAllFromCircleButton = document.createElement( 'button' ),
+              addCircleButton = document.createElement( 'button' ),
+              deleteCircleButton = document.createElement( 'button' ),
               exportToFileBlock = document.createElement( 'div' ),
               exportToFileTitle = document.createElement( 'h3' ),
               exportToCsvButton = document.createElement( 'button' ),
               exportToXmlButton = document.createElement( 'button' );
               
-        addToCircleButton.textContent = getMessage( 'addToCircle' );
-        moveToCircleButton.textContent = getMessage( 'moveToCircle' );
-        deleteFromCircleButton.textContent = getMessage( 'deleteFromCircle' );
-        deleteAllFromCircleButton.textContent = getMessage( 'deleteAllFromCircle' );
-        exportToFileTitle.textContent = getMessage( 'exportToFile' );
-        exportToXmlButton.textContent = getMessage( 'exportToXml' );
-        exportToCsvButton.textContent = getMessage( 'exportToCsv' );
+        addToCircleButton.textContent           = getMessage( 'addToCircle' );
+        moveToCircleButton.textContent          = getMessage( 'moveToCircle' );
+        deleteFromCircleButton.textContent      = getMessage( 'deleteFromCircle' );
+        deleteAllFromCircleButton.textContent   = getMessage( 'deleteAllFromCircle' );
+        exportToFileTitle.textContent           = getMessage( 'exportToFile' );
+        addCircleButton.textContent             = getMessage( 'addCircle' );
+        deleteCircleButton.textContent          = getMessage( 'deleteCircle' );
+        
+        exportToXmlButton.textContent           = getMessage( 'exportToXml' );
+        exportToCsvButton.textContent           = getMessage( 'exportToCsv' );
 
-        addToCircleButton.title = getMessage( 'addToCircleTitle' );
-        moveToCircleButton.title = getMessage( 'moveToCircleTitle' );
-        deleteFromCircleButton.title = getMessage( 'deleteFromCircleTitle' );
+        addToCircleButton.title         = getMessage( 'addToCircleTitle' );
+        moveToCircleButton.title        = getMessage( 'moveToCircleTitle' );
+        deleteFromCircleButton.title    = getMessage( 'deleteFromCircleTitle' );
         deleteAllFromCircleButton.title = getMessage( 'deleteAllFromCircleTitle' );
-        exportToFileTitle.title = getMessage( 'exportToFileTitle' );
-        exportToXmlButton.title = getMessage( 'exportToXmlTitle' );
-        exportToCsvButton.title = getMessage( 'exportToCsvTitle' );
-
+        exportToFileTitle.title         = getMessage( 'exportToFileTitle' );
+        addCircleButton.title           = getMessage( 'addCircleTitle' );
+        deleteCircleButton.title        = getMessage( 'deleteCircleTitle' );
+        
+        exportToXmlButton.title         = getMessage( 'exportToXmlTitle' );
+        exportToCsvButton.title         = getMessage( 'exportToCsvTitle' );
+        
+        addCircleButton.addEventListener( 'click', function() {
+            $.modal( showAddCircleForm( function() {
+                    console.log('OnClose');
+                })
+            );
+            console.log( 'YYY');
+            
+        }); 
+        
         chooseActionBlock.appendChild( addToCircleButton );
         chooseActionBlock.appendChild( moveToCircleButton );
         chooseActionBlock.appendChild( deleteFromCircleButton );
         chooseActionBlock.appendChild( deleteAllFromCircleButton );
-
+        chooseActionBlock.appendChild( addCircleButton );
+        chooseActionBlock.appendChild( deleteCircleButton );
+        
         exportToFileBlock.appendChild ( exportToFileTitle );
         exportToFileBlock.appendChild ( exportToXmlButton );
         exportToFileBlock.appendChild ( exportToCsvButton );

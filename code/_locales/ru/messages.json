@@ -148,5 +148,17 @@
     },
     "city": {
         "message": "Город"
+    },
+    "addCircle": {
+        "message": "Добавить круг"
+    },
+    "deleteCircle": {
+        "message": "Удалить круг"
+    },
+    "addCircleTitle": {
+        "message": "Открыть форму создания круга"
+    },
+    "deleteCircleTitle": {
+        "message": "Открыть форму выбора круга для удаления"
     }
 }

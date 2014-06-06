@@ -148,5 +148,17 @@
     },
     "city": {
         "message": "City"
+    },
+    "addCircle": {
+        "message": "Add circle"
+    },
+    "deleteCircle": {
+        "message": "Delete circle"
+    },
+    "addCircleTitle": {
+        "message": "Add circle to GPlus"
+    },
+    "deleteCircleTitle": {
+        "message": "Delete circle from GPlus"
     }
 }
