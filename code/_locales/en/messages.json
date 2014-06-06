@@ -149,6 +149,7 @@
     "city": {
         "message": "City"
     },
+<<<<<<< HEAD
     "addCircle": {
         "message": "Add circle"
     },
@@ -169,5 +170,9 @@
     },
     "ErrorInputCircleName": {
         "message": "Please circle name"
+=======
+    "goToProfilePage": {
+        "message": "Go to Profile page"
+>>>>>>> master
     }
 }

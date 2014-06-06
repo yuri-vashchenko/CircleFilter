@@ -25,10 +25,12 @@ img.icon {
     -webkit-filter: none;
 }
 
+.optionsBlock .contentBlock {
+    padding: 15px;
+}
+
 .optionsBlock .controlBlock {
-    position: absolute;
-    bottom: 0;
-    right: 0;
+    float: right;
 }
 
 
