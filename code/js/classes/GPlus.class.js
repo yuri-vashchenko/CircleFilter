@@ -114,12 +114,16 @@ var GPlus = (function() {
             }
         },
         
-        getCirclesList : function( callback ) {            
-            xhrWithAuth( 'GET', 'https://plus.google.com/u/0/_/socialgraph/lookup/circles', false, callback );
+        getCirclesList : function( callback ) {     
+            getTokenGPlus( function( token ) {
+                xhrWithAuth( 'GET', 'https://plus.google.com/u/0/_/socialgraph/lookup/circles', false, callback );
+            });
         },
         
-        getCirclesAndUsersList : function( callback ) {            
-            xhrWithAuth( 'GET', 'https://plus.google.com/u/0/_/socialgraph/lookup/circles?m=true', false, callback );
+        getCirclesAndUsersList : function( callback ) {
+            getTokenGPlus( function( token ) {
+                xhrWithAuth( 'GET', 'https://plus.google.com/u/0/_/socialgraph/lookup/circles?m=true', false, callback );
+            });
         },
         
         getUserEmail : function( callback ) {
@@ -132,12 +136,14 @@ var GPlus = (function() {
          * @param {function(string)} callback The ids of the people added.
          */
         addPeopleToCircle : function( circleId, usersIds, callback ) {
-            var usersIdsArray = [];
-            usersIds.forEach( function( element, index ) {
-                usersIdsArray.push('[[null,null,"' + element + '"],null,[]]');
+            getTokenGPlus( function( token ) {
+                var usersIdsArray = [];
+                usersIds.forEach( function( element, index ) {
+                    usersIdsArray.push('[[null,null,"' + element + '"],null,[]]');
+                });
+                
+                xhrWithAuth( 'POST', 'https://plus.google.com/u/0/_/socialgraph/mutate/modifymemberships/?a=[[["' + circleId + '"]]]&m=[[' + usersIdsArray.join( ',' ) + ']]&at=' + token, false, callback );
             });
-            
-            xhrWithAuth( 'POST', 'https://plus.google.com/u/0/_/socialgraph/mutate/modifymemberships/?a=[[["' + circleId + '"]]]&m=[[' + usersIdsArray.join( ',' ) + ']]&at=' + getSession(), false, callback );
         },
         
         /**
@@ -148,12 +154,14 @@ var GPlus = (function() {
          * @param {function(string)} callback
          */
         removePeopleFromCircle : function( circleId, usersIds, callback ) {
-            var usersIdsArray = [];
-            usersIds.forEach( function( element, index ) {
-                usersIdsArray.push( '[null,null,"' + element + '"]' );
+            getTokenGPlus( function( token ) {
+                var usersIdsArray = [];
+                usersIds.forEach( function( element, index ) {
+                    usersIdsArray.push( '[null,null,"' + element + '"]' );
+                });
+                
+                xhrWithAuth( 'POST', 'https://plus.google.com/u/0/_/socialgraph/mutate/removemember/?c=["' + circleId + '"]&m=[[' + usersIdsArray.join( ',' ) + ']]&at=' + token, false, callback );
             });
-            
-            xhrWithAuth( 'POST', 'https://plus.google.com/u/0/_/socialgraph/mutate/removemember/?c=["' + circle + '"]&m=[[' + usersIdsArray.join( ',' ) + ']]&at=' + getSession(), false, callback );
         },
         /**
          * Create a new empty circle in your account.
@@ -163,13 +171,15 @@ var GPlus = (function() {
          * @param {function(string)} callback The ID of the circle.
          */
         createCircle : function( name, opt_description, callback ) {
-            var data = 't=2&n=' + encodeURIComponent( name ) + '&m=[[]]';
-            if ( opt_description ) {
-                data += '&d=' + encodeURIComponent( opt_description );
-            }
-            data += '&at=' + getSession();
-            
-            xhrWithAuth( 'POST', 'https://plus.google.com/u/0/_/socialgraph/mutate/create/?' + data, false, callback );
+            getTokenGPlus( function( token ) {
+                var data = 't=2&n=' + encodeURIComponent( name ) + '&m=[[]]';
+                if ( opt_description ) {
+                    data += '&d=' + encodeURIComponent( opt_description );
+                }
+                data += '&at=' + token;
+                
+                xhrWithAuth( 'POST', 'https://plus.google.com/u/0/_/socialgraph/mutate/create/?' + data, false, callback );
+            });
         },
         /**
          * Removes a circle from your profile.
@@ -178,11 +188,9 @@ var GPlus = (function() {
          * @param {function(boolean)} callback.
          */
         removeCircle : function( circleId, callback ) {
-            xhrWithAuth( 'POST', 'https://plus.google.com/u/0/_/socialgraph/mutate/delete/?c=["' + circleId + '"]&at=' + getSession(), false, callback );
-        },
-
-        testQuery : function( query, callback ) {
-            xhrWithAuth( 'GET', query, false, callback );
+            getTokenGPlus( function( token ) {
+                xhrWithAuth( 'POST', 'https://plus.google.com/u/0/_/socialgraph/mutate/delete/?c=["' + circleId + '"]&at=' + token, false, callback );
+            });
         },
         
         revokeToken : function( callback ) {

@@ -114,6 +114,30 @@ var StorageManager = (function() {
         removeProperty( 'users' );  
     }
     
+    function removeCircleFromCircles( id ) {
+        var circles = readProperty( 'circles' ),
+              circleIndex = getCircleIndex( id );
+              
+        if ( circleIndex >= 0 ) {
+            circles.splice( circleIndex , 1 );
+            writeProperty( 'circles', circles );
+        }
+    }
+    
+    function removeCircleFromUsers( id ) {
+        var users = readProperty( 'users' );
+        
+        users.forEach( function( element, index ) {  
+            var circleIndex = getIndexByValue( element.circles, id );
+            
+            if ( circleIndex >= 0 ) {
+                element.circles.splice( circleIndex, 1 );
+            }
+        });
+        
+        writeProperty( 'users', users );
+    }
+    
     function clearCircles() {
         removeProperty( 'circles' );  
     }
@@ -186,6 +210,19 @@ var StorageManager = (function() {
         return -1;
     }
     
+    function getIndexByValue( array , value ) {
+        if ( !array )
+            return -1;
+            
+        for ( var i = 0; i < array.length; i++ ) {
+            if ( array[i] == value ) {
+                return i;
+            }            
+        }
+        
+        return -1;
+    }
+    
     function getCircleIndex( id ) {
         var circles = readProperty( 'circles' );
         
@@ -247,7 +284,7 @@ var StorageManager = (function() {
     function setUserEmail( email ) {
         writeProperty( 'email', email );
     }
-        
+    
     return {
         getUserIdsList: function( callback ) {
             var userIdsList = new Array();
@@ -473,6 +510,102 @@ var StorageManager = (function() {
         
         getStorageSize: function() {
             return getStorageSize();
-        }
+        },
+        /**
+         * Add people to a circle in your account.
+         * @param {string} circleId the Circle to add the people to.
+         * @param {{Array.<string>}} usersIds The people to add.
+         * @param {function(string)} callback The ids of the people added.
+         */
+        addPeopleToCircle : function( circleId, usersIds, callback ) {
+            GPlus.addPeopleToCircle( circleId, usersIds, function( error, status, response ) {
+                GPlusTranslator.addPeopleToCircle( error, status, response, function( responseObject ) { 
+                    if( !responseObject.error ) {
+                        var toAddUsers = responseObject.userIdsList,
+                              users = readProperty( 'users' );
+                        
+                        toAddUsers.forEach( function( element, index ) {                            
+                            var userIndex = getUserIndex( element );
+                            
+                            if ( getIndexByValue( users[userIndex].circles, circleId ) < 0 ) {
+                            
+                                if ( !users[userIndex].circles ) {
+                                    users[userIndex].circles = [];
+                                }
+                                
+                                users[userIndex].circles.push( circleId );
+                            }
+                        });
+                        
+                        writeProperty( 'users', users );
+                    }
+                    callback( responseObject );
+                });
+            });
+        },
+        
+        /**
+         * Remove people from a circle in your account.
+         *
+         * @param {string} circleId the Circle to remove people from.
+         * @param {{Array.<string>}} usersIds The people to add.
+         * @param {function(string)} callback
+         */
+        removePeopleFromCircle : function( circleId, usersIds, callback ) {
+            GPlus.removePeopleFromCircle( circleId, usersIds, function ( error, status, response ) {
+                GPlusTranslator.removePeopleFromCircle( error, status, response, function( responseObject ) { 
+                    if( !responseObject.error ) {
+                        var users = readProperty( 'users' );
+                        
+                        usersIds.forEach( function( element, index ) {                            
+                            var userIndex = getUserIndex( element ),                     
+                                  circleIndex = getIndexByValue( users[userIndex].circles , circleId );
+                                  
+                            if ( circleIndex >= 0 ) {
+                                users[userIndex].circles.splice( circleIndex, 1 );     
+                            }                
+                        });
+                        
+                        writeProperty( 'users', users );
+                    }
+                    callback( responseObject );
+                });
+            });
+        },
+        /**
+         * Create a new empty circle in your account.
+         *
+         * @param {string} name The circle names.
+         * @param {string} description Optional description.
+         * @param {function(string)} callback The ID of the circle.
+         */
+        createCircle : function( name, description, callback ) {
+            initCircles();
+            GPlus.createCircle( name, description, function( error, status, response ) { 
+                GPlusTranslator.createCircle( error, status, response, function( responseObject ) {
+                    if( !responseObject.error ) {
+                        addCircle( responseObject.id, name, description, responseObject.position );
+                    }
+                    callback( responseObject );
+                });
+            });
+        },
+        /**
+         * Removes a circle from your profile.
+         *
+         * @param {string} circleId The circle ID.
+         * @param {function(boolean)} callback.
+         */
+        removeCircle : function( circleId, callback ) {
+            GPlus.removeCircle( circleId, function( error, status, response ) { 
+                GPlusTranslator.removeCircle( error, status, response, function( responseObject ) {
+                    if( !responseObject.error ) {
+                        removeCircleFromCircles( circleId  );
+                        removeCircleFromUsers( circleId  );
+                    }
+                    callback( circleId, callback );
+                });
+            });
+        },
     }
 })();
