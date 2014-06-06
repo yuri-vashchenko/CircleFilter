@@ -34,7 +34,7 @@ function Filter( filterBlock, resultBlock ) {
         clearButton.title = getMessage( 'clearTitle' );
         applyButton.title = getMessage( 'applyTitle' );    
         importIcon.src = 'images/import.png';    
-        importIcon.title = getMessage( 'importTitle' );        
+        importIcon.title = getMessage( 'import' );        
         importButton.appendChild( importIcon );
         
         importInput.type = 'file';        
@@ -68,7 +68,7 @@ function Filter( filterBlock, resultBlock ) {
         });
         
         exportIcon.src = 'images/export.png';
-        exportIcon.title = getMessage( 'exportTitle' );
+        exportIcon.title = getMessage( 'export' );
         
         exportButton.appendChild( exportIcon );
         $( exportIcon ).addClass( 'but-icon' );
