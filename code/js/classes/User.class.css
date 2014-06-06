@@ -24,7 +24,7 @@
     margin: 4px;
 }
 
-.user a {   
+.user a {
     cursor: pointer;
 }
 
@@ -35,6 +35,8 @@
 
 .user.selected {
     background-color: #00a3e8;
+}
+.user.selected a {
     color: white;
 }
 
@@ -44,4 +46,12 @@
 
 .contentBlock {
     padding: 15px;
+}
+
+.userTooltip label {
+    font-weight: bold;
+}
+
+.userTooltip label>span {
+    font-weight: normal;
 }

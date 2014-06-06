@@ -149,7 +149,6 @@
     "city": {
         "message": "Город"
     },
-<<<<<<< HEAD
     "addCircle": {
         "message": "Добавить круг"
     },
@@ -173,9 +172,8 @@
     },
     "ErrorInputCircleName": {
         "message": "Не заполнено название круга"
-=======
+    },
     "goToProfilePage": {
         "message": "Перейти на страницу профиля"
->>>>>>> master
     }
 }

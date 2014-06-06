@@ -27,6 +27,7 @@ function User( id, firstName, lastName, photo, age, sex, city, circles ) {
         img.src = this.photo;
         url.textContent = this.firstName + ' ' + this.lastName;
         url.href = 'https://plus.google.com/' + this.id;
+        url.target = '_blank';
         url.title = getMessage( 'goToProfilePage' );
         
         userBlock.appendChild( img );
