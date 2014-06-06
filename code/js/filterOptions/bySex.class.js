@@ -1,7 +1,7 @@
 (function(){
     filterOptionsList.push( new FilterOption( 
         7,
-        '/images/sex-icon.png', 
+        '/images/sex.png', 
         getMessage( 'filterBySex' ),
         function() {
             var sexBlock = document.createElement( 'div' ),

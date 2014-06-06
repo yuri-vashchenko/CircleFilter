@@ -27,10 +27,10 @@
         "message": "in dev..."
     },
     "import": {
-        "message": "Upload formula filtering"
+        "message": "Import formula"
     },
     "export": {
-        "message": "Unload formula filtering"
+        "message": "Export formula"
     },
     "clear": {
         "message": "Clear"
@@ -112,5 +112,41 @@
     },
     "removeFilterOption": {
         "message": "Remove filter option"
+    },
+    "clearTitle": {
+        "message": "Clear the contents of the formula"
+    },
+    "applyTitle": {
+        "message": "Start filtering on a formula"
+    },
+    "stopTitle": {
+        "message": "Stop filtering"
+    },
+    "addToCircleTitle": {
+        "message": "Add selected users in a circle"
+    },
+    "moveToCircleTitle": {
+        "message": "Move selected users in a circle"
+    },
+    "deleteFromCircleTitle": {
+        "message": "Delete selected users from the circle"
+    },
+    "deleteAllFromCircleTitle": {
+        "message": "Delete all users from the circle"
+    },
+    "exportToFileTitle": {
+        "message": "Export filter result to a file"
+    },
+    "exportToXmlTitle": {
+        "message": "Export filter result to XML"
+    },
+    "exportToCsvTitle": {
+        "message": "Export filter result to CSV"
+    },
+    "filterByCity": {
+        "message": "by City"
+    },
+    "city": {
+        "message": "City"
     }
 }

@@ -47,7 +47,7 @@ function FilterSet() {
         filterSet.addBlock = document.createElement( 'div' ),
         
         addIcon.src = 'images/plus-btn.png';
-		addIcon.title = getMessage( 'AddFilterOption' );
+        addIcon.title = getMessage( 'addFilterOption' );
         addButton.appendChild( addIcon );
         filterSet.addBlock.appendChild( addButton );
         $( addButton ).addClass( 'add' );
@@ -83,7 +83,7 @@ function FilterSet() {
                                 editInterfaceBlock = filterOptionsList[index].showEditInterface( 
                                     function() {
                                         addIcon.src = 'images/plus-btn.png';
-										addIcon.title = getMessage( 'AddFilterOption' );
+                                        addIcon.title = getMessage( 'addFilterOption' );
                                         $.modal.close();
                                     },
                                     function( configuration ) {
@@ -110,14 +110,14 @@ function FilterSet() {
                                     onOpen: function ( dialog ) {
                                         dialog.overlay.fadeIn( 'fast' );
                                         dialog.container.slideDown( 'fast' );
-                                        dialog.data.slideDown();	 
+                                        dialog.data.slideDown();     
                                     },
                                     onClose: function ( dialog ) {
                                         dialog.data.slideUp( 'fast', function () {
                                             dialog.container.slideUp( 'fast', function () {
                                                 dialog.overlay.fadeOut( 'fast' );
                                                 addIcon.src = 'images/plus-btn.png';
-												addIcon.title = getMessage( 'AddFilterOption' );
+                                                addIcon.title = getMessage( 'addFilterOption' );
                                                 $.modal.close();
                                             });
                                         });
@@ -125,7 +125,7 @@ function FilterSet() {
                                 });
                             } else {
                                 addIcon.src = 'images/plus-btn.png';
-								addIcon.title = getMessage( 'AddFilterOption' );
+                                addIcon.title = getMessage( 'addFilterOption' );
                             }
                         }); 
                     }); 
@@ -202,7 +202,7 @@ function FilterSet() {
               removeIcon = document.createElement( 'img' );
               
         removeIcon.src = 'images/grey-cross-btn.png';
-		removeIcon.title = getMessage( 'RemoveFilterOption' );
+        removeIcon.title = getMessage( 'removeFilterOption' );
         removeButton.appendChild( removeIcon );        
         $( removeButton ).addClass( 'remove' );
         $( removeButton ).addClass( 'but-icon' );
