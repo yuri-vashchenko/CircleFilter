@@ -160,5 +160,14 @@
     },
     "deleteCircleTitle": {
         "message": "Delete circle from GPlus"
+    },
+    "NameCircle": {
+        "message": "Circle name"
+    },
+    "DescriptionCircle": {
+        "message": "Circle discription"
+    },
+    "ErrorInputCircleName": {
+        "message": "Please circle name"
     }
 }

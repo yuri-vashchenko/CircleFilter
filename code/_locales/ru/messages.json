@@ -160,5 +160,17 @@
     },
     "deleteCircleTitle": {
         "message": "Открыть форму выбора круга для удаления"
+    },
+    "NameCircle": {
+        "message": "Название круга"
+    },
+    "DescriptionCircle": {
+        "message": "Описание круга"
+    },
+    "ButtonSuccessAddCircle": {
+        "message": "Добавить"
+    },
+    "ErrorInputCircleName": {
+        "message": "Не заполнено название круга"
     }
 }
