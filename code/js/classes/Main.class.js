@@ -30,8 +30,10 @@ function Main() {
         });
     });
     
-    StorageManager.getUserEmail( function( email ) {
-        document.querySelector( '#user-email' ).textContent = email;
+    getTokenOAuth2( function( token ) { 
+        StorageManager.getUserEmail( function( email ) {
+            document.querySelector( '#user-email' ).textContent = email;
+        });
     });
             
     var filter = new Filter( document.querySelector('.left-sidebar'), document.querySelector( '.content>div' ) );

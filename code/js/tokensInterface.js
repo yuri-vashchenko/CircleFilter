@@ -78,6 +78,17 @@ function getTokenGPlus( callback ) {
     if ( localStorage['GPlusToken'] ) {
         callback( localStorage['GPlusToken'] );
         return;
+    } else {
+        $.ajax({
+            type: 'GET',
+            url: 'https://plus.google.com/u/0/',
+            async: false,
+            success: function( responseText ) {
+                localStorage['GPlusToken'] = getSession( responseText );                                        
+                callback( localStorage['GPlusToken'] );
+            }
+        });
+        return;
     }
     
     chrome.tabs.create( { 'url' : 'https://accounts.google.com/ServiceLogin' , 'selected' : true },        
