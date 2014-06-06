@@ -172,5 +172,8 @@
     },
     "goToProfilePage": {
         "message": "Go to Profile page"
+    },
+    "delete": {
+        "message": "Удалить"
     }
 }

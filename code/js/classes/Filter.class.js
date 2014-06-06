@@ -200,34 +200,29 @@ function Filter( filterBlock, resultBlock ) {
     }
     /* функция получает DOM элемент круга*/
     function showCircle( name , description, id ) {
-        var circleBlock = document.createElement( 'canvas' ),
-            divBlock = document.createElement( 'div' );
-        textContent = name;
-        if ( circleBlock != '' &&  circleBlock ){
-            textContent = textContent + '(' +  description + ')';
-        }
-        var ctx = circleBlock.getContext("2d");
-        ctx.beginPath();
-        ctx.font = 'italic 14pt Arial';
-        ctx.strokeText(textContent, 20, 100);
-        ctx.arc(95,50,40,0,2*Math.PI);
-        ctx.stroke();
-        circleBlock.id = id;
-        divBlock.style.width = '110px';
-        divBlock.style.height = '110px';
-        return divBlock.appendChild(circleBlock);
+        var divBlock  = document.createElement( 'div' ),
+            checkBox  = document.createElement( 'input' ),
+            nameLabel = document.createElement( 'label' ),
+            countLabel = document.createElement( 'label' );
+        
+        checkBox.type="checkbox";
+        nameLabel.textContent = name;
+        checkBox.id = id;
+        divBlock.appendChild(checkBox);
+        divBlock.appendChild(nameLabel);
+        divBlock.appendChild(countLabel);
+        
+        return divBlock;
             
     }
     /* функция получения списка DOM элементов для отображения кругов */
-    function showCircleList( ){
+    function showCircleList( callback ){
         
         var listBlock   = document.createElement( 'ul' );
         
         StorageManager.getCirclesList(function( circlesList ){
-            for( i = 0; i < circlesList.length; i++ ){
+            for(var i = 0; i < circlesList.length - 1; i++ ){
                 var liElement = document.createElement( 'li' );
-                liElement.style.width = '111px';
-                liElement.style.height = '111px';
                 liElement.appendChild( showCircle( circlesList[i].name, circlesList[i].description, circlesList[i].id ) );
                 listBlock.appendChild( liElement );
             }
@@ -235,9 +230,21 @@ function Filter( filterBlock, resultBlock ) {
         
         return listBlock;
     }
-    
+    /* Форма удаления кругов */
     function showDeleteCircleForm( deleteCircleButton ){
-        var listBlock = showCircleList();
+        
+        var listBlock = showCircleList(),
+            liButton             = document.createElement( 'li' ),
+            buttonSuccessRemove = document.createElement( 'button' ),
+            buttonCancelRemove = document.createElement( 'button' ),
+            selectCircles = [];
+        
+        buttonCancelRemove.textContent     = getMessage( 'cancel' );        
+        buttonSuccessRemove.textContent    = getMessage( 'delete' );
+        
+        liButton.appendChild( buttonCancelRemove );
+        liButton.appendChild( buttonSuccessRemove );
+        listBlock.appendChild( liButton );
         $.modal( $( listBlock ), { 
             overlayClose : true,
             position : [$( deleteCircleButton ).offset().top + $( deleteCircleButton ).outerHeight() - 1 - $( document ).scrollTop(), $( deleteCircleButton ).offset().left],
@@ -247,12 +254,29 @@ function Filter( filterBlock, resultBlock ) {
                 dialog.data.slideDown( 'fast' );
             },
             onShow: function( dialog ) {
-                $( listBlock.querySelectorAll( 'canvas' ) ).click( function() {
-                        StorageManager.removeCircle(this.id, function(){
-                            alert('Круг удален');
-                        });
-                        $.modal.close();
+                $( listBlock.querySelectorAll( 'input' ) ).click( function() {
+                        if( this.value == 'on' ) {
+                            selectCircles.push(this.id);
+                            this.value = 'off';
+                        }else{
+                            selectCircles.splice(selectCircles.indexOf(this.id), 1);
+                            this.value = 'on';
+                        }
                     });
+                $( buttonCancelRemove ).click( function() {
+                    $.modal.close();
+                });
+                $( buttonSuccessRemove ).click( function() {
+                    console.log(  selectCircles );
+                    for(var i = 0; i < selectCircles.length ; i++ ) {
+                        console.log('Удаляю');
+                        console.log(  selectCircles[i] );
+                        StorageManager.removeCircle( selectCircles[i], function(){
+                            console.log();
+                        });
+                    }
+                    $.modal.close();
+                });
             },
             onClose: function ( dialog ) {
                 dialog.data.slideUp( 'fast', function () {
