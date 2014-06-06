@@ -115,7 +115,7 @@ function Filter( filterBlock, resultBlock ) {
                         },
                         filter.process
                     );
-                    
+
                     function applyFilterSetIteration( filterSetList, callback, onSuccess, filterProcess ) {
                         if ( !filterSetList.length || filterProcess.id == null ) {
                             onSuccess();
@@ -198,7 +198,73 @@ function Filter( filterBlock, resultBlock ) {
         
         return chooseFilterBlock;
     }
+    /* функция получает DOM элемент круга*/
+    function showCircle( name , description, id ) {
+        var circleBlock = document.createElement( 'canvas' ),
+            divBlock = document.createElement( 'div' );
+        textContent = name;
+        if ( circleBlock != '' &&  circleBlock ){
+            textContent = textContent + '(' +  description + ')';
+        }
+        var ctx = circleBlock.getContext("2d");
+        ctx.beginPath();
+        ctx.font = 'italic 14pt Arial';
+        ctx.strokeText(textContent, 20, 100);
+        ctx.arc(95,50,40,0,2*Math.PI);
+        ctx.stroke();
+        circleBlock.id = id;
+        divBlock.style.width = '110px';
+        divBlock.style.height = '110px';
+        return divBlock.appendChild(circleBlock);
+            
+    }
+    /* функция получения списка DOM элементов для отображения кругов */
+    function showCircleList( ){
+        
+        var listBlock   = document.createElement( 'ul' );
+        
+        StorageManager.getCirclesList(function( circlesList ){
+            for( i = 0; i < circlesList.length; i++ ){
+                var liElement = document.createElement( 'li' );
+                liElement.style.width = '111px';
+                liElement.style.height = '111px';
+                liElement.appendChild( showCircle( circlesList[i].name, circlesList[i].description, circlesList[i].id ) );
+                listBlock.appendChild( liElement );
+            }
+        });
+        
+        return listBlock;
+    }
     
+    function showDeleteCircleForm( deleteCircleButton ){
+        var listBlock = showCircleList();
+        $.modal( $( listBlock ), { 
+            overlayClose : true,
+            position : [$( deleteCircleButton ).offset().top + $( deleteCircleButton ).outerHeight() - 1 - $( document ).scrollTop(), $( deleteCircleButton ).offset().left],
+            onOpen: function ( dialog ) {
+                dialog.overlay.fadeIn( 'fast' );
+                dialog.container.slideDown( 'fast' );
+                dialog.data.slideDown( 'fast' );
+            },
+            onShow: function( dialog ) {
+                $( listBlock.querySelectorAll( 'canvas' ) ).click( function() {
+                        StorageManager.removeCircle(this.id, function(){
+                            alert('Круг удален');
+                        });
+                        $.modal.close();
+                    });
+            },
+            onClose: function ( dialog ) {
+                dialog.data.slideUp( 'fast', function () {
+                    dialog.container.slideUp( 'fast', function () {
+                        dialog.overlay.fadeOut( 'fast' );
+                        $.modal.close();
+                    }); 
+                }); 
+            }
+        });
+    }
+    /* Форма добавления кругов */
     function showAddCircleForm( addCircleButton ){
 
         var listBlock             = document.createElement( 'ul' ),
@@ -276,15 +342,15 @@ function Filter( filterBlock, resultBlock ) {
     
     function showChooseActionBlock() {
         var chooseActionBlock = document.createElement( 'div' ),
-              addToCircleButton = document.createElement( 'button' ),
-              deleteFromCircleButton = document.createElement( 'button' ),
-              deleteAllFromCircleButton = document.createElement( 'button' ),
-              addCircleButton = document.createElement( 'button' ),
-              deleteCircleButton = document.createElement( 'button' ),
-              exportToFileBlock = document.createElement( 'div' ),
-              exportToFileTitle = document.createElement( 'h3' ),
-              exportToCsvButton = document.createElement( 'button' ),
-              exportToXmlButton = document.createElement( 'button' );
+            addToCircleButton = document.createElement( 'button' ),
+            deleteFromCircleButton = document.createElement( 'button' ),
+            deleteAllFromCircleButton = document.createElement( 'button' ),
+            addCircleButton = document.createElement( 'button' ),
+            deleteCircleButton = document.createElement( 'button' ),
+            exportToFileBlock = document.createElement( 'div' ),
+            exportToFileTitle = document.createElement( 'h3' ),
+            exportToCsvButton = document.createElement( 'button' ),
+            exportToXmlButton = document.createElement( 'button' );
               
         addToCircleButton.textContent           = getMessage( 'addToCircle' );
         deleteFromCircleButton.textContent      = getMessage( 'deleteFromCircle' );
@@ -308,6 +374,9 @@ function Filter( filterBlock, resultBlock ) {
         
         addCircleButton.addEventListener( 'click', function() {
             showAddCircleForm( addCircleButton );
+        }); 
+        deleteCircleButton.addEventListener( 'click', function() {
+            showDeleteCircleForm( deleteCircleButton );
         }); 
         
         chooseActionBlock.appendChild( addToCircleButton );

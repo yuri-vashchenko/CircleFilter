@@ -126,7 +126,8 @@ var StorageManager = (function() {
     
     function removeCircleFromUsers( id ) {
         var users = readProperty( 'users' );
-        
+        initUsers();
+        users = (users ? users : []);
         users.forEach( function( element, index ) {  
             var circleIndex = getIndexByValue( element.circles, id );
             
@@ -336,6 +337,21 @@ var StorageManager = (function() {
                     });
                 });
             }
+        },
+        
+        getCirclesListOnGPlus: function( callback ){
+            var circlesList = new Array();
+            initCircles();
+            GPlus.getCirclesList( function( error, status, response ) {
+                GPlusTranslator.circlesList( error, status, response, function( cList ) {
+                    for ( var i = 0; i < cList.length; i++ ) {
+                        circlesList.push( cList[i] );
+                        addCircle( cList[i].id, cList[i].name, cList[i].description, cList[i].position );
+                    }
+                    
+                    callback( circlesList );
+                });
+            });
         },
         
         getUserInfo: function( id, propsList, callback ) {
