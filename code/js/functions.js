@@ -42,16 +42,7 @@ function convertDate( date ) {
     
     return day + '.' + month + '.' + year + ' ' + h + ':' + m;
 }
-
-
-function transliterate( word ){
-    var a = {"Ё":"YO","Й":"I","Ц":"TS","У":"U","К":"K","Е":"E","Н":"N","Г":"G","Ш":"SH","Щ":"SCH","З":"Z","Х":"H","Ъ":"'","ё":"yo","й":"i","ц":"ts","у":"u","к":"k","е":"e","н":"n","г":"g","ш":"sh","щ":"sch","з":"z","х":"h","ъ":"'","Ф":"F","Ы":"I","В":"V","А":"a","П":"P","Р":"R","О":"O","Л":"L","Д":"D","Ж":"ZH","Э":"E","ф":"f","ы":"i","в":"v","а":"a","п":"p","р":"r","о":"o","л":"l","д":"d","ж":"zh","э":"e","Я":"Ya","Ч":"CH","С":"S","М":"M","И":"I","Т":"T","Ь":"'","Б":"B","Ю":"YU","я":"ya","ч":"ch","с":"s","м":"m","и":"i","т":"t","ь":"'","б":"b","ю":"yu"};
-
-    return word.split('').map(function (char) { 
-        return a[char] || char; 
-    }).join("");
-}  
-
+    
 function writeStringToFile( string, fileName ) {
     window.webkitRequestFileSystem( window.TEMPORARY, string.length * 16 , function( fs ) {
         fs.root.getFile( fileName, { create: true }, function( fileEntry ) {
@@ -80,6 +71,119 @@ function readStringFromFile( file, callback ) {
     }, function() {});
 }
 
+function convertJSONtoXML( json ) {
+    var tab = ""
+    var toXml = function( v, name, ind ) {  
+    var xml = "";
+        if ( v instanceof Array ) {
+            for ( var i = 0, n = v.length; i < n; i++ ) {
+                xml += ind + toXml ( v[i], name, ind + "\t" ) + "\n";
+            }
+         }
+        else if ( typeof( v ) == "object" ) {
+            var hasChild = false;
+            xml += ind + "<" + name;
+            for ( var m in v ) {
+                if ( m.charAt ( 0 ) == "@" ) {
+                    xml += " " + m.substr( 1 ) + "=\"" + v[m].toString( ) + "\"";
+                }
+                else
+                    hasChild = true;
+            }
+            xml += hasChild ? ">" : "/>";
+            if (hasChild) {
+                for ( var m in v ) {
+                    if ( m == "#text" ) {
+                        xml += v[m];
+                    }
+                    else if ( m == "#cdata" ) {
+                        xml += "<![CDATA[" + v[m] + "]]>";
+                    }
+                    else if (m.charAt( 0 ) != "@") {
+                        xml += toXml( v[m], m, ind+"\t" );
+                    }
+                }
+                xml += ( xml.charAt(xml.length-1)=="\n"?ind:"" ) + "</" + name + ">";
+            }
+        }
+        else {
+            xml += ind + "<" + name + ">" + v.toString() +  "</" + name + ">";
+        }
+      return xml;
+   }, xml="";
+   
+    for ( var m in json ){
+        xml += toXml( json[m], m, "" );
+    }
+    return tab ? xml.replace( /\t/g, tab ) : xml.replace( /\t|\n/g, "" );
+}
+
+
+
+function convertXMLtoJSON() {
+    var me = this;
+    me.fromFile = function(xml, rstr) {
+        xhttp.open("GET", xml ,false);
+        xhttp.send(null);
+        var json_str = jsontoStr(setJsonObj(xhttp.responseXML));
+        return (typeof(rstr) == 'undefined') ? JSON.parse(json_str) : json_str;
+    }
+    me.fromStr = function(xml, rstr) {
+    // for non IE browsers
+    if(window.DOMParser) {
+      var getxml = new DOMParser();
+      var xmlDoc = getxml.parseFromString(xml,"text/xml");
+    }
+
+    // gets the JSON string
+    var json_str = jsontoStr(setJsonObj(xmlDoc));
+
+    // sets and returns the JSON object, if "rstr" undefined (not passed), else, returns JSON string
+    return (typeof(rstr) == 'undefined') ? JSON.parse(json_str) : json_str;
+  }
+
+  // receives XML DOM object, returns converted JSON object
+  var setJsonObj = function(xml) {
+    var js_obj = {};
+    if (xml.nodeType == 1) {
+      if (xml.attributes.length > 0) {
+        js_obj["@attributes"] = {};
+        for (var j = 0; j < xml.attributes.length; j++) {
+          var attribute = xml.attributes.item(j);
+          js_obj["@attributes"][attribute.nodeName] = attribute.value;
+        }
+      }
+    } else if (xml.nodeType == 3) {
+      js_obj = xml.nodeValue;
+    }            
+    if (xml.hasChildNodes()) {
+      for (var i = 0; i < xml.childNodes.length; i++) {
+        var item = xml.childNodes.item(i);
+        var nodeName = item.nodeName;
+        if (typeof(js_obj[nodeName]) == "undefined") {
+          js_obj[nodeName] = setJsonObj(item);
+        } else {
+          if (typeof(js_obj[nodeName].push) == "undefined") {
+            var old = js_obj[nodeName];
+            js_obj[nodeName] = [];
+            js_obj[nodeName].push(old);
+          }
+          js_obj[nodeName].push(setJsonObj(item));
+        }
+      }
+    }
+    return js_obj;
+  }
+
+  var jsontoStr = function(js_obj) {
+    var rejsn = JSON.stringify(js_obj, undefined, 2).replace(/(\\t|\\r|\\n)/g, '').replace(/"",[\n\t\r\s]+""[,]*/g, '').replace(/(\n[\t\s\r]*\n)/g, '').replace(/[\s\t]{2,}""[,]{0,1}/g, '').replace(/"[\s\t]{1,}"[,]{0,1}/g, '').replace(/\[[\t\s]*\]/g, '""');
+    return (rejsn.indexOf('"parsererror": {') == -1) ? rejsn : 'Invalid XML format';
+  }
+};
+
+// creates object instantce of XMLtoJSON
+var xml2json = new convertXMLtoJSON();
+
 function getMessage( label ) {
     if ( label == null ) {
         return 'undefined';
@@ -103,32 +207,6 @@ Array.prototype.clone = function() {
 
 function closeWindow() {
     window.close();
-}
-
-function showCancelButton() {
-    var cancelButton = document.createElement( 'a' ),
-          cancelIcon = document.createElement( 'img' );
-          
-    cancelIcon.src = 'images/cancel.png';
-    cancelIcon.title = getMessage( 'cancel' );
-    
-    cancelButton.appendChild( cancelIcon );
-    $( cancelButton ).addClass( 'but-icon' );
-    
-    return cancelButton;
-}
-
-function showAcceptButton( title ) {
-    var acceptButton = document.createElement( 'a' ),
-          acceptIcon = document.createElement( 'img' );
-          
-    acceptIcon.src = 'images/apply.png';
-    acceptIcon.title = title;
-    
-    acceptButton.appendChild( acceptIcon );
-    $( acceptButton ).addClass( 'but-icon' );
-    
-    return acceptButton;
 }
 
 function loadClasses() {
