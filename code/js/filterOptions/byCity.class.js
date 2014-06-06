@@ -20,7 +20,11 @@
         function( configurationBlock ) {
             var configuration = {};
             
-            configuration.city = configurationBlock.querySelector( '[name=city]' ).value;
+            configuration.city = configurationBlock.querySelector( '[name=city]' ).value.trim();
+            
+            if ( configuration.city == "" ) {
+                return false;
+            }
             
             return configuration;
         },
@@ -32,8 +36,10 @@
                   requiredUserFields = this.requiredUserFields;
             
             StorageManager.getUserInfo( userId, requiredUserFields, function( user ) {
-                var translit = transliterate( configuration.city );
-                if ( user.city && ( user.city.indexOf( configuration.city ) >= 0 || translit.indexOf( configuration.city ) >= 0 ) ) {
+                var translit = transliterate( configuration.city ).toLowerCase(),
+                      city = ( user.city ? user.city.toLowerCase() : "" );
+                      
+                if ( city.indexOf( configuration.city.toLowerCase() ) >= 0 || city.indexOf( translit ) >= 0 ) {
                     accept( userId );                    
                 } else {
                     decline( userId );
