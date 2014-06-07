@@ -151,5 +151,32 @@
     },
     "goToProfilePage": {
         "message": "Go to Profile page"
+    },    
+    "createCircle": {
+        "message": "Create circle"
+    },
+    "deleteCircle": {
+        "message": "Delete circle"
+    },
+    "createCircleTitle": {
+        "message": "Create circle to GPlus"
+    },
+    "deleteCircleTitle": {
+        "message": "Delete circle from GPlus"
+    },
+    "circleName": {
+        "message": "Circle name"
+    },
+    "circleDescription": {
+        "message": "Circle description"
+    },
+    "createCircleButton": {
+        "message": "Create"
+    },
+    "circleNameInputError": {
+        "message": "Please circle name"
+    },
+    "delete": {
+        "message": "Delete"
     }
 }

@@ -61,7 +61,7 @@ function UsersList( perPage ) {
         var checkedUsers = [];
 
         for ( var i = 0; i < this.usersList.length; i++ ) {
-            if ( this.usersList[i].checked ) {
+            if ( this.usersList[i].isChecked() ) {
                 checkedUsers.push( this.usersList[i] );
             }
         }

@@ -31,7 +31,7 @@ function Main() {
     });
     
     getTokenOAuth2( function( token ) { 
-        StorageManager.getUserEmail( false, function( email ) {
+        StorageManager.getUserEmail( function( email ) {
             document.querySelector( '#user-email' ).textContent = email;
         });
     });

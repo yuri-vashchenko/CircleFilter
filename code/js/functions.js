@@ -105,6 +105,32 @@ function closeWindow() {
     window.close();
 }
 
+function showCancelButton() {
+    var cancelButton = document.createElement( 'a' ),
+          cancelIcon = document.createElement( 'img' );
+          
+    cancelIcon.src = 'images/cancel.png';
+    cancelIcon.title = getMessage( 'cancel' );
+    
+    cancelButton.appendChild( cancelIcon );
+    $( cancelButton ).addClass( 'but-icon' );
+    
+    return cancelButton;
+}
+
+function showAcceptButton( title ) {
+    var acceptButton = document.createElement( 'a' ),
+          acceptIcon = document.createElement( 'img' );
+          
+    acceptIcon.src = 'images/apply.png';
+    acceptIcon.title = title;
+    
+    acceptButton.appendChild( acceptIcon );
+    $( acceptButton ).addClass( 'but-icon' );
+    
+    return acceptButton;
+}
+
 function loadClasses() {
     var classesList = [
         'User',

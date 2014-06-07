@@ -146,9 +146,9 @@ function FilterSet() {
             
             /* sort filterOptionList by priority here [highest,...., lowest] */
             
-            StorageManager.getUserIdsList( true, function( userIdsList ) {
+            StorageManager.getUserIdsList( function( userIdsList ) {
                 applyUserIteration( filterOptionList, userIdsList, callback, onSuccess, filterProcess );
-            });
+            }, true );
         } else {
             onSuccess();
         }

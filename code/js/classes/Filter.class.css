@@ -67,3 +67,19 @@
 .filter .control input[type='file'] {
     display: none;
 }
+
+.circleDeleteForm .contentBlock {
+    padding: 15px;
+}
+
+.circleDeleteForm .controlBlock {
+    float: right;
+}
+
+.circleCreateForm .contentBlock {
+    padding: 15px;
+}
+
+.circleCreateForm .controlBlock {
+    float: right;
+}

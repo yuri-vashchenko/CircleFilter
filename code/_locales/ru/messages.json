@@ -151,5 +151,32 @@
     },
     "goToProfilePage": {
         "message": "Перейти на страницу профиля"
+    },
+    "createCircle": {
+        "message": "Создать круг"
+    },
+    "deleteCircle": {
+        "message": "Удалить круг"
+    },
+    "createCircleTitle": {
+        "message": "Открыть форму создания круга"
+    },
+    "deleteCircleTitle": {
+        "message": "Открыть форму выбора круга для удаления"
+    },
+    "circleName": {
+        "message": "Название круга"
+    },
+    "circleDescription": {
+        "message": "Описание круга"
+    },
+    "createCircleButton": {
+        "message": "Создать"
+    },
+    "circleNameInputError": {
+        "message": "Не заполнено название круга"
+    },
+    "delete": {
+        "message": "Удалить"
     }
 }
