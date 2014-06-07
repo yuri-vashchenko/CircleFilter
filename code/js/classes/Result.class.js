@@ -56,8 +56,8 @@ function Result( block ) {
         $( this.block ).addClass( 'text' );
     }
     
-    this.getCheckedUsers = function() {        
-        return usersList.getCheckedUsers();
+    this.getCheckedUsers = function() { 
+        return this.usersList.getCheckedUsers();
     }
     
     this.reset = function() {

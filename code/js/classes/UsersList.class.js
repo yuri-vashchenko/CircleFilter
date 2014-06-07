@@ -44,6 +44,8 @@ function UsersList( perPage ) {
         $( this.pageNav ).addClass( 'pagesNav' );
         $( this.pageNav ).addClass( 'paginate' );
         
+        
+        
         for ( var i = 0; i < this.usersList.length; i++ ) {
             var li = document.createElement( 'li' );
             
@@ -53,7 +55,6 @@ function UsersList( perPage ) {
         
         usersListBlock.appendChild( this.usersBlock );
         usersListBlock.appendChild( this.pageNav );
-        
         return usersListBlock;
     }
     
