@@ -32,10 +32,8 @@ function FilterOption( id, icon, name, configurationBlock, getConfigurationFunc,
         var editInterfaceBlock = document.createElement( 'div' ),
               headerBlock = document.createElement( 'div' ),
               controlBlock = document.createElement( 'div' ),
-              cancelButton = document.createElement( 'a' ),
-              cancelIcon = document.createElement( 'img' ),
-              acceptButton = document.createElement( 'a' ),
-              acceptIcon = document.createElement( 'img' ),
+              cancelButton = showCancelButton(),
+              acceptButton = showAcceptButton( getMessage( 'addFilterOption' ) ),
               configurationBlock = this.configurationBlock,
               getConfigurationFunc = this.getConfigurationFunc;
               
@@ -43,20 +41,10 @@ function FilterOption( id, icon, name, configurationBlock, getConfigurationFunc,
         headerBlock.appendChild( showIcon( this ) );
         headerBlock.appendChild( showName( this ) );
         
-        cancelIcon.src = 'images/cross-btn.png';
-        cancelIcon.title = getMessage( 'cancel' );
-        cancelButton.appendChild( cancelIcon );
-        controlBlock.appendChild( cancelButton );        
-        $( cancelButton ).addClass( 'but-icon' );   
+        controlBlock.appendChild( cancelButton );
+        controlBlock.appendChild( acceptButton );   
         
         cancelButton.addEventListener( 'click', onClose );
-        
-        acceptIcon.src = 'images/plus-btn.png';
-        acceptIcon.title = getMessage( 'addFilterOption' );
-        acceptButton.appendChild( acceptIcon );
-        controlBlock.appendChild( acceptButton );        
-        $( acceptButton ).addClass( 'but-icon' );   
-        
         acceptButton.addEventListener( 'click', function() {
             var configuration = getConfigurationFunc( configurationBlock );
             

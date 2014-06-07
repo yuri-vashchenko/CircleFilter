@@ -126,16 +126,18 @@ var StorageManager = (function() {
     
     function removeCircleFromUsers( id ) {
         var users = readProperty( 'users' );
-        
-        users.forEach( function( element, index ) {  
-            var circleIndex = getIndexByValue( element.circles, id );
+
+        if ( users ) {
+            users.forEach( function( element, index ) {  
+                var circleIndex = getIndexByValue( element.circles, id );
+                
+                if ( circleIndex >= 0 ) {
+                    element.circles.splice( circleIndex, 1 );
+                }
+            });
             
-            if ( circleIndex >= 0 ) {
-                element.circles.splice( circleIndex, 1 );
-            }
-        });
-        
-        writeProperty( 'users', users );
+            writeProperty( 'users', users );
+        }
     }
     
     function clearCircles() {
