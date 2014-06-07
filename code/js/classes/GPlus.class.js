@@ -121,13 +121,13 @@ var GPlus = (function() {
         
         getCirclesList : function( callback ) {     
             getTokenGPlus( function( token ) {
-                xhrWithAuth( 'GET', 'https://plus.google.com/u/0/_/socialgraph/lookup/circles', false, callback );
+                xhrWithAuth( 'GET', 'https://plus.google.com/u/' + getPageId() + '/_/socialgraph/lookup/circles', false, callback );
             });
         },
         
         getCirclesAndUsersList : function( callback ) {
             getTokenGPlus( function( token ) {
-                xhrWithAuth( 'GET', 'https://plus.google.com/u/0/_/socialgraph/lookup/circles?m=true', false, callback );
+                xhrWithAuth( 'GET', 'https://plus.google.com/u/' + getPageId() + '/_/socialgraph/lookup/circles?m=true', false, callback );
             });
         },
         
@@ -147,7 +147,7 @@ var GPlus = (function() {
                     usersIdsArray.push('[[null,null,"' + element + '"],null,[]]');
                 });
                 
-                xhrWithAuth( 'POST', 'https://plus.google.com/u/0/_/socialgraph/mutate/modifymemberships/?a=[[["' + circleId + '"]]]&m=[[' + usersIdsArray.join( ',' ) + ']]&at=' + token, false, callback );
+                xhrWithAuth( 'POST', 'https://plus.google.com/u/' + getPageId() + '/_/socialgraph/mutate/modifymemberships/?a=[[["' + circleId + '"]]]&m=[[' + usersIdsArray.join( ',' ) + ']]&at=' + token, false, callback );
             });
         },
         
@@ -165,7 +165,7 @@ var GPlus = (function() {
                     usersIdsArray.push( '[null,null,"' + element + '"]' );
                 });
                 
-                xhrWithAuth( 'POST', 'https://plus.google.com/u/0/_/socialgraph/mutate/removemember/?c=["' + circleId + '"]&m=[[' + usersIdsArray.join( ',' ) + ']]&at=' + token, false, callback );
+                xhrWithAuth( 'POST', 'https://plus.google.com/u/' + getPageId() + '/_/socialgraph/mutate/removemember/?c=["' + circleId + '"]&m=[[' + usersIdsArray.join( ',' ) + ']]&at=' + token, false, callback );
             });
         },
         /**
@@ -183,7 +183,7 @@ var GPlus = (function() {
                 }
                 data += '&at=' + token;
                 
-                xhrWithAuth( 'POST', 'https://plus.google.com/u/0/_/socialgraph/mutate/create/?' + data, false, callback );
+                xhrWithAuth( 'POST', 'https://plus.google.com/u/' + getPageId() + '/_/socialgraph/mutate/create/?' + data, false, callback );
             });
         },
         /**
@@ -194,7 +194,7 @@ var GPlus = (function() {
          */
         removeCircle : function( circleId, callback ) {
             getTokenGPlus( function( token ) {
-                xhrWithAuth( 'POST', 'https://plus.google.com/u/0/_/socialgraph/mutate/delete/?c=["' + circleId + '"]&at=' + token, false, callback );
+                xhrWithAuth( 'POST', 'https://plus.google.com/u/' + getPageId() + '/_/socialgraph/mutate/delete/?c=["' + circleId + '"]&at=' + token, false, callback );
             });
         },
         

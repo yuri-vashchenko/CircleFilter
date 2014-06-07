@@ -54,8 +54,9 @@ function User( id, firstName, lastName, photo, age, sex, city, circles ) {
             tooltipTimeOutId = setTimeout( function() {
                 
                 $.modal( showTooltip( self ), {
-                    position : [$( userBlock ).offset().top + 71 + $( document ).scrollTop(), $( userBlock ).offset().left],
+                    position : [$( userBlock ).offset().top + 71 - $( document ).scrollTop(), $( userBlock ).offset().left],
                     containerCss: {
+                        position: 'absolute !important',
                         borderBottom: '1px solid silver',
                         borderLeft: '1px solid silver',
                         borderRight: '1px solid silver',
@@ -138,6 +139,27 @@ function User( id, firstName, lastName, photo, age, sex, city, circles ) {
             userTooltip.appendChild( userCity );
         }
         
+        if ( user.circles && user.circles.length ) {
+            var userCircles = document.createElement( 'div' ),
+                  userCirclesLabel = document.createElement( 'label' ),
+                  userCirclesSpan = document.createElement( 'span' );
+            
+            userCirclesLabel.textContent = getMessage( 'circles' ) + ': ';
+            userCirclesSpan.textContent = '';
+            
+            for ( var i = 0; i < user.circles.length; i++ ) {
+                StorageManager.getCircleInfo( user.circles[i], function( circle ) {
+                    userCirclesSpan.textContent += circle.name + ( i != user.circles.length - 1 ? ', ' : '' );
+                });
+                
+            }
+            
+            userCircles.appendChild( userCirclesLabel );
+            userCirclesLabel.appendChild( userCirclesSpan );
+            
+            userTooltip.appendChild( userCircles );
+        }
+
         $( userTooltip ).addClass( 'userTooltip' );
         $( userTooltip ).addClass( 'contentBlock' );
         

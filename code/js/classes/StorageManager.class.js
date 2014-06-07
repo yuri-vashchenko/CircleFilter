@@ -163,10 +163,10 @@ var StorageManager = (function() {
 
         if ( users ) {
             users.forEach( function( element, index ) {  
-                var circleIndex = getIndexByValue( element.circles, id );
+                var circleIndex = getIndexByValue( ( element.circles ? element.circles.value : [] ), id );
                 
                 if ( circleIndex >= 0 ) {
-                    element.circles.splice( circleIndex, 1 );
+                    element.circles.value.splice( circleIndex, 1 );
                 }
             });
             
@@ -445,7 +445,6 @@ var StorageManager = (function() {
                         for ( var i = 0; i < cList.length; i++ ) {
                             addCircle( cList[i].id, cList[i].name, cList[i].description, cList[i].position );
                         }
-                        /* Put your check code here */
                         callback( getCircle( id ) );
                     });
                 });
@@ -572,13 +571,13 @@ var StorageManager = (function() {
                         toAddUsers.forEach( function( element, index ) {                            
                             var userIndex = getUserIndex( element );
                             
-                            if ( getIndexByValue( users[userIndex].circles, circleId ) < 0 ) {
+                            if ( getIndexByValue( ( users[userIndex].circles ? users[userIndex].circles.value : [] ), circleId ) < 0 ) {
                             
                                 if ( !users[userIndex].circles ) {
-                                    users[userIndex].circles = [];
+                                    users[userIndex].circles = { 'value': [], 'date': getCurrentDate() };
                                 }
                                 
-                                users[userIndex].circles.push( circleId );
+                                users[userIndex].circles.value.push( circleId );
                             }
                         });
                         
@@ -604,10 +603,10 @@ var StorageManager = (function() {
                         
                         usersIds.forEach( function( element, index ) {                            
                             var userIndex = getUserIndex( element ),                     
-                                  circleIndex = getIndexByValue( users[userIndex].circles , circleId );
+                                  circleIndex = getIndexByValue( ( users[userIndex].circles ? users[userIndex].circles.value : [] ) , circleId );
                                   
                             if ( circleIndex >= 0 ) {
-                                users[userIndex].circles.splice( circleIndex, 1 );     
+                                users[userIndex].circles.value.splice( circleIndex, 1 );     
                             }                
                         });
                         
