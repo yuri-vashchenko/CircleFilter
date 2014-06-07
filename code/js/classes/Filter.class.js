@@ -406,11 +406,146 @@ function Filter( filterBlock, resultBlock ) {
         });
     }
     
+    /* Форма добавления выбранных пользователей в круг*/
+    function showAddToCircleForm( addToCircleButton ){
+        showCircleList( function( listBlock ) {
+            $( listBlock ).addClass( 'contentBlock' );
+            
+            var circleDeleteForm = document.createElement( 'div' ),
+                  controlBlock = document.createElement( 'div' ),
+                  cancelButton = showCancelButton(),
+                  acceptButton = showAcceptButton( getMessage( 'delete' ) );
+            
+            controlBlock.appendChild( cancelButton );
+            controlBlock.appendChild( acceptButton );           
+            $( controlBlock ).addClass( 'controlBlock' );
+            
+            circleDeleteForm.appendChild( listBlock );
+            circleDeleteForm.appendChild( controlBlock );            
+            $( circleDeleteForm ).addClass( 'circleDeleteForm' );
+            
+            $.modal( $( circleDeleteForm ), {
+                overlayClose : true,
+                position : [$( addToCircleButton ).offset().top + $( addToCircleButton ).outerHeight() - 1 - $( document ).scrollTop(), $( addToCircleButton ).offset().left],
+                onOpen: function ( dialog ) {
+                    dialog.overlay.fadeIn( 'fast' );
+                    dialog.container.slideDown( 'fast' );
+                    dialog.data.slideDown( 'fast' );
+                },
+                onShow: function( dialog ) {                
+                    cancelButton.addEventListener( 'click', function() {
+                        $.modal.close(); 
+                    });
+                    
+                    acceptButton.addEventListener( 'click', function() {
+                        
+                        removeIterator( 0, listBlock, function() { 
+                            alert( 'Операция добавления пользователей в круги завершена' );
+                        });
+                        $.modal.close();
+                        
+                        function removeIterator( i, listBlock, onSuccess ) {
+                            if ( i < listBlock.children.length ) {
+                                var checkBox = listBlock.children[i].querySelector( 'input' );
+                                usersListID = [];
+                                /* тут нужно получить выбранных пользователей и заполнить массив usersListID */
+                                if ( checkBox.checked || usersListID.lenght > 0 ) {
+                                    StorageManager.addPeopleToCircle( checkBox.value, usersListID, function() {
+                                        removeIterator( i + 1, listBlock, onSuccess );
+                                    });
+                                } else {
+                                    removeIterator( i + 1, listBlock, onSuccess );
+                                }                          
+                            } else {
+                                onSuccess();
+                            }
+                        }
+                    });
+                },
+                onClose: function ( dialog ) {
+                    dialog.data.slideUp( 'fast', function () {
+                        dialog.container.slideUp( 'fast', function () {
+                            dialog.overlay.fadeOut( 'fast' );
+                            $.modal.close();
+                        }); 
+                    }); 
+                }
+            });
+        });
+    }
+    
+    /* Форма удаления выбранных пользователей в круг*/
+    function showDeleteFromCircleForm( deleteFromCircleButton ){
+        showCircleList( function( listBlock ) {
+            $( listBlock ).addClass( 'contentBlock' );
+            
+            var circleDeleteForm = document.createElement( 'div' ),
+                  controlBlock = document.createElement( 'div' ),
+                  cancelButton = showCancelButton(),
+                  acceptButton = showAcceptButton( getMessage( 'delete' ) );
+            
+            controlBlock.appendChild( cancelButton );
+            controlBlock.appendChild( acceptButton );           
+            $( controlBlock ).addClass( 'controlBlock' );
+            
+            circleDeleteForm.appendChild( listBlock );
+            circleDeleteForm.appendChild( controlBlock );            
+            $( circleDeleteForm ).addClass( 'circleDeleteForm' );
+            
+            $.modal( $( circleDeleteForm ), {
+                overlayClose : true,
+                position : [$( deleteFromCircleButton ).offset().top + $( deleteFromCircleButton ).outerHeight() - 1 - $( document ).scrollTop(), $( deleteFromCircleButton ).offset().left],
+                onOpen: function ( dialog ) {
+                    dialog.overlay.fadeIn( 'fast' );
+                    dialog.container.slideDown( 'fast' );
+                    dialog.data.slideDown( 'fast' );
+                },
+                onShow: function( dialog ) {                
+                    cancelButton.addEventListener( 'click', function() {
+                        $.modal.close(); 
+                    });
+                    
+                    acceptButton.addEventListener( 'click', function() {
+                        
+                        removeIterator( 0, listBlock, function() { 
+                            alert( 'Операция удаления пользователей из кругов завершена' );
+                        });
+                        $.modal.close();
+                        
+                        function removeIterator( i, listBlock, onSuccess ) {
+                            if ( i < listBlock.children.length ) {
+                                var checkBox = listBlock.children[i].querySelector( 'input' );
+                                usersListID = [];
+                                /* тут нужно получить выбранных пользователей и заполнить массив usersListID */
+                                if ( checkBox.checked || usersListID.lenght > 0 ) {
+                                    StorageManager.removePeopleFromCircle( checkBox.value, usersListID, function() {
+                                        removeIterator( i + 1, listBlock, onSuccess );
+                                    });
+                                } else {
+                                    removeIterator( i + 1, listBlock, onSuccess );
+                                }                          
+                            } else {
+                                onSuccess();
+                            }
+                        }
+                    });
+                },
+                onClose: function ( dialog ) {
+                    dialog.data.slideUp( 'fast', function () {
+                        dialog.container.slideUp( 'fast', function () {
+                            dialog.overlay.fadeOut( 'fast' );
+                            $.modal.close();
+                        }); 
+                    }); 
+                }
+            });
+        });
+    }
+    
     function showChooseActionBlock() {
         var chooseActionBlock = document.createElement( 'div' ),
               addToCircleButton = document.createElement( 'button' ),
               deleteFromCircleButton = document.createElement( 'button' ),
-              deleteAllFromCircleButton = document.createElement( 'button' ),
               createCircleButton = document.createElement( 'button' ),
               deleteCircleButton = document.createElement( 'button' ),
               exportToFileBlock = document.createElement( 'div' ),
@@ -420,8 +555,7 @@ function Filter( filterBlock, resultBlock ) {
               
         addToCircleButton.textContent = getMessage( 'addToCircle' );
         deleteFromCircleButton.textContent = getMessage( 'deleteFromCircle' );
-        deleteAllFromCircleButton.textContent = getMessage( 'deleteAllFromCircle' );
-        exportToFileTitle.textContent = getMessage( 'exportToFile' );
+        exportToFileTitle.textContent  = getMessage( 'exportToFile' );
         createCircleButton.textContent = getMessage( 'createCircle' );
         deleteCircleButton.textContent = getMessage( 'deleteCircle' );
         
@@ -430,13 +564,20 @@ function Filter( filterBlock, resultBlock ) {
 
         addToCircleButton.title = getMessage( 'addToCircleTitle' );
         deleteFromCircleButton.title = getMessage( 'deleteFromCircleTitle' );
-        deleteAllFromCircleButton.title = getMessage( 'deleteAllFromCircleTitle' );
         exportToFileTitle.title = getMessage( 'exportToFileTitle' );
         createCircleButton.title = getMessage( 'createCircleTitle' );
         deleteCircleButton.title = getMessage( 'deleteCircleTitle' );
         
         exportToXmlButton.title = getMessage( 'exportToXmlTitle' );
         exportToCsvButton.title = getMessage( 'exportToCsvTitle' );
+        
+        addToCircleButton.addEventListener( 'click', function() {
+            showAddToCircleForm( addToCircleButton );
+        }); 
+        
+        deleteFromCircleButton.addEventListener( 'click', function() {
+            showDeleteFromCircleForm( deleteFromCircleButton );
+        }); 
         
         createCircleButton.addEventListener( 'click', function() {
             showCreateCircleForm( createCircleButton );
@@ -447,7 +588,6 @@ function Filter( filterBlock, resultBlock ) {
         
         chooseActionBlock.appendChild( addToCircleButton );
         chooseActionBlock.appendChild( deleteFromCircleButton );
-        chooseActionBlock.appendChild( deleteAllFromCircleButton );
         chooseActionBlock.appendChild( createCircleButton );
         chooseActionBlock.appendChild( deleteCircleButton );
         
