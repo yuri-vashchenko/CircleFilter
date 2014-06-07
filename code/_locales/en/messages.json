@@ -178,5 +178,26 @@
     },
     "delete": {
         "message": "Delete"
+    },
+    "countPeoplePerPage": {
+        "message": "Сount people per page"
+    },
+    "alwaysAsk": {
+        "message": "Always ask"
+    },
+    "alwaysLocal": {
+        "message": "Always local"
+    },
+    "alwaysLoading": {
+        "message": "Always loading"
+    },
+    "defaultLoadingResourse": {
+        "message": "Вefault loading resourse"
+    },
+    "storageSize": {
+        "message": "Storage size"
+    },
+    "storageClear": {
+        "message": "Storage clear"
     }
 }

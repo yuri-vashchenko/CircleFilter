@@ -522,6 +522,20 @@ var StorageManager = (function() {
         getStorageSize: function() {
             return getStorageSize();
         },
+        
+        getUsersSize: function() {
+            return getUsersSize();
+        },
+        
+        getCirclesSize: function() {
+            return getCirclesSize();
+        },
+        getUsersPerPage: function() {
+            return readProperty( 'UsersPerPage' );
+        },
+        setUsersPerPage: function( value ) {
+            return writeProperty( 'UsersPerPage', value );
+        },
         /**
          * Add people to a circle in your account.
          * @param {string} circleId the Circle to add the people to.
