@@ -68,6 +68,8 @@ function FilterOption( id, icon, name, configurationBlock, getConfigurationFunc,
             }
         });
         
+        $( configurationBlock ).addClass( 'contentBlock' );
+        
         editInterfaceBlock.appendChild( headerBlock );
         editInterfaceBlock.appendChild( configurationBlock );
         editInterfaceBlock.appendChild( controlBlock );

@@ -62,7 +62,7 @@
 -----------------------------------------------------------------------------*/
 
 ul.filterOptionsList {
-    width: 288px;
+    width: 286px;
     padding: 0;
     display: none;
 }
@@ -77,12 +77,12 @@ ul.filterOptionsList li:hover {
 }
 
 /* Overlay */
-#simplemodal-overlay {
+.simplemodal-overlay {
 }
 
 /* Container */
-#simplemodal-container {
-    height: 300px;
+.simplemodal-container {
+    height: inherit !important;
     width: 288px;
     color: black;
     background-color: white;

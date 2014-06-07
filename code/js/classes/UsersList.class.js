@@ -57,6 +57,18 @@ function UsersList( perPage ) {
         return usersListBlock;
     }
     
+    this.getCheckedUsers = function() {
+        var checkedUsers = [];
+
+        for ( var i = 0; i < this.usersList.length; i++ ) {
+            if ( this.usersList[i].checked ) {
+                checkedUsers.push( this.usersList[i] );
+            }
+        }
+        
+        return checkedUsers;
+    }
+    
     this.updateUsersOnPage = function( page ) {
         var indexOfTheFirst = this.perPage * ( page - 1 ),
               indexOfTheLast = this.perPage * page - 1;

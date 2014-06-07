@@ -4,7 +4,7 @@
     width: 200px;
     margin: 10px;
     border: 1px solid silver;
-    border-radius: 5px;
+    border-radius: 5px 5px 0 0;
     vertical-align: top;
     background-color: whitesmoke;
     color: dodgerblue;
@@ -26,4 +26,22 @@
 
 .user a {   
     cursor: pointer;
+}
+
+.user.selected {
+    background-color: #00a3e8;
+    color: white;
+}
+
+.user.selected {
+    background-color: #00a3e8;
+    color: white;
+}
+
+.userTooltip {
+    background-color: whitesmoke;
+}
+
+.contentBlock {
+    padding: 15px;
 }

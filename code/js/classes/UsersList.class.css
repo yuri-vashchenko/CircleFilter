@@ -6,6 +6,11 @@ ul.usersList li {
     display: inline;
 }
 
+div.pagesNav {
+    position: fixed;
+    bottom: 0;
+}
+
 /* pages by BochkarevAS */
 .paginate  {
     height: 34px;
