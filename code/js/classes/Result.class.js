@@ -63,7 +63,7 @@ function Result( block ) {
     this.reset = function() {
         this.usersList = new UsersList( perPage );
         this.state = STATE.DEFAULT;
-        
+        usersSelectedCount = 0;
         this.block.innerHTML = '';
         this.block.appendChild( showText( getMessage( 'defaultResultBlockContent' ) ) );
         this.block.appendChild( showImportButton( this ) );

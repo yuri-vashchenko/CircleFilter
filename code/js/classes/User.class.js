@@ -44,6 +44,9 @@ function User( id, firstName, lastName, photo, age, sex, city, circles ) {
         
         userBlock.addEventListener( 'click', function( e ) {
             $( this ).toggleClass( 'selected' );
+            ( checked ? counterProgressBar.usersSelectedCount-- : counterProgressBar.usersSelectedCount++ );
+            $( '.userCounter' ).textContent = 'Пользователей выведено:' +  + ' Пользователей выбрано: ' + counterProgressBar.usersSelectedCount;
+            /* Вставить событие обновления количества обновленных пользователей */
             self.toggleCheck();
         });
         

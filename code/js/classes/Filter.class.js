@@ -102,15 +102,21 @@ function Filter( filterBlock, resultBlock ) {
         bottomGroupBlock.appendChild( applyButton );
         
         applyButton.addEventListener( 'click', function() {
+            usersApply = 0;
             if ( filter.process.id == null ) {
                 startProcessing( filter, applyButton, function() {
                     var filterSetList = filter.filterSetList.clone(),
                           filterOptionsCount = 0;
-                    
+                          
                     for ( var i = 0; i < filterSetList.length; i++ ) {
                         filterOptionsCount += filterSetList[i].filterOptionList;
                     }
-                    
+                    /* Здесь можно определить максимальное значение прогресс бара для фильтрации */
+                    counterProgressBar.filterIteration = (filterOptionsCount > 0 ? filterOptionsCount : 1);
+                    counterProgressBar.usersCount = ( counterProgressBar.usersCount > 0 ? counterProgressBar.usersCount : StorageManager.getUserIdsList(function( userList ) {
+                        counterProgressBar.usersCount = userList.length;
+                    }));
+                    $( '#progresBar' ).wijprogressbar( 'maxValue', counterProgressBar.usersCount * counterProgressBar.filterIteration );
                     if ( filterOptionsCount == 0 ) {
                         StorageManager.getUserIdsList( function( userIdsList ) {
                             applyEmptyFilterSetIteration(
@@ -146,7 +152,6 @@ function Filter( filterBlock, resultBlock ) {
                             });
                         }
                     }
-                    
                     function applyFilterSetIteration( filterSetList, callback, onSuccess, filterProcess ) {
                         if ( !filterSetList.length || filterProcess.id == null ) {
                             onSuccess();
@@ -184,6 +189,15 @@ function Filter( filterBlock, resultBlock ) {
         filter.result.reset();
         filter.result.processing();
         filter.process.id = setTimeout( processingFunc, 0);
+        
+        counterProgressBar.usersApply = 0;
+
+        $( '#progresBar' ).wijprogressbar({
+            'enable': true, 
+            'value': 0,
+            'maxValue': counterProgressBar.usersCount * counterProgressBar.filterIteration
+            });
+
     }
     
     function stopProcessing( filter, applyButton ) {
@@ -191,6 +205,9 @@ function Filter( filterBlock, resultBlock ) {
         filter.result.finish(); 
         applyButton.textContent = getMessage( 'apply' );
         applyButton.title = getMessage( 'applyTitle' );
+        
+        $( '#progresBar' ).wijprogressbar('value', 1000);
+        $( '#progresBar' ).wijprogressbar('disable');
     }
     
     function showFormulaBlock( filter ) {

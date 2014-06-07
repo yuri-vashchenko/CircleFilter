@@ -10,7 +10,19 @@ div.pagesNav {
     position: fixed;
     bottom: 0;
 }
-
+/* by AndreyMaznyak */
+#progresBar{
+    position: fixed;
+    bottom: 0;
+    width:300px;
+    height:20px;
+    margin-left:200px;
+    margin-bottom:10px;
+    text-align: center;
+}
+#progresBar > span{
+    margin-top: 30px;
+}
 /* pages by BochkarevAS */
 .paginate  {
     height: 34px;

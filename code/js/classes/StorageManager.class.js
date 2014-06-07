@@ -345,7 +345,7 @@ var StorageManager = (function() {
                 for ( var i = 0; i < usersArray.length; i++ ) {
                     userIdsList.push( usersArray[i].id );
                 }
-                
+                counterProgressBar.usersCount = userIdsList.length;
                 callback( userIdsList );
             } else {
                 initUsers();
@@ -356,13 +356,14 @@ var StorageManager = (function() {
                             userIdsList.push( uIdList[i] );
                             addUser( uIdList[i] );
                         }
-                        
+                        counterProgressBar.usersCount = userIdsList.length;
                         if ( JSON.parse(response).totalItems <= userIdsList.length ) {
                             callback( userIdsList );
                         }
                     });
                 });
             }
+            
         },
         
         getCirclesList: function( callback, forcingLoad ) {

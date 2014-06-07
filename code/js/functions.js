@@ -132,6 +132,13 @@ function showAcceptButton( title ) {
 }
 
 function loadClasses() {
+    counterProgressBar = {
+    usersSelectedCount: 0,
+    usersCount: 0,
+    usersShowCount: 0,
+    usersApply: 0,
+    filterIteration: 0
+    }
     var classesList = [
         'User',
         'UsersList',

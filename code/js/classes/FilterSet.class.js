@@ -151,7 +151,6 @@ function FilterSet() {
             var filterOptionList = this.filterOptionList.clone();
             
             /* sort filterOptionList by priority here [highest,...., lowest] */
-            
             StorageManager.getUserIdsList( function( userIdsList ) {
                 applyUserIteration( filterOptionList, userIdsList, callback, onSuccess, filterProcess );
             }, true );
@@ -162,7 +161,7 @@ function FilterSet() {
         function applyUserIteration( filterOptionList, userIdsList, callback, onSuccess, filterProcess ) {
             if ( userIdsList.length && filterProcess.id != null ) {
                 var foList = filterOptionList.clone();
-                
+
                 applyFilterOptionIteration( 
                     foList,
                     userIdsList.shift(), 
@@ -183,10 +182,13 @@ function FilterSet() {
         }
         
         function applyFilterOptionIteration( filterOptionList, userId, nextUserIteration, callback, filterProcess ) {
+            
             if ( filterProcess.id == null ) {
             } else if ( !filterOptionList.length ) {
                 callback( userId );
             } else {
+                /* Событие обновления прогресс бара */
+                $( '#progresBar' ).wijprogressbar( 'value', counterProgressBar.usersApply++ );
                 filterOptionList.shift().apply( 
                     userId, 
                     

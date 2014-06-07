@@ -5,7 +5,8 @@ function UsersList( perPage ) {
     this.perPage = perPage || 20;
     this.currentPage = 1;
     this.pagesCount = 1;
-
+    this.usersSelectedCount = 0;
+    
     this.addUser = function( user ) {
         for ( var i = 0; i < this.usersList.length; i++ ) {
             if ( this.usersList[i].eq( user ) ) {
@@ -35,16 +36,26 @@ function UsersList( perPage ) {
     }
 
     this.show = function() {
-        var usersListBlock = document.createElement( 'div' );
-              
+        var usersListBlock = document.createElement( 'div' ),
+            progresBar      = document.createElement( 'div' );
+            
         this.usersBlock = document.createElement( 'ul' );
         this.pageNav = document.createElement( 'div' );
+            
+        progresBar.id = 'progresBar';
         
         $( this.usersBlock ).addClass( 'usersList' );
         $( this.pageNav ).addClass( 'pagesNav' );
         $( this.pageNav ).addClass( 'paginate' );
         
-        
+        $( progresBar ).wijprogressbar({
+            value: 0,
+            labelAlign: 'center',
+            animationOptions: {
+            duration: 1000
+            },
+        indicatorImage: 'images/progressbar_40x40.png'
+        });
         
         for ( var i = 0; i < this.usersList.length; i++ ) {
             var li = document.createElement( 'li' );
@@ -52,9 +63,9 @@ function UsersList( perPage ) {
             li.appendChild( this.usersList[i].show() );
             this.usersBlock.appendChild( li );
         }
-        
         usersListBlock.appendChild( this.usersBlock );
         usersListBlock.appendChild( this.pageNav );
+        usersListBlock.appendChild( progresBar );
         return usersListBlock;
     }
     
