@@ -183,13 +183,11 @@ var StorageManager = (function() {
               users = readProperty( 'users' );       
         
         for ( property in propArray ) {
-            if ( propArray[property] != undefined 
-                && ( users[userIndex][property] == undefined
+            if ( users[userIndex][property] == undefined
                     || ( override && expiredDate == undefined )
                     || ( override && compareDates( users[userIndex][property].date, expiredDate ) > 0 )
-                    ) 
                ) {
-                users[userIndex][property] = { 'value': propArray[property], 'date': getCurrentDate() };
+                users[userIndex][property] = { 'value': ( propArray[property] != undefined ? propArray[property] : '' ), 'date': getCurrentDate() };
             }
         }
         
@@ -286,10 +284,12 @@ var StorageManager = (function() {
     }
     
     return {
-        getUserIdsList: function( useCache, callback ) {
+        getUserIdsList: function( callback, forcingLoad ) {
             var userIdsList = new Array();
             
-            if ( useCache && readProperty( 'users' ) ) {
+            forcingLoad = forcingLoad || false;
+            
+            if ( !forcingLoad && readProperty( 'users' ) ) {
                 var usersArray = readProperty( 'users' );
                       
                 for ( var i = 0; i < usersArray.length; i++ ) {
@@ -315,10 +315,12 @@ var StorageManager = (function() {
             }
         },
         
-        getCirclesList: function( useCache, callback ) {
+        getCirclesList: function( callback, forcingLoad ) {
             var circlesList = new Array();
             
-            if ( useCache && readProperty( 'circles' ) ) {
+            forcingLoad = forcingLoad || false;
+            
+            if ( !forcingLoad && readProperty( 'circles' ) ) {
                 var circlesArray = readProperty( 'circles' );
                 
                 callback( circlesArray );
@@ -338,11 +340,13 @@ var StorageManager = (function() {
             }
         },
         
-        getUserInfo: function( useCache, id, propsList, callback ) {
+        getUserInfo: function( id, propsList, callback, forcingLoad ) {
             initUsers();
             
+            forcingLoad = forcingLoad || false;
+            
             var user = getUser( id ),
-                  missingProps = ( useCache ? checkUserProperties( id, propsList ) : propsList );
+                  missingProps = ( !forcingLoad ? checkUserProperties( id, propsList ) : propsList );
                   
             if ( missingProps.length == 0 ) {
                 callback( user );
@@ -375,12 +379,14 @@ var StorageManager = (function() {
             }
         },
         
-        getCircleInfo: function( useCache, id, callback ) {
+        getCircleInfo: function( id, callback, forcingLoad ) {
             initCircles();
+            
+            forcingLoad = forcingLoad || false;
             
             var circle = getCircle( id );
             
-            if ( useCache && circle ) {
+            if ( !forcingLoad && circle ) {
                 callback( circle );
             } else {
                 GPlus.getCirclesList( function( error, status, response ) {
@@ -480,10 +486,12 @@ var StorageManager = (function() {
             return expiredInfo;
         },
         
-        getUserEmail: function( useCache, callback ) {
+        getUserEmail: function( callback, forcingLoad ) {
             var email = readProperty( 'email' );
             
-            if ( useCache && email ) {
+            forcingLoad = forcingLoad || false;
+            
+            if ( !forcingLoad && email ) {
                 callback( email );
             } else {
                 GPlus.getUserEmail( function( error, status, response ) {

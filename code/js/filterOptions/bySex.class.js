@@ -40,7 +40,7 @@
             var configuration = this.configuration,
                   requiredUserFields = this.requiredUserFields;
             
-            StorageManager.getUserInfo( false, userId, requiredUserFields, function( user ) {
+            StorageManager.getUserInfo( userId, requiredUserFields, function( user ) {
                 if ( configuration.sex == user.sex ) {
                     accept( userId );                    
                 } else {

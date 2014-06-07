@@ -110,18 +110,18 @@ function Filter( filterBlock, resultBlock ) {
                     }
                     
                     if ( filterOptionsCount == 0 ) {
-                        StorageManager.getUserIdsList( true, function( userIdsList ) {
+                        StorageManager.getUserIdsList( function( userIdsList ) {
                             for ( var i = 0; i < userIdsList.length; i++ ) {
-                                StorageManager.getUserInfo( false, userIdsList[i], User.propertiesForShow, function( user ) {
+                                StorageManager.getUserInfo( userIdsList[i], User.propertiesForShow, function( user ) {
                                     filter.result.append( user );
                                 });
                             }
-                        });
+                        }, true );
                     } else {
                         applyFilterSetIteration( 
                             filterSetList, 
                             function( userId ) {
-                                StorageManager.getUserInfo( false, userId, User.propertiesForShow, function( user ) {
+                                StorageManager.getUserInfo( userId, User.propertiesForShow, function( user ) {
                                     filter.result.append( user );
                                 });
                             }, 
