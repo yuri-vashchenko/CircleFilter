@@ -27,6 +27,7 @@ function User( id, firstName, lastName, photo, age, sex, city, circles ) {
         img.src = this.photo;
         url.textContent = this.firstName + ' ' + this.lastName;
         url.href = 'https://plus.google.com/' + this.id;
+        url.target = '_blank';
         url.title = getMessage( 'goToProfilePage' );
         
         userBlock.appendChild( img );
@@ -49,9 +50,6 @@ function User( id, firstName, lastName, photo, age, sex, city, circles ) {
                         borderTop: '0px solid silver',        
                         width: '200px',
                         borderRadius: '0 0 5px 5px'
-                    },                        
-                    dataCss: {                
-                        backgroundСolor: 'whitesmoke'
                     },
                     onOpen: function ( dialog ) {
                         dialog.container.slideDown( 'fast' );
