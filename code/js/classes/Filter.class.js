@@ -175,6 +175,72 @@ function Filter( filterBlock, resultBlock ) {
         });        
 
         controlBlock.appendChild( bottomGroupBlock );
+        /*Элементы показывающие количество выбранных пользователей*/
+        var usersCountBlock    = document.createElement( 'div' ),
+            userSellectedLabel = document.createElement( 'label' ),
+            userSellectedTitle = document.createElement( 'span' ),
+            userSellectedCount = document.createElement( 'span' ),
+            userCountLabel     = document.createElement( 'label' ),
+            userCountTitle     = document.createElement( 'span' ),
+            userCount          = document.createElement( 'span' ),
+            userSellectBlock   = document.createElement( 'div' ),
+            userSellectAll     = document.createElement( 'button' ),
+            userUnsellectAll   = document.createElement( 'button' );
+        
+        userSellectedTitle.textContent = getMessage( 'usersSelectedCount' );
+        userSellectedCount.id = 'usersSelectedCount';
+        userSellectedCount.textContent = ' 0';
+        
+        userCountTitle.textContent = getMessage( 'usersShowCount' );
+        userCount.id = 'usersShowCount';
+        userCount.textContent = ' 0';
+        userSellectAll.textContent = getMessage( 'selectAll' );
+        userUnsellectAll.textContent = getMessage( 'unsellectAll' );
+        
+        /* Тут нужно продумать как изменить поля в юзер лист. Ещё картинку нужно обновить*/
+        var self = this;
+        userSellectAll.addEventListener( 'click', function() {
+            if(self.result){
+                if( self.result.usersList ){
+                    userlist = self.result.usersList;
+                    for( var i = 0; i < userlist.length; i++){
+                        if ( !userlist[i].isChecked() ) {
+                            userlist[i].toggleCheck();
+                        }
+                    }
+                    counterProgressBar.usersSelectedCount = counterProgressBar.usersShowCount;
+                    userSellectedCount.textContent = counterProgressBar.usersSelectedCount;
+                }
+            }
+        });
+        /* Та же беда комментарий выше */
+        userUnsellectAll.addEventListener( 'click', function() {
+            if(self.result){
+                if( self.result.usersList ){
+                    userlist = self.result.usersList;
+                    for( var i = 0; i < userlist.length; i++){
+                        if ( userlist[i].isChecked() ) {
+                            userlist[i].toggleCheck();
+                        }
+                    }
+                    counterProgressBar.usersSelectedCount = 0;
+                    userSellectedCount.textContent = counterProgressBar.usersSelectedCount;
+                }
+            }
+        });
+        
+        userSellectedLabel.appendChild( userSellectedTitle );
+        userSellectedLabel.appendChild( userSellectedCount );
+        userCountLabel.appendChild( userCountTitle );
+        userCountLabel.appendChild( userCount );
+        usersCountBlock.appendChild( userSellectedLabel );
+        usersCountBlock.appendChild( userCountLabel );
+        userSellectBlock.appendChild( userSellectAll );
+        userSellectBlock.appendChild( userUnsellectAll );
+        
+        controlBlock.appendChild( usersCountBlock );
+        controlBlock.appendChild( userSellectBlock );
+        
         $( bottomGroupBlock ).addClass( 'bottomGroupBlock' );
         
         $( controlBlock ).addClass( 'control' );

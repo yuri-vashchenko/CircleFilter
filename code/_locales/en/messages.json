@@ -48,25 +48,25 @@
         "message": "Choose filter criteria"
     },
     "addToCircle": {
-        "message": "Add to circle"
+        "message": "addToCircle"
     },
     "moveToCircle": {
-        "message": "Move to circle"
+        "message": "moveToCircle"
     },
     "deleteFromCircle": {
-        "message": "Delete from circle"
+        "message": "deleteFromCircle"
     },
     "deleteAllFromCircle": {
-        "message": "Delete all from circle"
+        "message": "deleteAllFromCircle"
     },
     "exportToFile": {
-        "message": "Export to file"
+        "message": "exportToFile"
     },
     "exportToXml": {
-        "message": "Export to XML"
+        "message": "exportToXml"
     },
     "exportToCsv": {
-        "message": "Export to CSV"
+        "message": "exportToCsv"
     },
     "filterByAge": {
         "message": "by Age"
@@ -215,7 +215,16 @@
     "kBytes": {
         "message": "kBytes"
     },
-    "filterByCircles": {
-        "message": "by Circles"
+    "selectAll": {
+        "message": "Select all"
+    },
+    "unsellectAll": {
+        "message": "Unsellect all"
+    },
+    "usersShowCount": {
+        "message": "Users show count"
+    },
+    "usersSelectedCount": {
+        "message": "Users selected count"
     }
 }

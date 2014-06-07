@@ -13,7 +13,10 @@ function UsersList( perPage ) {
                 return false;
             }
         }
-        
+        /* Ошибка тут. Не работает селектор. Может быть я что то с областями видимости туплю.
+        А может просто неправильно обновляю элемент*/
+        counterProgressBar.usersShowCount = this.usersList.length;
+        $( '#usersShowCount' ).textContent = counterProgressBar.usersShowCount;
         this.usersList.push( user );
         
         if ( this.usersList.length - this.perPage * this.currentPage <= 0 ) {
