@@ -1,5 +1,6 @@
 var GPlusTranslator = (function() {
-
+    var circleIdLength = 16;
+    
     function parseDirtyJSON( input ) {
         var jsonString = input.replace( /\[,/g, '[null,' );
         jsonString = jsonString.replace( /,\]/g, ',null]' );
@@ -37,12 +38,14 @@ var GPlusTranslator = (function() {
                   circlesList = new Array();
                   
             dirtyCirclesList[1].forEach( function( element, index ) {
-                circlesList.push({
-                    id: element[0][0],
-                    name: element[1][0],
-                    position: element[1][12],
-                    description: element[1][2]
-                });
+                if ( element[0][0].length == circleIdLength ) {
+                    circlesList.push({
+                        id: element[0][0],
+                        name: element[1][0],
+                        position: element[1][12],
+                        description: element[1][2]
+                    });
+                }
             });
             
             callback( circlesList );
