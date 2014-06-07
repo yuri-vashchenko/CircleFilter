@@ -111,11 +111,13 @@ function Filter( filterBlock, resultBlock ) {
                     
                     if ( filterOptionsCount == 0 ) {
                         StorageManager.getUserIdsList( function( userIdsList ) {
-                            for ( var i = 0; i < userIdsList.length; i++ ) {
-                                StorageManager.getUserInfo( userIdsList[i], User.propertiesForShow, function( user ) {
-                                    filter.result.append( user );
-                                });
-                            }
+                            applyEmptyFilterSetIteration(
+                                userIdsList,
+                                function() { 
+                                    stopProcessing( filter, applyButton );
+                                },
+                                filter.process
+                            );
                         }, true );
                     } else {
                         applyFilterSetIteration( 
@@ -130,6 +132,17 @@ function Filter( filterBlock, resultBlock ) {
                             },
                             filter.process
                         );
+                    }
+                    
+                    function applyEmptyFilterSetIteration( userIdsList, onSuccess, filterProcess ) {
+                        if ( userIdsList.length == 0 || filterProcess.id == null ) {
+                            onSuccess();
+                        } else {
+                            StorageManager.getUserInfo( userIdsList.shift(), User.propertiesForShow, function( user ) {
+                                filter.result.append( user );
+                                applyEmptyFilterSetIteration( userIdsList, onSuccess, filterProcess );
+                            });
+                        }
                     }
                     
                     function applyFilterSetIteration( filterSetList, callback, onSuccess, filterProcess ) {
