@@ -17,7 +17,8 @@ function getTokenOAuth2( callback ) {
             scope: scope,
             redirect_uri: redirectUri,
             response_type: 'code',
-            client_id: clientId
+            client_id: clientId,
+            access_type: 'offline'
         }), 'selected' : true },
         
         function ( tab ) {
@@ -151,28 +152,29 @@ function refreshTokenOAuth2( callback ) {
             api_key: apiKey,
             grant_type: 'refresh_token'
         },
-        success: function( response ) {
-            chrome.tabs.remove( tab.id, function ( tab ) {
-                localStorage['OAuth2Token'] = response.access_token;
-                localStorage['refreshOAuth2Token'] = response.refresh_token;
-                callback( response.access_token );
-            });
+        success: function( response ) { console.log(response)
+            localStorage['OAuth2Token'] = response.access_token;
+            localStorage.removeItem( 'refreshOAuth2Token' );
+            callback( response.access_token );
         }
     });
 }
 
 function revokeTokens( callback ) {
-    getTokenOAuth2( function( current_token ) {
-        if ( !chrome.runtime.lastError ) {         
-            $.ajax({
-                type: 'GET',
-                url: 'https://accounts.google.com/o/oauth2/revoke',
-                data: { token: current_token },
-                success: callback
-            });
-        }   
-    });
+    var refreshToken = localStorage['refreshOAuth2Token'];
+    
     localStorage.removeItem( 'GPlusToken' );
     localStorage.removeItem( 'OAuth2Token' );
     localStorage.removeItem( 'refreshOAuth2Token' );
+    
+    getTokenOAuth2( function( current_token ) {
+        $.ajax({
+            type: 'GET',
+            url: 'https://accounts.google.com/o/oauth2/revoke',
+            data: { token: current_token },
+            success: function() {
+                callback( refreshToken );
+            }
+        });
+    });
 }

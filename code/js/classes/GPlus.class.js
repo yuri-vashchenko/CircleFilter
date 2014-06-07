@@ -35,7 +35,7 @@ var GPlus = (function() {
         function requestComplete() {
             if ( this.status == 401 && retry ) {
                 retry = false;                
-                revokeTokens( closeWindow );
+                revokeTokens( refreshTokenOAuth2 );
             } else if ( this.status == 403 && retry ) { 
                 xhrWithAuth( method, url, interactive, callback, ( waitTime == 0 ? 1 : waitTime * 2 ) );
             } else  {
