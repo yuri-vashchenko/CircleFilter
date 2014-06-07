@@ -18,7 +18,7 @@ function Filter( filterBlock, resultBlock ) {
         getMessage( 'chooseAction' ), 
         showChooseActionBlock( this ),
         false ) );
-        
+    
     function showControlBlock( filter ) {
         var controlBlock = document.createElement( 'div' ),
               importButton = document.createElement( 'a' ),
@@ -102,19 +102,35 @@ function Filter( filterBlock, resultBlock ) {
         applyButton.addEventListener( 'click', function() {
             if ( filter.process.id == null ) {
                 startProcessing( filter, applyButton, function() {
-                    var filterSetList = filter.filterSetList.clone();
-                    applyFilterSetIteration( 
-                        filterSetList, 
-                        function( userId ) {
-                            StorageManager.getUserInfo( false, userId, User.propertiesForShow, function( user ) {
-                                filter.result.append( user );
-                            });
-                        }, 
-                        function() { 
-                            stopProcessing( filter, applyButton );
-                        },
-                        filter.process
-                    );
+                    var filterSetList = filter.filterSetList.clone(),
+                          filterOptionsCount = 0;
+                    
+                    for ( var i = 0; i < filterSetList.length; i++ ) {
+                        filterOptionsCount += filterSetList[i].filterOptionList;
+                    }
+                    
+                    if ( filterOptionsCount == 0 ) {
+                        StorageManager.getUserIdsList( true, function( userIdsList ) {
+                            for ( var i = 0; i < userIdsList.length; i++ ) {
+                                StorageManager.getUserInfo( false, userIdsList[i], User.propertiesForShow, function( user ) {
+                                    filter.result.append( user );
+                                });
+                            }
+                        });
+                    } else {
+                        applyFilterSetIteration( 
+                            filterSetList, 
+                            function( userId ) {
+                                StorageManager.getUserInfo( false, userId, User.propertiesForShow, function( user ) {
+                                    filter.result.append( user );
+                                });
+                            }, 
+                            function() { 
+                                stopProcessing( filter, applyButton );
+                            },
+                            filter.process
+                        );
+                    }
                     
                     function applyFilterSetIteration( filterSetList, callback, onSuccess, filterProcess ) {
                         if ( !filterSetList.length || filterProcess.id == null ) {
