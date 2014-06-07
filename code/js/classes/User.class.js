@@ -7,8 +7,17 @@ function User( id, firstName, lastName, photo, age, sex, city, circles ) {
     this.sex = sex;
     this.city = city;
     this.circles = circles;
-    this.checked = false;
     var tooltipTimeOut = 1200;
+    
+    var checked = false;
+    
+    this.isChecked = function() {
+        return checked;
+    }
+    
+    this.toggleCheck = function() {
+        checked = !checked;
+    }
     
     this.show = function() {
         var userBlock = document.createElement( 'div' ),
@@ -20,7 +29,7 @@ function User( id, firstName, lastName, photo, age, sex, city, circles ) {
         
         $( userBlock ).addClass( 'user' );
         
-        if ( this.checked ) {
+        if ( this.isChecked() ) {
             $( userBlock ).addClass( 'selected' );
         }
         
@@ -35,7 +44,7 @@ function User( id, firstName, lastName, photo, age, sex, city, circles ) {
         
         userBlock.addEventListener( 'click', function( e ) {
             $( this ).toggleClass( 'selected' );
-            self.checked = !self.checked;
+            self.toggleCheck();
         });
         
         $( userBlock ).mouseenter( function() {
