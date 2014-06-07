@@ -106,7 +106,7 @@ function Filter( filterBlock, resultBlock ) {
                     applyFilterSetIteration( 
                         filterSetList, 
                         function( userId ) {
-                            StorageManager.getUserInfo( userId, User.propertiesForShow, function( user ) {
+                            StorageManager.getUserInfo( false, userId, User.propertiesForShow, function( user ) {
                                 filter.result.append( user );
                             });
                         }, 

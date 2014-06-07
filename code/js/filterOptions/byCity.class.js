@@ -35,7 +35,7 @@
             var configuration = this.configuration,
                   requiredUserFields = this.requiredUserFields;
             
-            StorageManager.getUserInfo( userId, requiredUserFields, function( user ) {
+            StorageManager.getUserInfo( false, userId, requiredUserFields, function( user ) {
                 var translit = transliterate( configuration.city ).toLowerCase(),
                       city = ( user.city ? user.city.toLowerCase() : "" );
                       

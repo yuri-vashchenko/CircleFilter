@@ -286,10 +286,10 @@ var StorageManager = (function() {
     }
     
     return {
-        getUserIdsList: function( callback ) {
+        getUserIdsList: function( useCache, callback ) {
             var userIdsList = new Array();
             
-            if ( readProperty( 'users' ) ) {
+            if ( useCache && readProperty( 'users' ) ) {
                 var usersArray = readProperty( 'users' );
                       
                 for ( var i = 0; i < usersArray.length; i++ ) {
@@ -315,10 +315,10 @@ var StorageManager = (function() {
             }
         },
         
-        getCirclesList: function( callback ) {
+        getCirclesList: function( useCache, callback ) {
             var circlesList = new Array();
             
-            if ( readProperty( 'circles' ) ) {
+            if ( useCache && readProperty( 'circles' ) ) {
                 var circlesArray = readProperty( 'circles' );
                 
                 callback( circlesArray );
@@ -338,11 +338,12 @@ var StorageManager = (function() {
             }
         },
         
-        getUserInfo: function( id, propsList, callback ) {
+        getUserInfo: function( useCache, id, propsList, callback ) {
             initUsers();
             
             var user = getUser( id ),
-                  missingProps = checkUserProperties( id, propsList );
+                  missingProps = ( useCache ? checkUserProperties( id, propsList ) : propsList );
+                  
             if ( missingProps.length == 0 ) {
                 callback( user );
             } else {
@@ -374,12 +375,12 @@ var StorageManager = (function() {
             }
         },
         
-        getCircleInfo: function( id, callback ) {
+        getCircleInfo: function( useCache, id, callback ) {
             initCircles();
             
             var circle = getCircle( id );
             
-            if ( circle ) {
+            if ( useCache && circle ) {
                 callback( circle );
             } else {
                 GPlus.getCirclesList( function( error, status, response ) {
@@ -479,10 +480,10 @@ var StorageManager = (function() {
             return expiredInfo;
         },
         
-        getUserEmail: function( callback ) {
+        getUserEmail: function( useCache, callback ) {
             var email = readProperty( 'email' );
             
-            if ( email ) {
+            if ( useCache && email ) {
                 callback( email );
             } else {
                 GPlus.getUserEmail( function( error, status, response ) {
