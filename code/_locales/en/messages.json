@@ -214,5 +214,8 @@
     },
     "kBytes": {
         "message": "kBytes"
+    },
+    "filterByCircles": {
+        "message": "by Circles"
     }
 }

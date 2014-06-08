@@ -214,5 +214,8 @@
     },
     "kBytes": {
         "message": "кБайт"
-    }
+    },
+    "filterByCircles": {
+        "message": "по Кругам"
+    }   
 }
