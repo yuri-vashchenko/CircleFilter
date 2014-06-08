@@ -139,42 +139,47 @@ function getTokenGPlus( callback ) {
     }
 }
 
-function refreshTokenOAuth2( refreshToken, callback ) {
+function refreshTokenOAuth2( callback ) {
     var clientId = '192023125772-sr3b1p2c0ip8ig8l3nb4qmml12ht5mtq.apps.googleusercontent.com',
           apiKey = 'AIzaSyA0DGuMhkHgw1bjH5AEjSZAA4B6g4enDVY';
-            
-    $.ajax({
-        type: 'POST',
-        url: 'https://accounts.google.com/o/oauth2/token',
-        data: {
-            refresh_token: refreshToken,
-            client_id: clientId,
-            api_key: apiKey,
-            grant_type: 'refresh_token'
-        },
-        success: function( response ) { console.log(response)
-            localStorage['OAuth2Token'] = response.access_token;
-            localStorage.removeItem( 'refreshOAuth2Token' );
-            callback( response.access_token );
-        }
-    });
+    
+    if ( localStorage['refreshOAuth2Token'] ) {
+        $.ajax({
+            type: 'POST',
+            url: 'https://accounts.google.com/o/oauth2/token',
+            data: {
+                refresh_token: localStorage['refreshOAuth2Token'],
+                client_id: clientId,
+                api_key: apiKey,
+                grant_type: 'refresh_token'
+            },
+            success: function( response ) {
+                localStorage['OAuth2Token'] = response.access_token;
+                localStorage.removeItem( 'refreshOAuth2Token' );
+                callback( response.access_token );
+            },
+            error: function( response ) {
+                callback();
+            }        
+        });
+    } else {
+        callback();
+    }
 }
 
-function revokeTokens( callback ) {
-    var refreshToken = localStorage['refreshOAuth2Token'];
-    
-    localStorage.removeItem( 'GPlusToken' );
-    localStorage.removeItem( 'OAuth2Token' );
-    localStorage.removeItem( 'refreshOAuth2Token' );
-    
+function revokeTokens( callback ) {    
     getTokenOAuth2( function( current_token ) {
         $.ajax({
             type: 'GET',
             url: 'https://accounts.google.com/o/oauth2/revoke',
             data: { token: current_token },
             success: function() {
-                callback( refreshToken );
+                callback();
             }
         });
     });
+    
+    localStorage.removeItem( 'GPlusToken' );
+    localStorage.removeItem( 'OAuth2Token' );
+    localStorage.removeItem( 'refreshOAuth2Token' );
 }
