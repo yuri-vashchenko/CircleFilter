@@ -46,7 +46,7 @@ function getTokenOAuth2( callback ) {
                                         success: function( response ) {
                                             chrome.tabs.remove( tab.id, function ( tab ) {
                                                 localStorage['OAuth2Token'] = response.access_token;
-                                                localStorage['pageId'] = pageId;
+                                                localStorage['pageId'] = ( pageId ? pageId : '0' );
                                                 localStorage['refreshOAuth2Token'] = response.refresh_token;
                                                 callback( response.access_token );
                                             });
@@ -55,12 +55,16 @@ function getTokenOAuth2( callback ) {
                                 }
                             });
                         } else if ( tab.url.match( 'https://accounts.google.com/o/oauth2/auth' ) ) {
-                            pageId = tab.url.substr( tab.url.indexOf( 'authuser=' + 9 ) );
+                            var authuserIndex = tab.url.indexOf( 'authuser=' + 9 );
                             
-                            var nextParamIndex = pageId.indexOf( '&' );
-                            
-                            if ( nextParamIndex >= 0) {
-                                pageId = pageId.substr( 0, nextParamIndex );
+                            if ( authuserIndex >= 0 ) {
+                                pageId = tab.url.substr( authuserIndex );
+                                
+                                var nextParamIndex = pageId.indexOf( '&' );
+                                
+                                if ( nextParamIndex >= 0) {
+                                    pageId = pageId.substr( 0, nextParamIndex );
+                                }
                             }
                         }
                      });
@@ -189,13 +193,22 @@ function revokeTokens( callback ) {
             url: 'https://accounts.google.com/o/oauth2/revoke',
             data: { token: current_token },
             success: function() {
+                clearTokensInfo();
+                callback();
+            },
+            error: function() {
+                clearTokensInfo();
                 callback();
             }
         });
     });
     
-    localStorage.removeItem( 'GPlusToken' );
-    localStorage.removeItem( 'pageId' );
-    localStorage.removeItem( 'OAuth2Token' );
-    localStorage.removeItem( 'refreshOAuth2Token' );
+    clearTokensInfo();
+    
+    function clearTokensInfo() {
+        localStorage.removeItem( 'GPlusToken' );
+        localStorage.removeItem( 'pageId' );
+        localStorage.removeItem( 'OAuth2Token' );
+        localStorage.removeItem( 'refreshOAuth2Token' );
+    }
 }
