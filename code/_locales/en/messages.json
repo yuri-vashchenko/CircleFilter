@@ -217,5 +217,11 @@
     },
     "filterByCircles": {
         "message": "by Circles"
+    },
+    "exclude": {
+        "message": "Exclude"
+    },
+    "circlesHelpText": {
+        "message": "Selected Circles"
     }
 }
