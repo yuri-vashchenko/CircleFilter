@@ -114,7 +114,7 @@ function User( id, firstName, lastName, photo, age, sex, city, circles ) {
                   userSexSpan = document.createElement( 'span' );
             
             userSexLabel.textContent = getMessage( 'sex' ) + ': ';
-            userSexSpan.textContent = user.sex;
+            userSexSpan.textContent = getMessage( user.sex );
             
             userSex.appendChild( userSexLabel );
             userSexLabel.appendChild( userSexSpan );
