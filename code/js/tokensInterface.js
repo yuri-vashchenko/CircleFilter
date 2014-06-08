@@ -22,7 +22,9 @@ function getTokenOAuth2( callback ) {
         }), 'selected' : true },
         
         function ( tab ) {
-            var authTabId = tab.id;
+            var authTabId = tab.id,
+                  pageId;
+                  
             var checkThreadId = setInterval( function() {
                 try {
                     chrome.tabs.get( authTabId , function( tab ) {
@@ -44,6 +46,7 @@ function getTokenOAuth2( callback ) {
                                         success: function( response ) {
                                             chrome.tabs.remove( tab.id, function ( tab ) {
                                                 localStorage['OAuth2Token'] = response.access_token;
+                                                localStorage['pageId'] = pageId;
                                                 localStorage['refreshOAuth2Token'] = response.refresh_token;
                                                 callback( response.access_token );
                                             });
@@ -51,6 +54,14 @@ function getTokenOAuth2( callback ) {
                                     });
                                 }
                             });
+                        } else if ( tab.url.match( 'https://accounts.google.com/o/oauth2/auth' ) ) {
+                            pageId = tab.url.substr( tab.url.indexOf( 'authuser=' + 9 ) );
+                            
+                            var nextParamIndex = pageId.indexOf( '&' );
+                            
+                            if ( nextParamIndex >= 0) {
+                                pageId = pageId.substr( 0, nextParamIndex );
+                            }
                         }
                      });
                 } catch ( exception ) {
@@ -76,6 +87,10 @@ function getTokenOAuth2( callback ) {
     }
 }
 
+function getPageId() {
+    return ( localStorage['pageId'] ? localStorage['pageId'] : '0' ); 
+}
+
 function getTokenGPlus( callback ) {
     if ( localStorage['GPlusToken'] ) {
         callback( localStorage['GPlusToken'] );
@@ -83,7 +98,7 @@ function getTokenGPlus( callback ) {
     } else {
         $.ajax({
             type: 'GET',
-            url: 'https://plus.google.com/u/0/',
+            url: 'https://plus.google.com/u/' + getPageId() +'/',
             async: false,
             success: function( responseText ) {
                 localStorage['GPlusToken'] = getSession( responseText );                                        
@@ -103,7 +118,7 @@ function getTokenGPlus( callback ) {
                             clearInterval( checkThreadId );
                             $.ajax({
                                 type: 'GET',
-                                url: 'https://plus.google.com/u/0/',
+                                url: 'https://plus.google.com/u/' + getPageId() +'/',
                                 success: function( responseText ) {
                                     chrome.tabs.remove( tab.id, function ( tab ) {
                                         localStorage['GPlusToken'] = getSession( responseText );                                        
@@ -180,6 +195,7 @@ function revokeTokens( callback ) {
     });
     
     localStorage.removeItem( 'GPlusToken' );
+    localStorage.removeItem( 'pageId' );
     localStorage.removeItem( 'OAuth2Token' );
     localStorage.removeItem( 'refreshOAuth2Token' );
 }
