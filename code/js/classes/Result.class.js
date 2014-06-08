@@ -56,6 +56,10 @@ function Result( block ) {
         $( this.block ).addClass( 'text' );
     }
     
+    this.getCheckedUsers = function() {        
+        return usersList.getCheckedUsers();
+    }
+    
     this.reset = function() {
         this.usersList = new UsersList( perPage );
         this.state = STATE.DEFAULT;
