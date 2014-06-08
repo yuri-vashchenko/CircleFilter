@@ -4,7 +4,26 @@
         '/images/circles.png', 
         getMessage( 'filterByCircles' ),
         function() {
-            var circlesBlock = document.createElement( 'div' );
+            var circlesBlock = document.createElement( 'div' ),
+                excludeDiv = document.createElement( 'div' ),
+                excludeCheckBox = document.createElement( 'input' ),
+                excludeLabel = document.createElement( 'label' ),
+                excludeSpan = document.createElement( 'span' ),
+                helpText = document.createElement( 'div' );
+            
+            excludeCheckBox.type = 'checkbox';
+            excludeCheckBox.name = 'exclude';
+            
+            excludeSpan.textContent = getMessage( 'exclude' );
+            
+            excludeLabel.appendChild( excludeCheckBox );  
+            excludeLabel.appendChild( excludeSpan );
+            
+            excludeDiv.appendChild( excludeLabel );
+            circlesBlock.appendChild( excludeDiv );
+            
+            helpText.textContent = getMessage( 'circlesHelpText' ); 
+            circlesBlock.appendChild( helpText );
             
             StorageManager.getCirclesList( function( circlesList ) {
               for ( var i = 0; i < circlesList.length; i++ ) {
@@ -26,16 +45,18 @@
                   
                   circlesBlock.appendChild( circleBlock );
               }
-            }, false );
-                        
+            }, true );
+                   
             return circlesBlock;
         }(),
         function( configurationBlock ) {
             var configuration = {};
             
+            configuration.exclude = ( configurationBlock.querySelector( '[name=exclude]' ).checked ? true : false );
+            
             configuration.circles = [];
             
-            for ( var i = 0; i < configurationBlock.children.length; i++ ) {
+            for ( var i = 2; i < configurationBlock.children.length; i++ ) {
                 var checkBox = configurationBlock.children[i].querySelector( 'input' );
                 
                 if ( checkBox.checked ) {
@@ -59,7 +80,7 @@
                 string += configuration.circles[i].name + ( i != configuration.circles.length - 1 ? ', ' : '' );
             }
             
-            return string;
+            return ( configuration.exclude ? getMessage( 'exclude' ) + ' ' : '' ) + string;
         },
         function( userId, accept, decline ) {     
             var configuration = this.configuration,
@@ -83,7 +104,11 @@
                         break;
                     }
                 }
-                      
+                
+                if ( configuration.exclude ) {
+                    inAllCircles = !inAllCircles;
+                }
+                
                 if ( inAllCircles ) {
                     accept( userId );                    
                 } else {

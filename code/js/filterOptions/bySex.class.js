@@ -5,10 +5,25 @@
         getMessage( 'filterBySex' ),
         function() {
             var sexBlock = document.createElement( 'div' ),
-                  sexLabel = document.createElement( 'label' ),
-                  sex = document.createElement( 'select' ),
-                  sexOptionM = document.createElement ( 'option' ),
-                  sexOptionF = document.createElement ( 'option' );
+                sexLabel = document.createElement( 'label' ),
+                sex = document.createElement( 'select' ),
+                sexOptionM = document.createElement ( 'option' ),
+                sexOptionF = document.createElement ( 'option' ),
+                excludeDiv = document.createElement( 'div' ),
+                excludeCheckBox = document.createElement( 'input' ),
+                excludeLabel = document.createElement( 'label' ),
+                excludeSpan = document.createElement( 'span' );
+            
+            excludeCheckBox.type = 'checkbox';
+            excludeCheckBox.name = 'exclude';
+            
+            excludeSpan.textContent = getMessage( 'exclude' );
+            
+            excludeLabel.appendChild( excludeCheckBox );  
+            excludeLabel.appendChild( excludeSpan );
+            
+            excludeDiv.appendChild( excludeLabel );
+            sexBlock.appendChild( excludeDiv );
            
             sexLabel.textContent = getMessage( 'sex' );
             sexOptionM.textContent = getMessage( 'male' );
@@ -29,19 +44,26 @@
         function( configurationBlock ) {
             var configuration = {};
             
+            configuration.exclude = ( configurationBlock.querySelector( '[name=exclude]' ).checked ? true : false );
             configuration.sex = configurationBlock.querySelector( '[name=sex]' ).value;
             
             return configuration;
         },
         function( configuration ) {            
-            return getMessage( configuration.sex );
+            return ( configuration.exclude ? getMessage( 'exclude' ) + ' ' : '' ) + getMessage( configuration.sex );
         },
         function( userId, accept, decline ) {     
             var configuration = this.configuration,
                   requiredUserFields = this.requiredUserFields;
             
             StorageManager.getUserInfo( userId, requiredUserFields, function( user ) {
-                if ( configuration.sex == user.sex ) {
+                var toAccept = configuration.sex == user.sex;
+                
+                if ( configuration.exclude ) {
+                    toAccept = !toAccept;
+                }
+                
+                if ( toAccept ) {
                     accept( userId );                    
                 } else {
                     decline( userId );

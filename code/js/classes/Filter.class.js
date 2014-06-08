@@ -419,7 +419,7 @@ function Filter( filterBlock, resultBlock ) {
         showCircleList( function( listBlock ) {
             $( listBlock ).addClass( 'contentBlock' );
             
-            var circleDeleteForm = document.createElement( 'div' ),
+            var addToCircleForm = document.createElement( 'div' ),
                   controlBlock = document.createElement( 'div' ),
                   cancelButton = showCancelButton(),
                   acceptButton = showAcceptButton( getMessage( 'delete' ) );
@@ -428,14 +428,14 @@ function Filter( filterBlock, resultBlock ) {
             controlBlock.appendChild( acceptButton );           
             $( controlBlock ).addClass( 'controlBlock' );
             
-            circleDeleteForm.appendChild( listBlock );
-            circleDeleteForm.appendChild( controlBlock );            
-            $( circleDeleteForm ).addClass( 'circleDeleteForm' );
+            addToCircleForm.appendChild( listBlock );
+            addToCircleForm.appendChild( controlBlock );            
+            $( addToCircleForm ).addClass( 'addToCircleForm' );
             
-            $.modal( $( circleDeleteForm ), {
+            $.modal( $( addToCircleForm ), {
                 overlayClose : true,
                 position : [$( addToCircleButton ).offset().top + $( addToCircleButton ).outerHeight() - 1 - $( document ).scrollTop(), $( addToCircleButton ).offset().left],
-                onOpen: function ( dialog ) {
+                onOpen: function( dialog ) {
                     dialog.overlay.fadeIn( 'fast' );
                     dialog.container.slideDown( 'fast' );
                     dialog.data.slideDown( 'fast' );
@@ -446,26 +446,29 @@ function Filter( filterBlock, resultBlock ) {
                     });
                     
                     acceptButton.addEventListener( 'click', function() {
+                        var usersList = self.result.getCheckedUsers(),
+                              usersIdList = [];
+                              
+                        for ( var i = 0; i < usersList.length; i++ ) {
+                            usersIdList.push( usersList[i].id );    
+                        }
                         
-                        addUserToCircleIterator( 0, listBlock, function() { 
+                        addUserToCircleIterator( 0, listBlock, usersIdList, function() { 
                             alert( 'Операция добавления пользователей в круги завершена' );
                         });
+                        
                         $.modal.close();
                         
-                        function addUserToCircleIterator( i, listBlock, onSuccess ) {
-                                
+                        function addUserToCircleIterator( i, listBlock, usersIdList, onSuccess ) {                                
                             if ( i < listBlock.children.length ) {
-                                var checkBox = listBlock.children[i].querySelector( 'input' ),
-                                    usersList = self.result.getCheckedUsers(),
-                                    usersIdList = [];
-                                for( var j = 0; j < usersList.length; j++ )
-                                    usersIdList.push(usersList[j].id);
-                                if ( checkBox.checked || usersIdList.lenght > 0 ) {
+                                var checkBox = listBlock.children[i].querySelector( 'input' );
+                                    
+                                if ( checkBox.checked ) {
                                     StorageManager.addPeopleToCircle( checkBox.value, usersIdList, function() {
-                                        addUserToCircleIterator( i + 1, listBlock, onSuccess );
+                                        addUserToCircleIterator( i + 1, listBlock, usersIdList, onSuccess );
                                     });
                                 } else {
-                                    addUserToCircleIterator( i + 1, listBlock, onSuccess );
+                                    addUserToCircleIterator( i + 1, listBlock, usersIdList, onSuccess );
                                 }                          
                             } else {
                                 onSuccess();
@@ -485,12 +488,12 @@ function Filter( filterBlock, resultBlock ) {
         });
     }
     
-    /* Форма удаления выбранных пользователей в круг*/
+    /* Форма удаления выбранных пользователей из круга */
     function showDeleteFromCircleForm( deleteFromCircleButton ){
         showCircleList( function( listBlock ) {
             $( listBlock ).addClass( 'contentBlock' );
             
-            var circleDeleteForm = document.createElement( 'div' ),
+            var deleteFromCircleForm = document.createElement( 'div' ),
                   controlBlock = document.createElement( 'div' ),
                   cancelButton = showCancelButton(),
                   acceptButton = showAcceptButton( getMessage( 'delete' ) );
@@ -499,11 +502,11 @@ function Filter( filterBlock, resultBlock ) {
             controlBlock.appendChild( acceptButton );           
             $( controlBlock ).addClass( 'controlBlock' );
             
-            circleDeleteForm.appendChild( listBlock );
-            circleDeleteForm.appendChild( controlBlock );            
-            $( circleDeleteForm ).addClass( 'circleDeleteForm' );
+            deleteFromCircleForm.appendChild( listBlock );
+            deleteFromCircleForm.appendChild( controlBlock );            
+            $( deleteFromCircleForm ).addClass( 'deleteFromCircleForm' );
             
-            $.modal( $( circleDeleteForm ), {
+            $.modal( $( deleteFromCircleForm ), {
                 overlayClose : true,
                 position : [$( deleteFromCircleButton ).offset().top + $( deleteFromCircleButton ).outerHeight() - 1 - $( document ).scrollTop(), $( deleteFromCircleButton ).offset().left],
                 onOpen: function ( dialog ) {
@@ -517,26 +520,29 @@ function Filter( filterBlock, resultBlock ) {
                     });
                     
                     acceptButton.addEventListener( 'click', function() {
+                        var usersList = self.result.getCheckedUsers(),
+                              usersIdList = [];
+                              
+                        for ( var i = 0; i < usersList.length; i++ ) {
+                            usersIdList.push( usersList[i].id );    
+                        }
                         
-                        removeUserFromCirclesIterator( 0, listBlock, function() { 
+                        removeUserFromCirclesIterator( 0, listBlock, usersIdList, function() { 
                             alert( 'Операция удаления пользователей из кругов завершена' );
                         });
                         $.modal.close();
                         
-                        function removeUserFromCirclesIterator( i, listBlock, onSuccess ) {
+                        function removeUserFromCirclesIterator( i, listBlock, usersIdList, onSuccess ) {
                             
                             if ( i < listBlock.children.length ) {
-                                var checkBox = listBlock.children[i].querySelector( 'input' ),
-                                    usersList = self.result.getCheckedUsers(),
-                                    usersIdList = [];
-                                for( var j = 0; j < usersList.length; j++ )
-                                    usersIdList.push(usersList[j].id);
-                                if ( checkBox.checked || usersIdList.lenght > 0 ) {
+                                var checkBox = listBlock.children[i].querySelector( 'input' );
+                                
+                                if ( checkBox.checked ) {
                                     StorageManager.removePeopleFromCircle( checkBox.value, usersIdList, function() {
-                                        removeUserFromCirclesIterator( i + 1, listBlock, onSuccess );
+                                        removeUserFromCirclesIterator( i + 1, listBlock, usersIdList, onSuccess );
                                     });
                                 } else {
-                                    removeUserFromCirclesIterator( i + 1, listBlock, onSuccess );
+                                    removeUserFromCirclesIterator( i + 1, listBlock, usersIdList, onSuccess );
                                 }                          
                             } else {
                                 onSuccess();

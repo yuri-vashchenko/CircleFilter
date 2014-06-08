@@ -561,30 +561,34 @@ var StorageManager = (function() {
          * @param {function(string)} callback The ids of the people added.
          */
         addPeopleToCircle : function( circleId, usersIds, callback ) {
-            GPlus.addPeopleToCircle( circleId, usersIds, function( error, status, response ) {
-                GPlusTranslator.addPeopleToCircle( error, status, response, function( responseObject ) { 
-                    if( !responseObject.error ) {
-                        var toAddUsers = responseObject.userIdsList,
-                              users = readProperty( 'users' );
-                        
-                        toAddUsers.forEach( function( element, index ) {                            
-                            var userIndex = getUserIndex( element );
+            if ( circleId && usersIds && usersIds.length > 0 ) {
+                GPlus.addPeopleToCircle( circleId, usersIds, function( error, status, response ) {
+                    GPlusTranslator.addPeopleToCircle( error, status, response, function( responseObject ) { 
+                        if( !responseObject.error ) {
+                            var toAddUsers = responseObject.userIdsList,
+                                  users = readProperty( 'users' );
                             
-                            if ( getIndexByValue( ( users[userIndex].circles ? users[userIndex].circles.value : [] ), circleId ) < 0 ) {
-                            
-                                if ( !users[userIndex].circles ) {
-                                    users[userIndex].circles = { 'value': [], 'date': getCurrentDate() };
-                                }
+                            toAddUsers.forEach( function( element, index ) {                            
+                                var userIndex = getUserIndex( element );
                                 
-                                users[userIndex].circles.value.push( circleId );
-                            }
-                        });
-                        
-                        writeProperty( 'users', users );
-                    }
-                    callback( responseObject );
+                                if ( getIndexByValue( ( users[userIndex].circles ? users[userIndex].circles.value : [] ), circleId ) < 0 ) {
+                                
+                                    if ( !users[userIndex].circles ) {
+                                        users[userIndex].circles = { 'value': [], 'date': getCurrentDate() };
+                                    }
+                                    
+                                    users[userIndex].circles.value.push( circleId );
+                                }
+                            });
+                            
+                            writeProperty( 'users', users );
+                        }
+                        callback( responseObject );
+                    });
                 });
-            });
+            } else {
+                callback( 'error' );
+            }
         },
         
         /**
@@ -595,25 +599,29 @@ var StorageManager = (function() {
          * @param {function(string)} callback
          */
         removePeopleFromCircle : function( circleId, usersIds, callback ) {
-            GPlus.removePeopleFromCircle( circleId, usersIds, function ( error, status, response ) {
-                GPlusTranslator.removePeopleFromCircle( error, status, response, function( responseObject ) { 
-                    if( !responseObject.error ) {
-                        var users = readProperty( 'users' );
-                        
-                        usersIds.forEach( function( element, index ) {                            
-                            var userIndex = getUserIndex( element ),                     
-                                  circleIndex = getIndexByValue( ( users[userIndex].circles ? users[userIndex].circles.value : [] ) , circleId );
-                                  
-                            if ( circleIndex >= 0 ) {
-                                users[userIndex].circles.value.splice( circleIndex, 1 );     
-                            }                
-                        });
-                        
-                        writeProperty( 'users', users );
-                    }
-                    callback( responseObject );
+            if ( circleId && usersIds && usersIds.length > 0 ) {
+                GPlus.removePeopleFromCircle( circleId, usersIds, function ( error, status, response ) {
+                    GPlusTranslator.removePeopleFromCircle( error, status, response, function( responseObject ) { 
+                        if( !responseObject.error ) {
+                            var users = readProperty( 'users' );
+                            
+                            usersIds.forEach( function( element, index ) {                            
+                                var userIndex = getUserIndex( element ),                     
+                                      circleIndex = getIndexByValue( ( users[userIndex].circles ? users[userIndex].circles.value : [] ) , circleId );
+                                      
+                                if ( circleIndex >= 0 ) {
+                                    users[userIndex].circles.value.splice( circleIndex, 1 );     
+                                }                
+                            });
+                            
+                            writeProperty( 'users', users );
+                        }
+                        callback( responseObject );
+                    });
                 });
-            });
+            } else {
+                callback( 'error' );
+            }
         },
         /**
          * Create a new empty circle in your account.

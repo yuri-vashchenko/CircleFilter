@@ -217,5 +217,12 @@
     },
     "filterByCircles": {
         "message": "по Кругам"
-    }   
+    },
+    "exclude": {
+        "message": "Исключая"
+    },
+    "circlesHelpText": {
+        "message": "Выбранные круги"
+    }
+    
 }
