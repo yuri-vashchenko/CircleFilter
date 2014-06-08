@@ -11,8 +11,36 @@ var StorageManager = (function() {
         localStorage.removeItem( property ); 
     }
     
+    function getOption( property ) {
+        var options = readProperty( 'options' ),
+              index = getOptionIndex( property );
+              
+        if ( index >= 0 ) {
+            return options[index].value;
+        }
+    }
+    
+    function setOption( property, value ) {
+        var options = readProperty( 'options' ),
+              index = getOptionIndex( property );
+        
+        if ( index < 0 ) {
+            options.push( { property: property, value: value } );
+        } else {
+            options[index] = { property: property, value: value };
+        }
+        
+        writeProperty( 'options', options );
+    }
+        
     function getStorageSize() {
-        return ( 3 + getUsersSize() + getCirclesSize() );
+        var size = 0;
+        
+        for ( element in localStorage ) {
+            size += localStorage.getItem( element ).length;
+        }
+        
+        return ( 3 + size / 512 );
     }
     
     function getUsersSize() {
@@ -110,6 +138,12 @@ var StorageManager = (function() {
         }
     }
     
+    function initOptions() {
+        if ( !readProperty( 'options' ) ) {
+            writeProperty( 'options', [] );
+        }
+    }
+    
     function clearUsers() {
         removeProperty( 'users' );  
     }
@@ -202,6 +236,20 @@ var StorageManager = (function() {
         if ( users ) {
             for ( var i = 0; i < users.length; i++ ) {
                 if ( users[i].id == id ) {
+                    return i;
+                }            
+            }
+        }
+        
+        return -1;
+    }
+    
+    function getOptionIndex( property ) {
+        var options = readProperty( 'options' );
+        
+        if ( options ) {
+            for ( var i = 0; i < options.length; i++ ) {
+                if ( options[i].property == property ) {
                     return i;
                 }            
             }
@@ -409,42 +457,6 @@ var StorageManager = (function() {
             }
         },
         
-        showStorageUsersFullInfo: function() {
-            var table = document.createElement( 'table' ),
-                  sizeSpan = document.createElement( 'span' ),
-                  usersArray = readProperty( 'users' );
-            
-            if ( usersArray ) {
-                var tr = document.createElement( 'tr' ),
-                      headers = ['id', 'firstName', 'lastName', 'photo', 'age', 'sex', 'city', 'circles'];
-                
-                for ( var i = 0; i < headers.length; i++ ) {
-                    var th = document.createElement( 'th' );
-                    th.textContent = headers[i];
-                    tr.appendChild( th );
-                }   
-                
-                table.appendChild( tr );
-                
-                for ( var i = 0; i < usersArray.length; i++ ) {
-                    tr = document.createElement( 'tr' );
-                    
-                    var td = document.createElement( 'td' );
-                    td.textContent = usersArray[i].id;
-                    tr.appendChild( td );
-                    
-                    for ( var j = 1; j < headers.length; j++ ) {
-                        td = document.createElement( 'td' );
-                        td.textContent = ( usersArray[i][headers[j]] != undefined ? usersArray[i][headers[j]].value + ' : ' + usersArray[i][headers[j]].date : '' );
-                        tr.appendChild( td );
-                    }
-                    table.appendChild( tr );
-                }                      
-            }
-            
-            return table;
-        },
-        
         getExpiredInfo: function( userIdsList, filterOptionList, expiredDate ) {
             var expiredInfo = new Array(),
                   uidList = userIdsList.clone(),
@@ -522,6 +534,27 @@ var StorageManager = (function() {
         getStorageSize: function() {
             return getStorageSize();
         },
+        
+        getUsersSize: function() {
+            return getUsersSize();
+        },
+        
+        getCirclesSize: function() {
+            return getCirclesSize();
+        },
+        
+        setOption: function( property, value ) {
+            initOptions();
+            
+            setOption( property, value );
+        },
+        
+        getOption: function( property ) {
+            initOptions();
+            
+            return getOption( property );
+        },
+        
         /**
          * Add people to a circle in your account.
          * @param {string} circleId the Circle to add the people to.

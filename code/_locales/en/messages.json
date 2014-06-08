@@ -178,5 +178,41 @@
     },
     "delete": {
         "message": "Delete"
+    },
+    "countPeoplePerPage": {
+        "message": "Сount people per page"
+    },
+    "alwaysAsk": {
+        "message": "Always ask"
+    },
+    "alwaysLocal": {
+        "message": "Always local"
+    },
+    "alwaysLoading": {
+        "message": "Always loading"
+    },
+    "defaultLoadingResourse": {
+        "message": "Вefault loading resourse"
+    },
+    "storageSize": {
+        "message": "Storage size"
+    },
+    "storageClear": {
+        "message": "Storage clear"
+    },
+    "users": {
+        "message": "Users"
+    },
+    "circles": {
+        "message": "Circles"
+    },
+    "free": {
+        "message": "Free"
+    },
+    "other": {
+        "message": "Other"
+    },
+    "kBytes": {
+        "message": "kBytes"
     }
 }

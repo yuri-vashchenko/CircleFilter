@@ -178,5 +178,41 @@
     },
     "delete": {
         "message": "Удалить"
+    },
+    "countPeoplePerPage": {
+        "message": "Количество людей на странице"
+    },
+    "alwaysAsk": {
+        "message": "Всегда спрашивать о выборе загрузки"
+    },
+    "alwaysLocal": {
+        "message": "Использовать только локальные данные"
+    },
+    "alwaysLoading": {
+        "message": "Использовать только актуальные данные"
+    },
+    "defaultLoadingResourse": {
+        "message": "Запоминание ресурсов загрузки данных"
+    },
+    "storageSize": {
+        "message": "Размер локального хранилища"
+    },
+    "storageClear": {
+        "message": "Очистить локальное хранилище"
+    },
+    "users": {
+        "message": "Пользователи"
+    },
+    "circles": {
+        "message": "Круги"
+    },
+    "free": {
+        "message": "Свободно"
+    },
+    "other": {
+        "message": "Другое"
+    },
+    "kBytes": {
+        "message": "кБайт"
     }
 }

@@ -18,7 +18,7 @@
     },    
     
     "background": {
-        "scripts": ["js/jquery.js", "js/tokensInterface.js", "background.js"]
+        "scripts": ["vendor/js/jQuery/jquery.js", "js/tokensInterface.js", "background.js"]
     },
     
     "browser_action": {

@@ -9,15 +9,37 @@ function Main() {
         GPlus.revokeToken( closeWindow ); 
     });
     
-    document.querySelector( '#config' ).addEventListener( 'click', function() { 
+    document.querySelector( '#config' ).addEventListener( 'click', function() {
         $.modal( Options.show( function() { $.modal.close(); } ), {
-            overlayClose : true,
-            minHeight: $( document ).height() * 0.8,
-            minWidth: $( document ).width() * 0.8,
+            overlayClose: true,
+            position: [$( '#config>span' ).offset().top + $( document ).scrollTop(), $( document ).scrollTop()],
+            containerCss: {
+                width: '500px'
+            },
             onOpen: function ( dialog ) {
                 dialog.overlay.fadeIn( 'fast' );
                 dialog.container.slideDown( 'fast' );
-                dialog.data.slideDown();	 
+                dialog.data.slideDown();
+                $( '#pieCharFullStorage' ).wijpiechart({
+                    radius: 40,
+                    hint: {
+                        content: function () {
+                            return this.data.label + " : " + Globalize.format(this.value / this.total, "p2");
+                        }
+                    },
+                    seriesList: [
+                        { label: getMessage( 'free' ), data: 5120 - StorageManager.getStorageSize(), offset: 10 }, 
+                        { label: getMessage( 'users' ), data: StorageManager.getUsersSize(), offset: 10 },
+                        { label: getMessage( 'circles' ), data: StorageManager.getCirclesSize(), offset: 10 }, 
+                        { label: getMessage( 'other' ), data: 3, offset: 20 }
+                    ],
+                    seriesStyles: [
+                        { fill: "180-rgb(195,255,0)-rgb(175,229,0)", stroke: "rgb(175,229,0)", "stroke-width": 1.5 }, 
+                        { fill: "90-rgb(142,222,67)-rgb(127,199,60)", stroke: "rgb(127,199,60)", "stroke-width": 1.5 },
+                        { fill: "90-rgb(106,171,167)-rgb(95,153,150)", stroke: "rgb(95,153,150)", "stroke-width": 1.5 },
+                        { fill: "90-rgb(70,106,133)-rgb(62,95,119)", stroke: "rgb(62,95,119)", "stroke-width": 1.5 }
+                    ]
+                });
             },
             onClose: function ( dialog ) {
                 dialog.data.slideUp( 'fast', function () {
