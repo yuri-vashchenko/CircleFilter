@@ -51,8 +51,9 @@ function User( id, firstName, lastName, photo, age, sex, city, circles ) {
             tooltipTimeOutId = setTimeout( function() {
                 
                 $.modal( showTooltip( self ), {
-                    position : [$( userBlock ).offset().top + 71 + $( document ).scrollTop(), $( userBlock ).offset().left],
+                    position : [$( userBlock ).offset().top + 71 - $( document ).scrollTop(), $( userBlock ).offset().left],
                     containerCss: {
+                        position: 'absolute !important',
                         borderBottom: '1px solid silver',
                         borderLeft: '1px solid silver',
                         borderRight: '1px solid silver',
