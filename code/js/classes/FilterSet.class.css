@@ -88,5 +88,5 @@ ul.filterOptionsList li:hover {
     background-color: white;
     border: 1px solid grey;
     padding: 0px;
-    position: absolute !important;
+    position: absolute;
 }

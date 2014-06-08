@@ -33,4 +33,6 @@ img.icon {
     float: right;
 }
 
-
+.optionsBlock .contentBlock>div {
+    margin: 15px 0;
+}

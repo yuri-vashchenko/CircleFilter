@@ -62,6 +62,9 @@ function FilterSet() {
                 
             $.modal( $( dropdownList ), { 
                 overlayClose : true,
+                containerCss: {
+                    position: 'absolute !important'
+                },
                 position : [$( filterSet.addBlock ).offset().top + $( filterSet.addBlock ).outerHeight() - 1 - $( document ).scrollTop(), $( filterSet.addBlock ).offset().left],
                 onOpen: function ( dialog ) {
                     dialog.overlay.fadeIn( 'fast' );
@@ -106,6 +109,9 @@ function FilterSet() {
                                 );
                                 $.modal( $( editInterfaceBlock ), { 
                                     overlayClose : true, 
+                                    containerCss: {
+                                        position: 'absolute !important'
+                                    },
                                     position : [$( filterSet.addBlock ).offset().top + $( filterSet.addBlock ).outerHeight() - 1 - $( document ).scrollTop(), $( filterSet.addBlock ).offset().left],
                                     onOpen: function ( dialog ) {
                                         dialog.overlay.fadeIn( 'fast' );

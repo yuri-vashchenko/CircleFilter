@@ -285,6 +285,9 @@ function Filter( filterBlock, resultBlock ) {
             
             $.modal( $( circleDeleteForm ), {
                 overlayClose : true,
+                containerCss: {
+                    position: 'absolute !important'
+                },
                 position : [$( deleteCircleButton ).offset().top + $( deleteCircleButton ).outerHeight() - 1 - $( document ).scrollTop(), $( deleteCircleButton ).offset().left],
                 onOpen: function ( dialog ) {
                     dialog.overlay.fadeIn( 'fast' );
@@ -373,6 +376,9 @@ function Filter( filterBlock, resultBlock ) {
 
         $.modal( $( circleCreateForm ), { 
             overlayClose : true,
+            containerCss: {
+                position: 'absolute !important'
+            },
             position : [$( createCircleButton ).offset().top + $( createCircleButton ).outerHeight() - 1 - $( document ).scrollTop(), $( createCircleButton ).offset().left],
             onOpen: function ( dialog ) {
                 dialog.overlay.fadeIn( 'fast' );

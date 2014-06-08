@@ -3,7 +3,7 @@ function Result( block ) {
         "DEFAULT" : 1,
         "EMPTY" : 2,
         "FULL" : 3
-    }, perPage = 20;
+    }, perPage = ( StorageManager.getOption( 'usersPerPage' ) ? StorageManager.getOption( 'usersPerPage' ) : 20 );
     
     
     this.block = block;
