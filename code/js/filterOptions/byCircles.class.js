@@ -56,7 +56,7 @@
             
             configuration.circles = [];
             
-            for ( var i = 0; i < configurationBlock.children.length; i++ ) {
+            for ( var i = 2; i < configurationBlock.children.length; i++ ) {
                 var checkBox = configurationBlock.children[i].querySelector( 'input' );
                 
                 if ( checkBox.checked ) {
