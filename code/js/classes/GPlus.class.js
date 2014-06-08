@@ -13,14 +13,9 @@ var GPlus = (function() {
         setTimeout( getToken, ( waitTime == 0 ? waitTime : ( waitTime + Math.random() ) ) * 1000 );
         
         function getToken() {
-            getTokenOAuth2( function( token ) {
-                if ( chrome.runtime.lastError ) {
-                    callback( chrome.runtime.lastError );
-                }
-                
+            getTokenOAuth2( function( token ) {                
                 access_token = token;
-                requestStart();
-                
+                requestStart();                
             });
         }
 
@@ -34,10 +29,18 @@ var GPlus = (function() {
 
         function requestComplete() {
             if ( this.status == 401 && retry ) {
-                retry = false;                
-                revokeTokens( function( refreshToken ) {
-                    refreshTokenOAuth2( refreshToken, function() {} );
+                retry = false;             
+                
+                refreshTokenOAuth2( function( token ) {
+                    if ( token ) {
+                        xhrWithAuth( method, url, interactive, callback, ( waitTime == 0 ? 1 : waitTime ) );
+                    } else {
+                        revokeTokens( function() {
+                            StorageManager.clear();
+                        });
+                    }
                 });
+                
             } else if ( this.status == 403 && retry ) { 
                 xhrWithAuth( method, url, interactive, callback, ( waitTime == 0 ? 1 : waitTime * 2 ) );
             } else  {
