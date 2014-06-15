@@ -34,7 +34,13 @@ function Filter( filterBlock, resultBlock ) {
               bottomGroupBlock = document.createElement( 'div' );           
 
         clearButton.title = getMessage( 'clearTitle' );
-        applyButton.title = getMessage( 'applyTitle' );    
+        applyButton.title = getMessage( 'applyTitle' );  
+        applyButton.textContent = getMessage( 'apply' );
+        
+        $( 'button#stopProcessing' ).click( function() {
+            stopProcessing( filter, applyButton );
+        });
+        
         importIcon.src = 'images/import.png';    
         importIcon.title = getMessage( 'import' );        
         importButton.appendChild( importIcon );
@@ -95,9 +101,6 @@ function Filter( filterBlock, resultBlock ) {
             parentContent.querySelector( '.formula' ).remove();
             parentContent.insertBefore( showFormulaBlock( filter ), parentContent.querySelector( '.control' ) );
         });
-        
-        applyButton.textContent = getMessage( 'apply' );
-        applyButton.title = getMessage( 'applyTitle' );  
         
         bottomGroupBlock.appendChild( applyButton );
         
@@ -195,9 +198,8 @@ function Filter( filterBlock, resultBlock ) {
     }
     
     function startProcessing( filter, applyButton, processingFunc ) {
-        applyButton.textContent = getMessage( 'stop' );
-        applyButton.title = getMessage( 'stopTitle' );
-        
+        $( applyButton ).attr( 'disabled', true );
+        $( 'button#stopProcessing' ).show();
         filter.result.reset();
         filter.result.processing();
         filter.process.id = setTimeout( processingFunc, 0);
@@ -206,8 +208,8 @@ function Filter( filterBlock, resultBlock ) {
     function stopProcessing( filter, applyButton ) {
         filter.process.id = null;
         filter.result.finish(); 
-        applyButton.textContent = getMessage( 'apply' );
-        applyButton.title = getMessage( 'applyTitle' );
+        $( applyButton ).attr( 'disabled', false );
+         $( 'button#stopProcessing' ).hide();
         
         $( '#progressBar' ).wijprogressbar( 'destroy' );
     }

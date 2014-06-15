@@ -110,8 +110,8 @@ var GPlus = (function() {
                     callback();
                 } else {
                     alert( "different emails: " + email + " and " + userEmailUnofficialAPI + ". Application will closed." );
+                    StorageManager.clear();
                     revokeTokens(function(){
-                        StorageManager.clear();
                         closeWindow();
                     });
                 }

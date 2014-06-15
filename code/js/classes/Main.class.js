@@ -5,6 +5,7 @@ function Main() {
     document.querySelector( '#config>span' ).textContent = Options.name;
     document.querySelector( '#selectAll' ).textContent = getMessage( 'selectAll' );
     document.querySelector( '#deselectAll' ).textContent = getMessage( 'deselectAll' );
+    document.querySelector( '#stopProcessing' ).textContent = getMessage( 'stop' );
     
     document.querySelector('#revoke').addEventListener( 'click', function() { 
         StorageManager.clear(); 
