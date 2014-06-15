@@ -3,6 +3,8 @@ function Main() {
     document.querySelector( '#revoke' ).textContent = getMessage( 'revoke' );
     document.querySelector( '#help>span' ).textContent = getMessage( 'help' );
     document.querySelector( '#config>span' ).textContent = Options.name;
+    document.querySelector( '#selectAll' ).textContent = getMessage( 'selectAll' );
+    document.querySelector( '#deselectAll' ).textContent = getMessage( 'deselectAll' );
     
     document.querySelector('#revoke').addEventListener( 'click', function() { 
         StorageManager.clear(); 
@@ -58,7 +60,22 @@ function Main() {
         });
     });
             
-    var filter = new Filter( document.querySelector('.left-sidebar'), document.querySelector( '.content>div' ) );
+    var filter = new Filter( document.querySelector( '.left-sidebar' ), document.querySelector( '.content>div' ) );
+}
+
+var counterProgressBar = {
+    usersTotal: 0,
+    usersConfirmed: 0,
+    filterOptionsTotal: 0,
+    progressJoint: 0
+}
+
+var selectedUsers = {
+    isCheckedDefault: false,
+    count: 0,
+    updateField: function() {
+         $( '#usersSelected' ).text( getMessage( 'usersSelectedCount' ) + ' ' + selectedUsers.count + '/' + counterProgressBar.usersConfirmed );
+    }
 }
 
 window.onload = Main;

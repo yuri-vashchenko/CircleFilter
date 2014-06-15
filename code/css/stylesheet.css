@@ -189,3 +189,14 @@ span#user-email {
 .but-icon {
     cursor: pointer;
 }
+
+div#resultControlPanel {
+    display: none;
+    position: fixed;
+    bottom: 10px;
+    right: 10px;
+}
+
+div#usersSelected {
+    text-align: right;
+}

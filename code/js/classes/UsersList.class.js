@@ -5,16 +5,27 @@ function UsersList( perPage ) {
     this.perPage = perPage || 20;
     this.currentPage = 1;
     this.pagesCount = 1;
-
+    
+    selectedUsers.count = 0;
+    counterProgressBar.usersConfirmed = 0;
+    
     this.addUser = function( user ) {
+        
         for ( var i = 0; i < this.usersList.length; i++ ) {
             if ( this.usersList[i].eq( user ) ) {
                 return false;
             }
         }
         
+        counterProgressBar.usersConfirmed++;
+        selectedUsers.updateField();
+            
         this.usersList.push( user );
         
+        if ( selectedUsers.isCheckedDefault ) {
+            user.toggleCheck();
+        }
+
         if ( this.usersList.length - this.perPage * this.currentPage <= 0 ) {
             this.usersBlock.appendChild( user.show() );
         } 
@@ -31,12 +42,12 @@ function UsersList( perPage ) {
                 mouse: 'press',
                 onChange: function( page ) { uList.updateUsersOnPage( page ); }
             });
-        }   
+        }
     }
 
     this.show = function() {
         var usersListBlock = document.createElement( 'div' );
-              
+            
         this.usersBlock = document.createElement( 'ul' );
         this.pageNav = document.createElement( 'div' );
         
@@ -44,17 +55,15 @@ function UsersList( perPage ) {
         $( this.pageNav ).addClass( 'pagesNav' );
         $( this.pageNav ).addClass( 'paginate' );
         
-        
-        
         for ( var i = 0; i < this.usersList.length; i++ ) {
             var li = document.createElement( 'li' );
             
             li.appendChild( this.usersList[i].show() );
             this.usersBlock.appendChild( li );
         }
-        
         usersListBlock.appendChild( this.usersBlock );
         usersListBlock.appendChild( this.pageNav );
+        
         return usersListBlock;
     }
     
