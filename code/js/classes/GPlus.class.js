@@ -18,7 +18,7 @@ var GPlus = (function() {
                 requestStart();                
             });
         }
-
+        
         function requestStart() {
             var xhr = new XMLHttpRequest();
             xhr.open( method, url );
@@ -134,6 +134,10 @@ var GPlus = (function() {
         getUserEmail : function( callback ) {
             xhrWithAuth( 'GET', 'https://www.googleapis.com/userinfo/v2/me?fields=email', false, callback );
         },
+        
+        getUserEmailUnofficialAPI : function( callback ) {
+            xhrWithAuth( 'GET', 'https://plus.google.com/u/' + getPageId() + '/_/initialdata?key=2', false, callback );
+        },
         /**
          * Add people to a circle in your account.
          * @param {string} circleId the Circle to add the people to.
@@ -201,5 +205,7 @@ var GPlus = (function() {
         revokeToken : function( callback ) {
             revokeTokens( callback );
         }
+        
+        
     }
 })();

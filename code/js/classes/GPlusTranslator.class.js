@@ -12,13 +12,20 @@ var GPlusTranslator = (function() {
     
     return {
         userEmail: function( error, status, response, callback ) {
-            if ( !error && status == 200 ) {            
+            if ( !error && status == 200 ) {
                 callback( JSON.parse( response ).email );
             } else {
                 callback( 'Error e-mail' );
             }
         },
-        
+        getUserEmailUnofficialAPI: function( error, status, response, callback ) {
+            if ( !error && status == 200 ) {            
+                var email = JSON.parse( parseDirtyJSON( response.substring( 4 ) )[0][1] )['2'][2];
+                callback( email );
+            } else {
+                callback( 'Error e-mail' );
+            }
+        },
         userIdsList: function( error, status, response, callback ) {
             if ( !error && status == 200 ) {
                 var resp = JSON.parse(response),

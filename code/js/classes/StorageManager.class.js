@@ -516,6 +516,17 @@ var StorageManager = (function() {
             }
         },
         
+        getUserEmailUnofficialAPI: function( callback ) {
+            
+            GPlus.getUserEmailUnofficialAPI( function( error, status, response ){
+                GPlusTranslator.getUserEmailUnofficialAPI( error, status, response, function( email ){
+                    //Рома тут нужно тебе уже решать, что будем делать.
+                    callback( email );
+                });
+            });
+            
+        },
+        
         clearUsers: function() {
             return clearUsers();
         },
