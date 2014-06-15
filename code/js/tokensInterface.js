@@ -186,12 +186,12 @@ function refreshTokenOAuth2( callback ) {
     }
 }
 
-function revokeTokens( callback ) {    
-    getTokenOAuth2( function( current_token ) {
+function revokeTokens( callback ) {
+    if ( localStorage['OAuth2Token'] ) {
         $.ajax({
             type: 'GET',
             url: 'https://accounts.google.com/o/oauth2/revoke',
-            data: { token: current_token },
+            data: { token: localStorage['OAuth2Token'] },
             success: function() {
                 clearTokensInfo();
                 callback();
@@ -201,9 +201,9 @@ function revokeTokens( callback ) {
                 callback();
             }
         });
-    });
-    
-    clearTokensInfo();
+    } else {
+        clearTokensInfo();
+    }
     
     function clearTokensInfo() {
         localStorage.removeItem( 'GPlusToken' );

@@ -8,6 +8,7 @@ function UsersList( perPage ) {
     
     selectedUsers.count = 0;
     counterProgressBar.usersConfirmed = 0;
+    selectedUsers.isCheckedDefault = false;
     
     this.addUser = function( user ) {
         
