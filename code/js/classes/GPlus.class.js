@@ -18,7 +18,7 @@ var GPlus = (function() {
                 requestStart();                
             });
         }
-
+        
         function requestStart() {
             var xhr = new XMLHttpRequest();
             xhr.open( method, url );
@@ -54,7 +54,52 @@ var GPlus = (function() {
             return JSON.parse( response );
         }
     }
-
+    
+    function propertyToParam( property ){
+        var result = '';
+        switch ( property ) {
+                    case 'id':
+                        result = 'id';
+                        break;
+                    case 'firstName':
+                        result = 'name(givenName)';
+                        break;
+                    case 'lastName':
+                        result = 'name(familyName)';
+                        break;
+                    case 'photo':
+                        result = 'image';
+                        break;
+                    case 'age':
+                        result = 'ageRange';
+                        break;
+                    case 'sex':
+                        result = 'gender';
+                        break;
+                    case 'city':
+                        result = 'placesLived';
+                        break;
+                    default: break;
+                }
+        return result;
+    }
+    function usersIDsToParam( listUsersID ){
+        var result = '';
+        for ( var i = 0; i < listUsersID.length; i++ ) {
+            result += listUsersID[i];
+            result += ( i < properties.length - 1 ? '%2C' : '' );
+        }
+        return result;
+    }
+    function propertiesToParam( properties ){
+        var result = '';
+        for ( var i = 0; i < properties.length; i++ ) {
+            result += propertyToParam( properties[i] );
+            result += ( i < properties.length - 1 ? '%2C' : '' );
+        }
+        return result;
+    }
+    
     return {
         getUserIdsList : function( onUserIdsListPageFetched, maxResults, nextPageToken ) {
             
@@ -75,34 +120,25 @@ var GPlus = (function() {
             }
         },
         getUserInfo : function( id, properties, callback ) {
-            var params = '';
-            
-            for ( var i = 0; i < properties.length; i++ ) {
-                switch ( properties[i] ) {
-                    case 'firstName':
-                        params += 'name(givenName)';
-                        break;
-                    case 'lastName':
-                        params += 'name(familyName)';
-                        break;
-                    case 'photo':
-                        params += 'image';
-                        break;
-                    case 'age':
-                        params += 'ageRange';
-                        break;
-                    case 'sex':
-                        params += 'gender';
-                        break;
-                    case 'city':
-                        params += 'placesLived';
-                        break;
-                    default: break;
-                }
-                params += ( i < properties.length - 1 ? '%2C' : '' );
-            }
-            xhrWithAuth( 'GET', 'https://www.googleapis.com/plus/v1/people/' + id + '?fields=' + params, false, callback );
+        
+            xhrWithAuth( 'GET', 'https://www.googleapis.com/plus/v1/people/' + id + '?fields=' + propertiesToParam( properties ), false, callback );
         },
+        getUsersInfo : function( onUserListPageFetched, properties, maxResults, nextPageToken ) {
+        
+            xhrWithAuth( 'GET', 'https://www.googleapis.com/plus/v1/people/me/people/visible?fields=items(' + propertiesToParam( properties ) +')%2CnextPageToken%2CtotalItems&'
+            + $.param({
+                'maxResults' : 100 || maxResults, 
+                'pageToken' : nextPageToken
+            }), 
+            false,
+            nextIteration );
+            function nextIteration( error, status, response ) {
+                onUserListPageFetched( error, status, response );
+                if ( !error && status == 200 && JSON.parse( response ).nextPageToken ) {
+                    GPlus.getUsersInfo( onUserListPageFetched, properties, maxResults, JSON.parse( response ).nextPageToken );
+                }
+            }
+        }, 
         getUsersList : function( onUsersListPageFetched, maxResults, nextPageToken ) {
             
             xhrWithAuth( 'GET', 'https://www.googleapis.com/plus/v1/people/me/people/visible?'
@@ -133,6 +169,10 @@ var GPlus = (function() {
         
         getUserEmail : function( callback ) {
             xhrWithAuth( 'GET', 'https://www.googleapis.com/userinfo/v2/me?fields=email', false, callback );
+        },
+        
+        getUserEmailUnofficialAPI : function( callback ) {
+            xhrWithAuth( 'GET', 'https://plus.google.com/u/' + getPageId() + '/_/initialdata?key=2', false, callback );
         },
         /**
          * Add people to a circle in your account.
@@ -201,5 +241,7 @@ var GPlus = (function() {
         revokeToken : function( callback ) {
             revokeTokens( callback );
         }
+        
+        
     }
 })();

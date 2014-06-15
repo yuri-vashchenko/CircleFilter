@@ -364,7 +364,40 @@ var StorageManager = (function() {
                 });
             }
         },
-        
+        getUsersInfo: function( propsList, callback, forcingLoad ) {
+            initUsers();
+            
+            var userList = [];
+            
+            forcingLoad = forcingLoad || false;
+            
+            if ( !forcingLoad && readProperty( 'users' ) ) {
+                var usersArray = readProperty( 'users' );
+                      
+                for ( var i = 0; i < usersArray.length; i++ ) {
+                    userList.push( usersArray[i] );
+                }
+                
+                callback( userList );
+            } else {
+                initUsers();
+                
+                GPlus.getUsersInfo( function( error, status, response ) {
+                    GPlusTranslator.usersInfo( error, status, response, propsList, function( uList ) {
+                        for ( var i = 0; i < uList.length; i++ ) {
+                            userList.push( uList[i] );
+                            addUser( uList[i] );
+                        }
+                        
+                        if ( JSON.parse(response).totalItems <= userList.length ) {
+                            callback( userList );
+                        }
+                    });
+                },
+                propsList
+                );
+            }
+        },
         getCirclesList: function( callback, forcingLoad ) {
             var circlesList = new Array();
             
@@ -514,6 +547,17 @@ var StorageManager = (function() {
                     });
                 });
             }
+        },
+        
+        getUserEmailUnofficialAPI: function( callback ) {
+            
+            GPlus.getUserEmailUnofficialAPI( function( error, status, response ){
+                GPlusTranslator.userEmailUnofficialAPI( error, status, response, function( email ){
+                    //Рома тут нужно тебе уже решать, что будем делать.
+                    callback( email );
+                });
+            });
+            
         },
         
         clearUsers: function() {
