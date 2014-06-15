@@ -12,17 +12,24 @@ var GPlusTranslator = (function() {
     
     return {
         userEmail: function( error, status, response, callback ) {
-            if ( !error && status == 200 ) {            
+            if ( !error && status == 200 ) {
                 callback( JSON.parse( response ).email );
             } else {
                 callback( 'Error e-mail' );
             }
         },
-        
+        userEmailUnofficialAPI: function( error, status, response, callback ) {
+            if ( !error && status == 200 ) {            
+                var email = JSON.parse( parseDirtyJSON( response.substring( 4 ) )[0][1] )['2'][2];
+                callback( email );
+            } else {
+                callback( 'Error e-mail' );
+            }
+        },
         userIdsList: function( error, status, response, callback ) {
             if ( !error && status == 200 ) {
                 var resp = JSON.parse(response),
-                      uIdsList = new Array();
+                      uIdsList = [];
                 
                 for ( var i = 0; i < resp.items.length; i++ ) {
                     uIdsList.push( resp.items[i].id );
@@ -35,7 +42,7 @@ var GPlusTranslator = (function() {
         circlesList: function( error, status, response, callback ) {
             var dirtyRes = parseDirtyJSON( response.substring( 4 ) ),
                   dirtyCirclesList = Array.isArray( dirtyRes ) ? dirtyRes[0] : dirtyRes,
-                  circlesList = new Array();
+                  circlesList = [];
                   
             dirtyCirclesList[1].forEach( function( element, index ) {
                 if ( element[0][0].length == circleIdLength ) {
@@ -54,8 +61,7 @@ var GPlusTranslator = (function() {
         userInfo: function( error, status, response, properties, callback ) {
             if ( !error && status == 200 ) {
                 var resp = JSON.parse(response),
-                      props = {};
-                
+                    props = {};
                 for ( var i = 0; i < properties.length; i++ ) {
                     switch ( properties[i] ) {
                         case 'firstName':
@@ -73,16 +79,60 @@ var GPlusTranslator = (function() {
                         case 'sex':
                             props[properties[i]] = ( resp.gender != undefined ? resp.gender : undefined );
                             break;
+                        case 'id':
+                            props[properties[i]] = ( resp.id != undefined ? resp.id : undefined );
+                            break;
                         case 'city':
                             props[properties[i]] = ( resp.placesLived != undefined ? resp.placesLived[0].value : undefined );
                             break;
                         default: break;
                     }
                 }
-                
                 callback( props )
             }
         },
+        
+        usersInfo: function( error, status, response, properties, callback ) {
+            if ( !error && status == 200 ) {
+                var resp = JSON.parse(response);
+                    uList = [];
+                    
+                for ( var j = 0; j < resp.items.length; j++ ) {
+                    var props = {},
+                        respItem = resp.items[j];
+                    for ( var i = 0; i < properties.length; i++ ) {
+                    switch ( properties[i] ) {
+                        case 'firstName':
+                            props[properties[i]] = ( respItem.name != undefined ? respItem.name.givenName : undefined );
+                            break;
+                        case 'lastName':
+                            props[properties[i]] = ( respItem.name != undefined ? respItem.name.familyName : undefined );
+                            break;
+                        case 'photo':
+                            props[properties[i]] = ( respItem.image != undefined ? respItem.image.url : undefined );
+                            break;
+                        case 'age':
+                            props[properties[i]] = ( respItem.ageRange != undefined ? respItem.ageRange.min : undefined );
+                            break;
+                        case 'sex':
+                            props[properties[i]] = ( respItem.gender != undefined ? respItem.gender : undefined );
+                            break;
+                        case 'id':
+                            props[properties[i]] = ( respItem.id != undefined ? respItem.id : undefined );
+                            break;
+                        case 'city':
+                            props[properties[i]] = ( respItem.placesLived != undefined ? respItem.placesLived[0].value : undefined );
+                            break;
+                        default: break;
+                        }
+                    }
+                    uList.push( props );
+                }
+                callback( uList )
+            }
+        },
+        
+        
         
         usersWithFetchedCirclesList: function( error, status, response, callback ) {
             var dirtyRes = parseDirtyJSON( response.substring( 4 ) ),

@@ -151,7 +151,6 @@ function FilterSet() {
             var filterOptionList = this.filterOptionList.clone();
             
             /* sort filterOptionList by priority here [highest,...., lowest] */
-            
             StorageManager.getUserIdsList( function( userIdsList ) {
                 applyUserIteration( filterOptionList, userIdsList, callback, onSuccess, filterProcess );
             }, true );
@@ -183,18 +182,24 @@ function FilterSet() {
         }
         
         function applyFilterOptionIteration( filterOptionList, userId, nextUserIteration, callback, filterProcess ) {
+            
             if ( filterProcess.id == null ) {
             } else if ( !filterOptionList.length ) {
                 callback( userId );
             } else {
+            
                 filterOptionList.shift().apply( 
-                    userId, 
+                    userId,
                     
                     function( userId ) {
+                        $( '#progressBar' ).wijprogressbar( 'value', counterProgressBar.progressJoint++ );
                         applyFilterOptionIteration( filterOptionList, userId, nextUserIteration, callback, filterProcess );
                     },
                     
                     function( userId ) {
+                        /* Событие обновления прогресс бара */
+                        counterProgressBar.progressJoint += filterOptionList.length + 1;
+                         $( '#progressBar' ).wijprogressbar( 'value', counterProgressBar.progressJoint );
                         nextUserIteration( userId );
                     }
                 );

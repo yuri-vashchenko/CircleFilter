@@ -214,7 +214,7 @@
     },
     "kBytes": {
         "message": "кБайт"
-    },
+    },    
     "filterByCircles": {
         "message": "по Кругам"
     },
@@ -223,6 +223,14 @@
     },
     "circlesHelpText": {
         "message": "Выбранные круги"
+    },
+    "selectAll": {
+        "message": "Выбрать всех"
+    },
+    "deselectAll": {
+        "message": "Снять выбор со всех"
+    },
+    "usersSelectedCount": {
+        "message": "Выбрано"
     }
-    
 }

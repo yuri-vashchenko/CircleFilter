@@ -34,7 +34,13 @@ function Filter( filterBlock, resultBlock ) {
               bottomGroupBlock = document.createElement( 'div' );           
 
         clearButton.title = getMessage( 'clearTitle' );
-        applyButton.title = getMessage( 'applyTitle' );    
+        applyButton.title = getMessage( 'applyTitle' );  
+        applyButton.textContent = getMessage( 'apply' );
+        
+        $( 'button#stopProcessing' ).click( function() {
+            stopProcessing( filter, applyButton );
+        });
+        
         importIcon.src = 'images/import.png';    
         importIcon.title = getMessage( 'import' );        
         importButton.appendChild( importIcon );
@@ -96,71 +102,84 @@ function Filter( filterBlock, resultBlock ) {
             parentContent.insertBefore( showFormulaBlock( filter ), parentContent.querySelector( '.control' ) );
         });
         
-        applyButton.textContent = getMessage( 'apply' );
-        applyButton.title = getMessage( 'applyTitle' );  
-        
         bottomGroupBlock.appendChild( applyButton );
         
         applyButton.addEventListener( 'click', function() {
+            
             if ( filter.process.id == null ) {
                 startProcessing( filter, applyButton, function() {
-                    var filterSetList = filter.filterSetList.clone(),
-                          filterOptionsCount = 0;
+                
+                    var filterSetList = filter.filterSetList.clone();
+                    
+                    counterProgressBar.progressJoint = 0;
+                    counterProgressBar.filterOptionsTotal = 0;
                     
                     for ( var i = 0; i < filterSetList.length; i++ ) {
-                        filterOptionsCount += filterSetList[i].filterOptionList;
+                        counterProgressBar.filterOptionsTotal += filterSetList[i].filterOptionList.length;
                     }
                     
-                    if ( filterOptionsCount == 0 ) {
-                        StorageManager.getUserIdsList( function( userIdsList ) {
-                            applyEmptyFilterSetIteration(
-                                userIdsList,
+                    StorageManager.getUserIdsList( function( userIdsList ) {
+                        counterProgressBar.usersTotal = userIdsList.length;
+                        
+                        $( '#progressBar' ).wijprogressbar({
+                            'enable': true, 
+                            'value': 0,
+                            'labelAlign': 'center',
+                            'animationOptions': { duration: 1000 },
+                            'indicatorImage': 'images/progressbar_40x40.png',
+                            'maxValue': counterProgressBar.usersTotal * ( counterProgressBar.filterOptionsTotal == 0 ? 1 : counterProgressBar.filterOptionsTotal )
+                        });
+                                
+                        if ( counterProgressBar.filterOptionsTotal == 0 ) {                                
+                                applyEmptyFilterSetIteration(
+                                    userIdsList,
+                                    function() { 
+                                        stopProcessing( filter, applyButton );
+                                    },
+                                    filter.process
+                                );                         
+                        } else {                            
+                            applyFilterSetIteration( 
+                                filterSetList, 
+                                function( userId ) {
+                                    StorageManager.getUserInfo( userId, User.propertiesForShow, function( user ) {
+                                        filter.result.append( user );
+                                    });
+                                }, 
                                 function() { 
                                     stopProcessing( filter, applyButton );
                                 },
                                 filter.process
                             );
-                        }, true );
-                    } else {
-                        applyFilterSetIteration( 
-                            filterSetList, 
-                            function( userId ) {
-                                StorageManager.getUserInfo( userId, User.propertiesForShow, function( user ) {
+                        }
+                    
+                        function applyEmptyFilterSetIteration( userIdsList, onSuccess, filterProcess ) {
+                            if ( userIdsList.length == 0 || filterProcess.id == null ) {
+                                onSuccess();
+                            } else {   
+                                $( '#progressBar' ).wijprogressbar( 'value', counterProgressBar.progressJoint++ );
+                                StorageManager.getUserInfo( userIdsList.shift(), User.propertiesForShow, function( user ) {
                                     filter.result.append( user );
+                                    applyEmptyFilterSetIteration( userIdsList, onSuccess, filterProcess );
                                 });
-                            }, 
-                            function() { 
-                                stopProcessing( filter, applyButton );
-                            },
-                            filter.process
-                        );
-                    }
-                    
-                    function applyEmptyFilterSetIteration( userIdsList, onSuccess, filterProcess ) {
-                        if ( userIdsList.length == 0 || filterProcess.id == null ) {
-                            onSuccess();
-                        } else {
-                            StorageManager.getUserInfo( userIdsList.shift(), User.propertiesForShow, function( user ) {
-                                filter.result.append( user );
-                                applyEmptyFilterSetIteration( userIdsList, onSuccess, filterProcess );
-                            });
+                            }
                         }
-                    }
-                    
-                    function applyFilterSetIteration( filterSetList, callback, onSuccess, filterProcess ) {
-                        if ( !filterSetList.length || filterProcess.id == null ) {
-                            onSuccess();
-                        } else {
-                            filterSetList.shift().apply( 
-                                callback,
-                                
-                                function() {
-                                    applyFilterSetIteration( filterSetList, callback, onSuccess, filterProcess )
-                                }, 
-                                filterProcess
-                            );
+                        
+                        function applyFilterSetIteration( filterSetList, callback, onSuccess, filterProcess ) {
+                            if ( !filterSetList.length || filterProcess.id == null ) {
+                                onSuccess();
+                            } else {
+                                filterSetList.shift().apply( 
+                                    callback,
+                                    
+                                    function() {
+                                        applyFilterSetIteration( filterSetList, callback, onSuccess, filterProcess )
+                                    }, 
+                                    filterProcess
+                                );
+                            }
                         }
-                    }
+                    }, true );
                 });
             } else {
                 clearTimeout( filter.process.id );
@@ -170,6 +189,7 @@ function Filter( filterBlock, resultBlock ) {
         });        
 
         controlBlock.appendChild( bottomGroupBlock );
+        
         $( bottomGroupBlock ).addClass( 'bottomGroupBlock' );
         
         $( controlBlock ).addClass( 'control' );
@@ -178,9 +198,8 @@ function Filter( filterBlock, resultBlock ) {
     }
     
     function startProcessing( filter, applyButton, processingFunc ) {
-        applyButton.textContent = getMessage( 'stop' );
-        applyButton.title = getMessage( 'stopTitle' );
-        
+        $( applyButton ).attr( 'disabled', true );
+        $( 'button#stopProcessing' ).show();
         filter.result.reset();
         filter.result.processing();
         filter.process.id = setTimeout( processingFunc, 0);
@@ -189,14 +208,15 @@ function Filter( filterBlock, resultBlock ) {
     function stopProcessing( filter, applyButton ) {
         filter.process.id = null;
         filter.result.finish(); 
-        applyButton.textContent = getMessage( 'apply' );
-        applyButton.title = getMessage( 'applyTitle' );
+        $( applyButton ).attr( 'disabled', false );
+         $( 'button#stopProcessing' ).hide();
+        
+        $( '#progressBar' ).wijprogressbar( 'destroy' );
     }
     
     function showFormulaBlock( filter ) {
         var formulaBlock = document.createElement( 'div' ),
               filterSet = new FilterSet();
-        
         
         filter.addFilterSetButton = document.createElement( 'button' );
         

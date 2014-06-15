@@ -118,7 +118,6 @@ span#user-email {
 }
 
 .container {
-    height: 100%;
     width: 100%;
     float: left;
     overflow: hidden;
@@ -135,10 +134,8 @@ span#user-email {
     float: left;
     padding: 15px 0 15px 15px;
     width: 500px;
-    height: 100%;
     position: relative;
     background: white;
-    border-right: 1px solid grey;
     left: -500px;
 }
 
@@ -188,4 +185,22 @@ span#user-email {
 
 .but-icon {
     cursor: pointer;
+}
+
+div#resultControlPanel {
+    display: none;
+    position: fixed;
+    bottom: 10px;
+    right: 10px;
+}
+
+#stopProcessing {
+    display: none;
+    bottom: 0;
+    margin-left:300px;
+    position: fixed;
+}
+
+div#usersSelected {
+    text-align: right;
 }

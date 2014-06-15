@@ -47,7 +47,7 @@
     "chooseFilter": {
         "message": "Choose filter criteria"
     },
-    "addToCircle": {
+   "addToCircle": {
         "message": "Add to circle"
     },
     "moveToCircle": {
@@ -223,5 +223,14 @@
     },
     "circlesHelpText": {
         "message": "Selected Circles"
+    },
+    "selectAll": {
+        "message": "Select all"
+    },
+    "deselectAll": {
+        "message": "Deselect all"
+    },
+    "usersSelectedCount": {
+        "message": "Users selected count"
     }
 }

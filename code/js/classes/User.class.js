@@ -7,26 +7,30 @@ function User( id, firstName, lastName, photo, age, sex, city, circles ) {
     this.sex = sex;
     this.city = city;
     this.circles = circles;
+    
     var tooltipTimeOut = 1200;
     
     var checked = false;
+    var userBlock;
     
     this.isChecked = function() {
         return checked;
     }
     
     this.toggleCheck = function() {
+        selectedUsers.count += ( checked ? -1 : 1 );
+        selectedUsers.updateField();
         checked = !checked;
+        $( userBlock ).toggleClass( 'selected' ); 
     }
     
     this.show = function() {
-        var userBlock = document.createElement( 'div' ),
-              img = document.createElement( 'img' ),
+        var img = document.createElement( 'img' ),
               url = document.createElement( 'a' ),
+              tooltipTimeOutId = null,
               self = this;
-        
-        var tooltipTimeOutId = null;
-        
+              
+        userBlock  = document.createElement( 'div' );        
         $( userBlock ).addClass( 'user' );
         
         if ( this.isChecked() ) {
@@ -43,7 +47,6 @@ function User( id, firstName, lastName, photo, age, sex, city, circles ) {
         userBlock.appendChild( url );
         
         userBlock.addEventListener( 'click', function( e ) {
-            $( this ).toggleClass( 'selected' );
             self.toggleCheck();
         });
         
@@ -147,8 +150,7 @@ function User( id, firstName, lastName, photo, age, sex, city, circles ) {
             for ( var i = 0; i < user.circles.length; i++ ) {
                 StorageManager.getCircleInfo( user.circles[i], function( circle ) {
                     userCirclesSpan.textContent += circle.name + ( i != user.circles.length - 1 ? ', ' : '' );
-                });
-                
+                });                
             }
             
             userCircles.appendChild( userCirclesLabel );
@@ -156,7 +158,7 @@ function User( id, firstName, lastName, photo, age, sex, city, circles ) {
             
             userTooltip.appendChild( userCircles );
         }
-
+        
         $( userTooltip ).addClass( 'userTooltip' );
         $( userTooltip ).addClass( 'contentBlock' );
         

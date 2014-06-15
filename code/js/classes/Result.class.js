@@ -5,6 +5,7 @@ function Result( block ) {
         "FULL" : 3
     }, perPage = ( StorageManager.getOption( 'usersPerPage' ) ? StorageManager.getOption( 'usersPerPage' ) : 20 );
     
+    var self = this;
     
     this.block = block;
     $( this.block ).addClass( 'result' );
@@ -35,6 +36,7 @@ function Result( block ) {
     
     this.clear = function() {
         this.usersList = new UsersList( perPage );
+        $( '#resultControlPanel' ).hide();
         this.state = STATE.EMPTY;
         this.block.innerHTML = '';
         this.block.appendChild( showText( getMessage( 'emptyResultBlock' ) ) );
@@ -46,13 +48,13 @@ function Result( block ) {
         if ( this.state == STATE.DEFAULT ) {
             this.clear();
         }
-        $( '#loading' ).removeClass( 'loading' );
     }
     
     this.processing = function() {
-        $( '#loading' ).addClass( 'loading' );
+        
         this.block.innerHTML = '';
         this.block.appendChild( showText( getMessage( 'defaultResultBlockContent' ) ) );
+        $( '#resultControlPanel' ).show();
         $( this.block ).addClass( 'text' );
     }
     
@@ -62,8 +64,8 @@ function Result( block ) {
     
     this.reset = function() {
         this.usersList = new UsersList( perPage );
+        $( '#resultControlPanel' ).hide();
         this.state = STATE.DEFAULT;
-        
         this.block.innerHTML = '';
         this.block.appendChild( showText( getMessage( 'defaultResultBlockContent' ) ) );
         this.block.appendChild( showImportButton( this ) );
@@ -86,4 +88,22 @@ function Result( block ) {
         textBlock.textContent = text;
         return textBlock;
     }
+    
+    $( 'button#selectAll' ).click( function() { 
+        selectedUsers.isCheckedDefault = true;
+        for ( var i = 0; i < self.usersList.usersList.length; i++ ) {
+            if ( !self.usersList.usersList[i].isChecked() ) {
+                self.usersList.usersList[i].toggleCheck();
+            }
+        }
+    });
+    
+    $( 'button#deselectAll' ).click( function() {
+        selectedUsers.isCheckedDefault = false;
+        for ( var i = 0; i < self.usersList.usersList.length; i++ ) {
+            if ( self.usersList.usersList[i].isChecked() ) {
+                self.usersList.usersList[i].toggleCheck();
+            }
+        }
+    });
 }
