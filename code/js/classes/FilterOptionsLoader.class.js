@@ -2,10 +2,10 @@
 var filterOptionsList = Array();
 
 function loadFilterOptions() {
-    var filterOptionsList = ['bySex', 'byCity', 'byCircles'];          
+    var filterOptionsList = ['bySex', 'byCity', 'byCircles', 'byNumberOfComments', 'byNumberOfPlusOne', 'byNumberOfPosts', 'byNumberOfReposts'];          
     
     for ( var i = 0; i < filterOptionsList.length; i++ ) {
-        var script = document.createElement( 'script' );
+        var script = document.createElement( 'script' );s
         script.type = 'text/javascript';
         script.src = 'js/filterOptions/' + filterOptionsList[i] + '.class.js';
         

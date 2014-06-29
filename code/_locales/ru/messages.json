@@ -232,5 +232,47 @@
     },
     "usersSelectedCount": {
         "message": "Выбрано"
-    }
+    },
+	"filterByNumberOfPlusOne": {
+        "message": "по Количеству +1"
+    },
+    "period": {
+        "message": "Период"
+    },
+    "lastDay": {
+        "message": "за Последний день"
+    },
+    "lastWeek": {
+        "message": "за Последнюю неделю"
+    },
+    "lastMonth": {
+        "message": "за Последний месяц"
+    },
+    "last3Month": {
+        "message": "за Последнии 3 месяца"
+    },
+    "last6Month": {
+        "message": "за Последнии пол года"
+    },
+    "lastYear": {
+        "message": "за Последний год"
+    },
+    "allTime": {
+        "message": "за Все время"
+    },
+    
+    "filterByNumberOfPosts": {
+        "message": "по Количеству постов"
+    },
+    
+    "filterByNumberOfReposts": {
+        "message": "по Количеству репостов"
+    },
+    
+    "filterByNumberOfComments": {
+        "message": "по Количеству комментариев"
+    },
+    "anyNumber": {
+        "message": "любое количество"
+    }		
 }

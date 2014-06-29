@@ -1,6 +1,6 @@
 (function(){
     filterOptionsList.push( new FilterOption( 
-        7,
+        1,
         '/images/sex.png', 
         getMessage( 'filterBySex' ),
         function() {
@@ -54,7 +54,7 @@
         },
         function( userId, accept, decline ) {     
             var configuration = this.configuration,
-                  requiredUserFields = this.requiredUserFields;
+		requiredUserFields = this.requiredUserFields;
             
             StorageManager.getUserInfo( userId, requiredUserFields, function( user ) {
                 var toAccept = configuration.sex == user.sex;

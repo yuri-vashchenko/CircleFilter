@@ -1,6 +1,6 @@
 (function(){
     filterOptionsList.push( new FilterOption( 
-        10,
+        3,
         '/images/circles.png', 
         getMessage( 'filterByCircles' ),
         function() {
