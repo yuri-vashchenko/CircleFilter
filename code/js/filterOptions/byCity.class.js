@@ -1,6 +1,6 @@
 (function(){
     filterOptionsList.push( new FilterOption( 
-        8,
+        2,
         '/images/habitation.png', 
         getMessage( 'filterByCity' ),
         function() {

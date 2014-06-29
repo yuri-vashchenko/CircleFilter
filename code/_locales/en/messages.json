@@ -232,5 +232,47 @@
     },
     "usersSelectedCount": {
         "message": "Users selected count"
-    }
+    },
+	"filterByNumberOfPlusOne": {
+        "message": "by number of +1"
+    },
+    "period": {
+        "message": "period"
+    },
+    "lastDay": {
+        "message": "last day"
+    },
+    "lastWeek": {
+        "message": "last week"
+    },
+    "lastMonth": {
+        "message": "last month"
+    },
+    "last3Month": {
+        "message": "last 3 month"
+    },
+    "last6Month": {
+        "message": "last 6 month"
+    },
+    "lastYear": {
+        "message": "last year"
+    },
+    "allTime": {
+        "message": "all time"
+    },
+    
+    "filterByNumberOfPosts": {
+        "message": "by number of posts"
+    },
+    
+    "filterByNumberOfReposts": {
+        "message": "by number of reposts"
+    },
+    
+    "filterByNumberOfComments": {
+        "message": "by number of comments"
+    },
+    "anyNumber": {
+        "message": "any number"
+    }	
 }
