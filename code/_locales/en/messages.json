@@ -272,6 +272,9 @@
     "filterByNumberOfComments": {
         "message": "by number of comments"
     },
+    "filterByLastActivity": {
+        "message": "by last activity"
+    },
     "anyNumber": {
         "message": "any number"
     }	

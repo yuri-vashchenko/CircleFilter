@@ -315,7 +315,9 @@ var StorageManager = (function() {
                 ( users[userIndex].age != undefined ? users[userIndex].age.value : null ),
                 ( users[userIndex].sex != undefined ? users[userIndex].sex.value : null ),
                 ( users[userIndex].city != undefined ? users[userIndex].city.value : null ),
-                ( users[userIndex].circles != undefined ? users[userIndex].circles.value : [] )
+                ( users[userIndex].circles != undefined ? users[userIndex].circles.value : [] ),
+                ( users[userIndex].numberOfPosts != undefined ? users[userIndex].numberOfPosts.value : {} ),
+                ( users[userIndex].lastActivityDate != undefined ? users[userIndex].lastActivityDate.value : null )
             )
         }
     }
@@ -364,6 +366,78 @@ var StorageManager = (function() {
                 });
             }
         },
+
+        getActivityInfo: function( userId, propsList, callback, forcingLoad ) {
+            initUsers();
+            
+            forcingLoad = forcingLoad || false;
+            
+            var user = getUser( userId ),
+                missingProps = ( !forcingLoad ? checkUserProperties( userId, propsList) : propsList );
+                  
+            if ( missingProps.length == 0 ) {
+                callback( user );
+            } else {
+                GPlus.getUserActivitiesList( userId, function( error, status, response ) {
+                    GPlusTranslator.getUserActivitiesList( error, status, response, function( properties ) {
+                        var numberOfPosts = {
+                            allTime: 0,
+                            lastDay: 0,
+                            lastWeek: 0,
+                            lastMonth: 0,
+                            last3Month: 0,
+                            last6Month: 0,
+                            lastYear: 0
+                        };
+
+                        var lastActivityDate = null;
+
+                        for ( var i = 0; i < properties.length; i++ ) {
+                            /* if activity is type of 'post' */
+                            if (properties[i].verb == 'post') {
+                                numberOfPosts.allTime++;
+
+                                if ( getDatesDiff( properties[i].updated, getCurrentDate( 'CLASSIC' ), 'days' ) <= 1 ) {
+                                    numberOfPosts.lastDay++;
+                                }
+
+                                if ( getDatesDiff( properties[i].updated, getCurrentDate( 'CLASSIC' ), 'weeks' ) <= 1 ) {
+                                    numberOfPosts.lastWeek++;
+                                }
+
+                                if ( getDatesDiff( properties[i].updated, getCurrentDate( 'CLASSIC' ), 'months' ) <= 1 ) {
+                                    numberOfPosts.lastMonth++;
+                                }
+
+                                if ( getDatesDiff( properties[i].updated, getCurrentDate( 'CLASSIC' ), 'months' ) <= 3 ) {
+                                    numberOfPosts.last3Month++;
+                                }
+
+                                if ( getDatesDiff( properties[i].updated, getCurrentDate( 'CLASSIC' ), 'months' ) <= 6 ) {
+                                    numberOfPosts.last6Month++;
+                                }
+
+                                if ( getDatesDiff( properties[i].updated, getCurrentDate( 'CLASSIC' ), 'years' ) <= 1 ) {
+                                    numberOfPosts.lastYear++;
+                                }
+                            }
+
+                            if (properties[i].updated > lastActivityDate || lastActivityDate == null ) {
+                                lastActivityDate = properties[i].updated;
+                            }
+                        }
+
+                        addUserProperties( userId, {
+                            numberOfPosts: numberOfPosts,
+                            lastActivityDate: lastActivityDate
+                        }, true );
+
+                        callback( getUser( userId ) );
+                    });
+                });
+            };            
+        },
+
         getUsersInfo: function( propsList, callback, forcingLoad ) {
             initUsers();
             

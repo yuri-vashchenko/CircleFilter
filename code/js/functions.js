@@ -29,20 +29,50 @@ function showDropdownBlock( title, contentBlock, state ) {
     return dropdownBlock;
 }
 
-function getCurrentDate() {        
-    return convertDate( new Date() );
+function getCurrentDate( format ) {
+    format = format || 'RU';
+
+    return convertDate( new Date(), format );
 }
 
-function convertDate( date ) {
+function convertDate( date, format ) {
     var day = date.getDate(),
-          month = date.getMonth()+1,
-          year = date.getFullYear(),
-          h = date.getHours(),
-          m = date.getMinutes();
-    
-    return day + '.' + month + '.' + year + ' ' + h + ':' + m;
+        month = date.getMonth() + 1,
+        year = date.getFullYear(),
+        h = date.getHours(),
+        m = date.getMinutes();
+
+    format = format || 'RU';
+
+    if (format == 'RU') {
+        return day + '.' + month + '.' + year + ' ' + h + ':' + m;
+    } else {
+        return year + '-' + month.pad(2) + '-' + day.pad(2) + ' ' + h.pad(2) + ':' + m.pad(2) + ':00';
+    }
 }
 
+function getDatesDiff(date1,date2,interval) {
+    var second=1000, minute=second*60, hour=minute*60, day=hour*24, week=day*7;
+    date1 = new Date(date1);
+    date2 = new Date(date2);
+    var timediff = date2 - date1;
+    if (isNaN(timediff)) return NaN;
+    
+    switch (interval) {
+        case "years": return date2.getFullYear() - date1.getFullYear();
+        case "months": return (
+        ( date2.getFullYear() * 12 + date2.getMonth() )
+        -
+        ( date1.getFullYear() * 12 + date1.getMonth() )
+        );
+        case "weeks"  : return Math.floor(timediff / week);
+        case "days"   : return Math.floor(timediff / day);
+        case "hours"  : return Math.floor(timediff / hour);
+        case "minutes": return Math.floor(timediff / minute);
+        case "seconds": return Math.floor(timediff / second);
+        default: return undefined;
+    }
+}
 
 function transliterate( word ){
     var a = {"Ё":"YO","Й":"I","Ц":"TS","У":"U","К":"K","Е":"E","Н":"N","Г":"G","Ш":"SH","Щ":"SCH","З":"Z","Х":"H","Ъ":"'","ё":"yo","й":"i","ц":"ts","у":"u","к":"k","е":"e","н":"n","г":"g","ш":"sh","щ":"sch","з":"z","х":"h","ъ":"'","Ф":"F","Ы":"I","В":"V","А":"a","П":"P","Р":"R","О":"O","Л":"L","Д":"D","Ж":"ZH","Э":"E","ф":"f","ы":"i","в":"v","а":"a","п":"p","р":"r","о":"o","л":"l","д":"d","ж":"zh","э":"e","Я":"Ya","Ч":"CH","С":"S","М":"M","И":"I","Т":"T","Ь":"'","Б":"B","Ю":"YU","я":"ya","ч":"ch","с":"s","м":"m","и":"i","т":"t","ь":"'","б":"b","ю":"yu"};
@@ -95,6 +125,12 @@ function clone( obj ) {
     for ( var key in obj )
         temp[key] = clone( obj[key] );
     return temp;
+}
+
+Number.prototype.pad = function( size ) {
+    var s = String(this);
+    while ( s.length < ( size || 2 ) ) { s = "0" + s; }
+    return s;
 }
 
 Array.prototype.clone = function() {

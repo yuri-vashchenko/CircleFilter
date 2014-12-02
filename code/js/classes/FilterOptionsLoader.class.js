@@ -2,7 +2,7 @@
 var filterOptionsList = Array();
 
 function loadFilterOptions() {
-    var filterOptionsList = ['bySex', 'byCity', 'byCircles', 'byNumberOfComments', 'byNumberOfPlusOne', 'byNumberOfPosts', 'byNumberOfReposts'];          
+    var filterOptionsList = ['bySex', 'byCity', 'byCircles', 'byNumberOfComments', 'byNumberOfPlusOne', 'byNumberOfPosts', 'byNumberOfReposts', 'byLastActivity'];          
     
     for ( var i = 0; i < filterOptionsList.length; i++ ) {
         var script = document.createElement( 'script' );s

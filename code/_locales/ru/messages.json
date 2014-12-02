@@ -272,6 +272,9 @@
     "filterByNumberOfComments": {
         "message": "по Количеству комментариев"
     },
+    "filterByLastActivity": {
+        "message": "по Дате активности"
+    },
     "anyNumber": {
         "message": "любое количество"
     }		
