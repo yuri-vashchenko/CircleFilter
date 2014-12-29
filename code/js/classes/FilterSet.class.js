@@ -1,22 +1,60 @@
 function FilterSet() {
     
+    this.toJSON = function() {
+        var string = '[';
+        
+        for ( var i = 0; i < this.filterOptionList.length; i++ ) {
+            string += this.filterOptionList[i].toJSON() + ( i != this.filterOptionList.length - 1 ? ',' : '' );
+        }
+        string += ']';
+        
+        return string;
+    }
+    
+    this.importFilterSet = function( filterSet ) {   
+        
+        for ( var i = 0; i < filterSet.length; i++ ) {
+            var filterOption = getFilterOptionById( filterSet[i].id ),
+                  configuredFilterOption = new FilterOption(
+                  filterSet[i].id,
+                  filterOption.icon, 
+                  filterOption.name, 
+                  filterOption.configurationBlock,
+                  filterOption.getConfigurationFunc, 
+                  filterOption.configurationToStringFunc, 
+                  filterOption.applyFunc,
+                  filterOption.requiredUserFields,
+                  filterSet[i].configuration 
+            );
+            
+            filterOptionBlock = showAddFilterOptionBlock( configuredFilterOption.show(), this );
+            
+            this.filterSetBlock.insertBefore( filterOptionBlock, this.addBlock );  
+            this.filterOptionList.push( configuredFilterOption );
+        }
+    }
+    
     this.filterOptionList = new Array();
+    this.filterSetBlock;
+    this.addBlock;
     
     this.show = function() {
-        var filterSetBlock = document.createElement( 'div' ),
-              addBlock = document.createElement( 'div' ),
-              addButton = document.createElement( 'a' ),
+        var addButton = document.createElement( 'a' ),
               addIcon = document.createElement( 'img' ),
               filterSet = this;
         
+        filterSet.filterSetBlock = document.createElement( 'div' );
+        filterSet.addBlock = document.createElement( 'div' ),
+        
         addIcon.src = 'images/plus-btn.png';
+        addIcon.title = getMessage( 'addFilterOption' );
         addButton.appendChild( addIcon );
-        addBlock.appendChild( addButton );
+        filterSet.addBlock.appendChild( addButton );
         $( addButton ).addClass( 'add' );
         $( addButton ).addClass( 'but-icon' );   
-        $( addBlock ).addClass( 'addFilterOption' );
+        $( filterSet.addBlock ).addClass( 'addFilterOption' );
         
-        addBlock.addEventListener( 'click', function( e ) {
+        filterSet.addBlock.addEventListener( 'click', function( e ) {
             var dropdownList = showFilterOptionList(),
                   editInterfaceBlock = null,
                   index = null;
@@ -24,7 +62,10 @@ function FilterSet() {
                 
             $.modal( $( dropdownList ), { 
                 overlayClose : true,
-                position : [$( addBlock ).offset().top + $( addBlock ).outerHeight() - 1 - $( document ).scrollTop(), $( addBlock ).offset().left],
+                containerCss: {
+                    position: 'absolute !important'
+                },
+                position : [$( filterSet.addBlock ).offset().top + $( filterSet.addBlock ).outerHeight() - 1 - $( document ).scrollTop(), $( filterSet.addBlock ).offset().left],
                 onOpen: function ( dialog ) {
                     dialog.overlay.fadeIn( 'fast' );
                     dialog.container.slideDown( 'fast' );
@@ -45,10 +86,12 @@ function FilterSet() {
                                 editInterfaceBlock = filterOptionsList[index].showEditInterface( 
                                     function() {
                                         addIcon.src = 'images/plus-btn.png';
+                                        addIcon.title = getMessage( 'addFilterOption' );
                                         $.modal.close();
                                     },
                                     function( configuration ) {
                                         var configuredFilterOption = new FilterOption(
+                                                filterOptionsList[index].id, 
                                                 filterOptionsList[index].icon, 
                                                 filterOptionsList[index].name, 
                                                 filterOptionsList[index].configurationBlock, 
@@ -60,23 +103,27 @@ function FilterSet() {
                                               ),
                                               filterOptionBlock = showAddFilterOptionBlock( configuredFilterOption.show(), filterSet );
                                               
-                                        filterSetBlock.insertBefore( filterOptionBlock, addBlock );  
+                                        filterSet.filterSetBlock.insertBefore( filterOptionBlock, filterSet.addBlock );  
                                         filterSet.filterOptionList.push( configuredFilterOption );
                                     }
                                 );
                                 $.modal( $( editInterfaceBlock ), { 
                                     overlayClose : true, 
-                                    position : [$( addBlock ).offset().top + $( addBlock ).outerHeight() - 1 - $( document ).scrollTop(), $( addBlock ).offset().left],
+                                    containerCss: {
+                                        position: 'absolute !important'
+                                    },
+                                    position : [$( filterSet.addBlock ).offset().top + $( filterSet.addBlock ).outerHeight() - 1 - $( document ).scrollTop(), $( filterSet.addBlock ).offset().left],
                                     onOpen: function ( dialog ) {
                                         dialog.overlay.fadeIn( 'fast' );
                                         dialog.container.slideDown( 'fast' );
-                                        dialog.data.slideDown();	 
+                                        dialog.data.slideDown();     
                                     },
                                     onClose: function ( dialog ) {
                                         dialog.data.slideUp( 'fast', function () {
                                             dialog.container.slideUp( 'fast', function () {
                                                 dialog.overlay.fadeOut( 'fast' );
                                                 addIcon.src = 'images/plus-btn.png';
+                                                addIcon.title = getMessage( 'addFilterOption' );
                                                 $.modal.close();
                                             });
                                         });
@@ -84,6 +131,7 @@ function FilterSet() {
                                 });
                             } else {
                                 addIcon.src = 'images/plus-btn.png';
+                                addIcon.title = getMessage( 'addFilterOption' );
                             }
                         }); 
                     }); 
@@ -91,11 +139,11 @@ function FilterSet() {
             });            
         });
         
-        filterSetBlock.appendChild( addBlock );
+        filterSet.filterSetBlock.appendChild( filterSet.addBlock );
         
-        $( filterSetBlock ).addClass( 'filterSetBlock' );
+        $( filterSet.filterSetBlock ).addClass( 'filterSetBlock' );
         
-        return filterSetBlock;
+        return filterSet.filterSetBlock;
     }
     
     this.apply = function( callback, onSuccess, filterProcess ) {
@@ -103,7 +151,6 @@ function FilterSet() {
             var filterOptionList = this.filterOptionList.clone();
             
             /* sort filterOptionList by priority here [highest,...., lowest] */
-            
             StorageManager.getUserIdsList( function( userIdsList ) {
                 applyUserIteration( filterOptionList, userIdsList, callback, onSuccess, filterProcess );
             });
@@ -135,18 +182,24 @@ function FilterSet() {
         }
         
         function applyFilterOptionIteration( filterOptionList, userId, nextUserIteration, callback, filterProcess ) {
+            
             if ( filterProcess.id == null ) {
             } else if ( !filterOptionList.length ) {
                 callback( userId );
             } else {
+            
                 filterOptionList.shift().apply( 
-                    userId, 
+                    userId,
                     
                     function( userId ) {
+                        $( '#progressBar' ).wijprogressbar( 'value', counterProgressBar.progressJoint++ );
                         applyFilterOptionIteration( filterOptionList, userId, nextUserIteration, callback, filterProcess );
                     },
                     
                     function( userId ) {
+                        /* Событие обновления прогресс бара */
+                        counterProgressBar.progressJoint += filterOptionList.length + 1;
+                         $( '#progressBar' ).wijprogressbar( 'value', counterProgressBar.progressJoint );
                         nextUserIteration( userId );
                     }
                 );
@@ -160,6 +213,7 @@ function FilterSet() {
               removeIcon = document.createElement( 'img' );
               
         removeIcon.src = 'images/grey-cross-btn.png';
+        removeIcon.title = getMessage( 'removeFilterOption' );
         removeButton.appendChild( removeIcon );        
         $( removeButton ).addClass( 'remove' );
         $( removeButton ).addClass( 'but-icon' );

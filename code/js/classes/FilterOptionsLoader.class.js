@@ -2,10 +2,10 @@
 var filterOptionsList = Array();
 
 function loadFilterOptions() {
-    var filterOptionsList = ['test', 'test2', 'byAge'];          
+    var filterOptionsList = ['bySex', 'byCity', 'byCircles', 'byNumberOfComments', 'byNumberOfPlusOne', 'byNumberOfPosts', 'byNumberOfReposts', 'byLastActivity', 'byRelation'];
     
     for ( var i = 0; i < filterOptionsList.length; i++ ) {
-        var script = document.createElement( 'script' );
+        var script = document.createElement( 'script' );s
         script.type = 'text/javascript';
         script.src = 'js/filterOptions/' + filterOptionsList[i] + '.class.js';
         
@@ -21,6 +21,18 @@ function loadFilterOptions() {
         l.parentNode.insertBefore(link, l);
     }
 };
+
+function getFilterOptionById( id ) {
+    var filterOption;
+    
+    for ( var i = 0; i < filterOptionsList.length; i++ ) {
+        if ( filterOptionsList[i].id == id ) {
+            return filterOptionsList[i];
+        }
+    }
+    
+    return;
+}
 
 (function(){
     loadFilterOptions();

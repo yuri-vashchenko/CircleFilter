@@ -8,6 +8,10 @@
     display: inline-block;
     margin-left: 10px;
     vertical-align: middle;
+    text-overflow: ellipsis;
+    width: 190px;
+    white-space: nowrap;
+    overflow: hidden;
 }
 
 img.icon {
@@ -30,10 +34,12 @@ img.icon {
     -webkit-filter: none;
 }
 
+.editInterface .contentBlock {
+    padding: 15px;
+}
+
 .editInterface .controlBlock {
-    position: absolute;
-    bottom: 0;
-    right: 0;
+    float: right;
 }
 
 

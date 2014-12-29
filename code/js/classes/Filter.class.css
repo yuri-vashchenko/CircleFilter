@@ -35,9 +35,51 @@
     display: block;
 }
 
+.filter .content.action {
+    padding: 20px 5px;
+}
 .filter .action button {
     display: block;
+    width: 288px;
+    height: 58px;
+    cursor: pointer;
+    border: 1px solid grey;
+    padding: 13px;
+    margin: 5px 0;
+    background-color: white;
+}
+
+.filter .action button:hover {
+    background: rgb(0, 168, 233);
+}
+
+
+.filter .action  h3{
+    font-size: 25px;
+    font-family: calibri;
+    margin-top: 10px;
+    margin-bottom: 10px; 
 }
 
 .filter .content {
+}
+
+.filter .control input[type='file'] {
+    display: none;
+}
+
+.circleDeleteForm .contentBlock {
+    padding: 15px;
+}
+
+.circleDeleteForm .controlBlock {
+    float: right;
+}
+
+.circleCreateForm .contentBlock {
+    padding: 15px;
+}
+
+.circleCreateForm .controlBlock {
+    float: right;
 }

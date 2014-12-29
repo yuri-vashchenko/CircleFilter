@@ -2,12 +2,26 @@
 <head>
     <meta http-equiv = "Content-Type" content = "text/html; charset=UTF-8">
     <title>CircleFilter</title>
-    <link rel = "stylesheet" type = "text/css" href = "css/bootstrap.min.css">
+    <!--vendor js-->
+    <script type = "text/javascript" src = "vendor/js/jQuery/jquery.js"></script>
+    <script type = "text/javascript" src = "vendor/js/jQuery/jquery.simplemodal-1.4.4.js"></script>
+    <script type = "text/javascript" src = "vendor/js/jQuery/jquery.pageFun.js"></script>
+    <script type = "text/javascript" src = "vendor/js/bootstrap/bootstrap.min.js"></script>
+    <script type = "text/javascript" src = "vendor/js/jQuery/jquery-ui.min.js"></script>
+    <script type = "text/javascript" src = "vendor/js/wijmo/jquery.wijmo-open.all.3.20141.34.min.js"></script>
+    <script type = "text/javascript" src = "vendor/js/wijmo/jquery.wijmo-pro.all.3.20141.34.min.js"></script>
+    <script type = "text/javascript" src = "vendor/js/wijmo/wijmo.data.ajax.3.20141.34.js"></script>
+    <script type = "text/javascript" src = "vendor/js/knockout/knockout-2.2.0.js"></script>
+    <script type = "text/javascript" src = "vendor/js/knockout/knockout.wijmo.3.20141.34.js"></script>
+    <!--vendor css-->
+    <link rel = "stylesheet" type = "text/css" href = "vendor/css/bootstrap/bootstrap.min.css">
+    <link rel = "stylesheet" type = "text/css" href = "vendor/css/jQuery-wijmo/jquery-wijmo.css">
+    <link rel = "stylesheet" type = "text/css" href = "vendor/css/jQuery-wijmo/jquery.wijmo-pro.all.3.20141.34.min.css">
+    
     <link rel = "stylesheet" type = "text/css" href = "css/stylesheet.css">
-    <script type = "text/javascript" src = "js/jquery.js"></script>
-    <script type = "text/javascript" src = "js/jquery.simplemodal-1.4.4.js"></script>
-    <script type = "text/javascript" src = "js/bootstrap.min.js"></script>
-    <script type = "text/javascript" src = "js/functions.js"></script>     
+    
+    <script type = "text/javascript" src = "js/tokensInterface.js"></script>     
+    <script type = "text/javascript" src = "js/functions.js"></script>
 </head>
 <body>
     <div class="wrapper">
@@ -24,14 +38,19 @@
                 <a href = '#' class='button' id = "config"><img class='but-icon' src='images/config.png'/><span></span></a>
             </div>
         </div>
-        
+
         <div class="middle">
             <div class = "container">
                 <div class = "content">
-                    <b id = "loading"></b>
                     <div></div>
                 </div>
-                <div id = "testzone"></div>
+                <div id="progressBar"></div>
+                <button id="stopProcessing"></button>
+                <div id="resultControlPanel">
+                    <div id="usersSelected"></div>
+                    <button id="selectAll"></button>
+                    <button id="deselectAll"></button>
+                </div>
             </div>
             <div class = "left-sidebar"></div>
         </div>
