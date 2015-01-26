@@ -356,13 +356,17 @@ var StorageManager = (function() {
 
                 /** TODO: fix forced another relation update */
                 StorageManager.getUserInfo( 'me', ['relationOwn', 'relationAnother'], function() {
-                    var usersArray = readProperty( 'users' );
+                    StorageManager.getActivePeople( 'me', function( activePeople ) {
+                        var usersArray = readProperty( 'users' );
 
-                    for ( var i = 0; i < usersArray.length; i++ ) {
-                        userIdsList.push( usersArray[i].id );
-                    }
+                        for ( var i = 0; i < usersArray.length; i++ ) {
+                            if ( usersArray[i].id != 'me' ) {
+                                userIdsList.push( usersArray[i].id );
+                            }
+                        }
 
-                    callback( userIdsList );
+                        callback( userIdsList );
+                    });
                 });
 
 
@@ -384,6 +388,18 @@ var StorageManager = (function() {
             }
         },
 
+        getActivePeople: function( userId,  callback ) {
+            GPlus.getUserActivityPeopleList( 'me', function( error, status, response ) {
+                GPlusTranslator.getUserActivityPeopleList( error, status, response, function( activePeople ) {
+                    for ( var i = 0; i < activePeople.length; i++ ) {
+                        addUser( activePeople[i] );
+                    }
+
+                    callback( activePeople );
+                });
+            });
+        },
+
         getActivityInfo: function( userId, propsList, callback, forcingLoad ) {
             initUsers();
             
@@ -398,13 +414,13 @@ var StorageManager = (function() {
                 GPlus.getUserActivitiesList( userId, function( error, status, response ) {
                     GPlusTranslator.getUserActivitiesList( error, status, response, function( properties ) {
                         var numberOfPosts = {
-                            allTime: 0,
-                            lastDay: 0,
-                            lastWeek: 0,
-                            lastMonth: 0,
+                            allTime:    0,
+                            lastDay:    0,
+                            lastWeek:   0,
+                            lastMonth:  0,
                             last3Month: 0,
                             last6Month: 0,
-                            lastYear: 0
+                            lastYear:   0
                         };
 
                         var lastActivityDate = null;
