@@ -1,0 +1,206 @@
+/* Eric Meyer's CSS Reset */
+html, body, div, span, applet, object, iframe,
+h1, h2, h3, h4, h5, h6, p, blockquote, pre,
+a, abbr, acronym, address, big, cite, code,
+del, dfn, em, img, ins, kbd, q, s, samp,
+small, strike, strong, sub, sup, tt, var,
+b, u, i, center,
+dl, dt, dd, ol, ul, li,
+fieldset, form, label, legend,
+table, caption, tbody, tfoot, thead, tr, th, td,
+article, aside, canvas, details, embed,
+figure, figcaption, footer, header, hgroup,
+menu, nav, output, ruby, section, summary,
+time, mark, audio, video {
+    margin: 0;
+    padding: 0;
+    border: 0;
+    font-size: 100%;
+    font: inherit;
+}
+
+/* HTML5 display-role reset for older browsers */
+article, aside, details, figcaption, figure,
+footer, header, hgroup, menu, nav, section {
+    display: block;
+}
+
+body {
+    line-height: 1;
+}
+
+ol, ul {
+    list-style: none;
+}
+
+blockquote, q {
+    quotes: none;
+}
+
+blockquote:before, blockquote:after,
+q:before, q:after {
+    content: '';
+    content: none;
+}
+
+table {
+    border-collapse: collapse;
+    border-spacing: 0;
+}
+/* End of Eric Meyer's CSS Reset */
+
+article, aside, details, figcaption, figure, footer, header, hgroup, main, nav, section, summary {
+    display: block;
+}
+
+body {
+    -webkit-font-smoothing: antialiased;
+    text-rendering: optimizeSpeed;
+    font-family: 'Segoe UI';
+}
+
+.wrapper {
+    width: 100%;
+    min-width: 900px;
+}
+
+/* Header
+-----------------------------------------------------------------------------*/
+.header {
+    height: 64px;
+    color: gray;
+    background-color: rgb(80, 80, 80);
+}
+
+.header img{
+    float: left;
+}
+
+.header #account {
+    position: absolute;
+    margin-left: 90px;
+    padding-top: 20px;
+    float: left;
+}
+
+span#user-email {
+    font-size: 16;
+    color: gray;
+}
+
+.header .nav{
+    padding-top: 15px;
+    margin-right: 20px;
+    float: right;
+}
+
+.header .nav a{
+    color: white;
+    float: none;
+    margin-left: 10px;
+}
+
+.header .nav img{
+    float: none;
+}
+
+/* Middle
+-----------------------------------------------------------------------------*/
+.middle {
+    border-left: 500px solid white;
+    position: relative;
+}
+
+.middle:after {
+    display: table;
+    clear: both;
+    content: '';
+}
+
+.container {
+    width: 100%;
+    float: left;
+    overflow: hidden;
+    margin-right: -100%;
+    padding: 0;
+}
+
+.content {
+}
+
+/* Left Sidebar
+-----------------------------------------------------------------------------*/
+.left-sidebar {
+    float: left;
+    padding: 15px 0 15px 15px;
+    width: 500px;
+    position: relative;
+    background: white;
+    left: -500px;
+}
+
+/* Dropdown
+-----------------------------------------------------------------------------*/
+
+.dropdown {
+    padding: 0px 10px;
+    position: relative;
+}
+
+.dropdown.inactive {
+    color: #bbb;
+}
+
+.dropdown .title {
+    color: black;
+    cursor: pointer;
+    position: relative;
+}
+
+.dropdown .title h3 {
+    padding: 5px 20px;
+    font-size: 1.4em;
+}
+
+.dropdown .title span {
+    position: absolute;
+    left: 0;
+    top: 5px;
+    width: 14px;
+    height: 14px;
+    background: url("/images/trigger.png") no-repeat left bottom;
+    display: block;
+}
+    
+.dropdown.inactive .title span {
+    background-position: left top;
+}
+
+.dropdown .content {
+    padding: 20px 0px;
+}
+
+/* Other
+-----------------------------------------------------------------------------*/
+
+.but-icon {
+    cursor: pointer;
+}
+
+div#resultControlPanel {
+    display: none;
+    position: fixed;
+    bottom: 10px;
+    right: 10px;
+}
+
+#stopProcessing {
+    display: none;
+    bottom: 0;
+    margin-left:300px;
+    position: fixed;
+}
+
+div#usersSelected {
+    text-align: right;
+}

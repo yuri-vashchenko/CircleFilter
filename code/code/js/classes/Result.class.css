@@ -1,0 +1,18 @@
+.result {
+    position: relative;
+}
+
+.result.processing {
+}
+
+.result.text {
+    text-align: center;
+    padding: 25% 0;
+    font-size: 35px;
+    color: grey;
+}
+
+.result button.importFromFile {
+    display: block;
+    margin: 0 auto;
+}

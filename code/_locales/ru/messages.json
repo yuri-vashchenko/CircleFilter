@@ -277,5 +277,23 @@
     },
     "anyNumber": {
         "message": "любое количество"
-    }		
+    },
+    "filterByRelation": {
+        "message": "по Связи"
+    },
+    "relation": {
+        "message": "Связь"
+    },
+    "relationBoth": {
+        "message": "В обе стороны"
+    },
+    "relationOwn": {
+        "message": "Кто у меня"
+    },
+    "relationAnother": {
+        "message": "У кого я"
+    },
+    "relationNone": {
+        "message": "Нет связи"
+    }
 }

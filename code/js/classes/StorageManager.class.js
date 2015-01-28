@@ -4,7 +4,7 @@ var StorageManager = (function() {
     }
 
     function readProperty( property ) {
-        return JSON.parse( localStorage.getItem( property ) );
+        return localStorage.getItem( property ) != null ? JSON.parse( localStorage.getItem( property ) ) : null;
     }
 
     function removeProperty( property ) {
@@ -53,12 +53,19 @@ var StorageManager = (function() {
         
     function uncouplePropertiesList( properties ) {
         var circlesPropsArray = [],
-              usersPropsArray = [];
+            usersPropsArray = [],
+            relationPropsArray = [];
               
         for ( var i = 0; i < properties.length; i++ ) {
                 switch ( properties[i] ) {
                     case 'circles':
                         circlesPropsArray.push(properties[i]);
+                        break;
+                    case 'relationOwn':
+                        relationPropsArray.push(properties[i]);
+                        break;
+                    case 'relationAnother':
+                        relationPropsArray.push(properties[i]);
                         break;
                     default: 
                         usersPropsArray.push(properties[i]);
@@ -67,7 +74,8 @@ var StorageManager = (function() {
         
         return { 
             circlesProps: circlesPropsArray, 
-            usersProps: usersPropsArray 
+            usersProps: usersPropsArray,
+            relationProps: relationPropsArray
         };
     }    
     
@@ -183,7 +191,7 @@ var StorageManager = (function() {
               userIndex = getUserIndex( id );
         
         if ( userIndex < 0 ) {
-            var user = new User( id );
+            var user = new User( {id: id} );
             users.push( user );
             writeProperty( 'users', users );
             userIndex = users.length - 1;
@@ -304,21 +312,24 @@ var StorageManager = (function() {
     
     function getUser( id ) {
         var users = readProperty( 'users' ),
-              userIndex = getUserIndex( id );
+            userIndex = getUserIndex( id );
               
         if ( userIndex >= 0 ) {
-            return new User(
-                users[userIndex].id,
-                ( users[userIndex].firstName != undefined ? users[userIndex].firstName.value : null ),
-                ( users[userIndex].lastName != undefined ? users[userIndex].lastName.value : null ),
-                ( users[userIndex].photo != undefined ? users[userIndex].photo.value : null ),
-                ( users[userIndex].age != undefined ? users[userIndex].age.value : null ),
-                ( users[userIndex].sex != undefined ? users[userIndex].sex.value : null ),
-                ( users[userIndex].city != undefined ? users[userIndex].city.value : null ),
-                ( users[userIndex].circles != undefined ? users[userIndex].circles.value : [] ),
-                ( users[userIndex].numberOfPosts != undefined ? users[userIndex].numberOfPosts.value : {} ),
-                ( users[userIndex].lastActivityDate != undefined ? users[userIndex].lastActivityDate.value : null )
-            )
+            return new User({
+                id:                 users[userIndex].id,
+                gID:              ( users[userIndex].gID != undefined ? users[userIndex].gID.value : null ),
+                firstName:        ( users[userIndex].firstName != undefined ? users[userIndex].firstName.value : null ),
+                lastName:         ( users[userIndex].lastName != undefined ? users[userIndex].lastName.value : null ),
+                photo:            ( users[userIndex].photo != undefined ? users[userIndex].photo.value : null ),
+                age:              ( users[userIndex].age != undefined ? users[userIndex].age.value : null ),
+                sex:              ( users[userIndex].sex != undefined ? users[userIndex].sex.value : null ),
+                city:             ( users[userIndex].city != undefined ? users[userIndex].city.value : null ),
+                circles:          ( users[userIndex].circles != undefined ? users[userIndex].circles.value : [] ),
+                numberOfPosts:    ( users[userIndex].numberOfPosts != undefined ? users[userIndex].numberOfPosts.value : {} ),
+                lastActivityDate: ( users[userIndex].lastActivityDate != undefined ? users[userIndex].lastActivityDate.value : null ),
+                relationOwn:      ( users[userIndex].relationOwn != undefined ? users[userIndex].relationOwn.value : null ),
+                relationAnother:  ( users[userIndex].relationAnother != undefined ? users[userIndex].relationAnother.value : null )
+            })
         }
     }
     
@@ -340,15 +351,23 @@ var StorageManager = (function() {
             var userIdsList = new Array();
             
             forcingLoad = forcingLoad || false;
-            
+
             if ( !forcingLoad && readProperty( 'users' ) ) {
-                var usersArray = readProperty( 'users' );
-                      
-                for ( var i = 0; i < usersArray.length; i++ ) {
-                    userIdsList.push( usersArray[i].id );
-                }
-                
-                callback( userIdsList );
+
+                /** TODO: fix forced another relation update */
+                StorageManager.getUserInfo( 'me', ['relationOwn', 'relationAnother'], function() {
+                    StorageManager.getActivePeople( 'me', function( activePeople ) {
+                        var usersArray = readProperty( 'users' );
+
+                        for ( var i = 0; i < usersArray.length; i++ ) {
+                            if ( usersArray[i].id != 'me' ) {
+                                userIdsList.push( usersArray[i].id );
+                            }
+                        }
+
+                        callback( userIdsList );
+                    });
+                });                
             } else {
                 initUsers();
                 
@@ -367,6 +386,18 @@ var StorageManager = (function() {
             }
         },
 
+        getActivePeople: function( userId,  callback ) {
+            GPlus.getUserActivityPeopleList( 'me', function( error, status, response ) {
+                GPlusTranslator.getUserActivityPeopleList( error, status, response, function( activePeople ) {
+                    for ( var i = 0; i < activePeople.length; i++ ) {
+                        addUser( activePeople[i] );
+                    }
+
+                    callback( activePeople );
+                });
+            });
+        },
+
         getActivityInfo: function( userId, propsList, callback, forcingLoad ) {
             initUsers();
             
@@ -381,13 +412,13 @@ var StorageManager = (function() {
                 GPlus.getUserActivitiesList( userId, function( error, status, response ) {
                     GPlusTranslator.getUserActivitiesList( error, status, response, function( properties ) {
                         var numberOfPosts = {
-                            allTime: 0,
-                            lastDay: 0,
-                            lastWeek: 0,
-                            lastMonth: 0,
+                            allTime:    0,
+                            lastDay:    0,
+                            lastWeek:   0,
+                            lastMonth:  0,
                             last3Month: 0,
                             last6Month: 0,
-                            lastYear: 0
+                            lastYear:   0
                         };
 
                         var lastActivityDate = null;
@@ -447,11 +478,9 @@ var StorageManager = (function() {
             
             if ( !forcingLoad && readProperty( 'users' ) ) {
                 var usersArray = readProperty( 'users' );
-                      
                 for ( var i = 0; i < usersArray.length; i++ ) {
                     userList.push( usersArray[i] );
                 }
-                
                 callback( userList );
             } else {
                 initUsers();
@@ -508,30 +537,83 @@ var StorageManager = (function() {
             if ( missingProps.length == 0 ) {
                 callback( user );
             } else {
-                missingProps = uncouplePropertiesList(missingProps);    
-                
-                var getUserInfoFunc = function( id, usersProps, callback ) {
-                    GPlus.getUserInfo( id, usersProps, function( error, status, response ) {
-                        GPlusTranslator.userInfo( error, status, response, usersProps, function( properties ) {                    
-                            addUserProperties( id, properties, true );
-                            callback( getUser( id ) );                        
-                        });
-                    });
-                };
-                
-                if ( missingProps.circlesProps.length > 0 ) {
-                    GPlus.getCirclesAndUsersList( function( error, status, response ) {
-                        GPlusTranslator.usersWithFetchedCirclesList( error, status, response, function( usersList ) {
-                            for ( var i = 0; i < usersList.length; i++ ) {
-                                addUserProperties( usersList[i].id, { circles: usersList[i].circles }, true);
-                            }                        
-                            
-                            getUserInfoFunc( id, missingProps.usersProps, callback );
-                            
-                        });
-                    });
+                missingProps = uncouplePropertiesList(missingProps);
+
+                if (readProperty('gID')) {
+                    getAllPropsApisRecursive( id, missingProps, callback );
                 } else {
-                    getUserInfoFunc( id, missingProps.usersProps, callback );
+                    GPlus.getUserInfo( 'me', ['gID'], function( error, status, response ) {
+                        GPlusTranslator.userInfo( error, status, response, ['gID'], function( properties ) {
+                            writeProperty('gID', properties.gID);
+                        });
+                    });
+                }
+
+
+                function getAllPropsApisRecursive( id, missingProps, callback ) {
+                    if ( missingProps.circlesProps.length > 0 ) {
+                        GPlus.getCirclesAndUsersList( function( error, status, response ) {
+                            GPlusTranslator.usersWithFetchedCirclesList( error, status, response, function( usersList ) {
+                                for ( var i = 0; i < usersList.length; i++ ) {
+                                    addUserProperties( usersList[i].id, { circles: usersList[i].circles }, true);
+                                }
+
+                                missingProps.circlesProps = [];
+
+                                getAllPropsApisRecursive( id, missingProps, callback );
+                            });
+                        });
+                    } else if ( missingProps.relationProps.length > 0 ) {
+                        getRelationshipsRecursive( readProperty('gID'), id, missingProps, callback );
+
+                        function getRelationshipsRecursive( myId, id, missingProps, callback ) {
+                            if ( missingProps.relationProps.length > 0 ) {
+                                var prop = missingProps.relationProps.pop();
+
+                                if (prop == 'relationOwn') {
+                                    GPlus.getRelationshipOwn( myId, function( error, status, response ) {
+                                        GPlusTranslator.relationship( error, status, response, function( usersList ) {
+                                            usersList.forEach( function( user, index ) {
+                                                addUserProperties( user.id, {
+                                                    relationOwn: true
+                                                }, true );
+                                            });
+
+                                            getRelationshipsRecursive( myId, id, missingProps, callback );
+                                        });
+                                    });
+                                } else if (prop == 'relationAnother') {
+                                    GPlus.getRelationshipAnother( myId, function( error, status, response ) {
+                                        GPlusTranslator.relationship( error, status, response, function( usersList ) {
+                                            usersList.forEach( function( user, index ) {
+                                                addUserProperties( user.id, {
+                                                    relationAnother: true
+                                                }, true );
+                                            });
+
+                                            getRelationshipsRecursive( myId, id, missingProps, callback );
+                                        });
+                                    });
+                                } else {
+                                    /** TODO: throw exception */
+                                }
+                            } else {
+                                getAllPropsApisRecursive( id, missingProps, callback );
+                            }
+                        }
+                    } else if ( missingProps.usersProps.length > 0 ) {
+                        GPlus.getUserInfo( id, missingProps.usersProps, function( error, status, response ) {
+                            GPlusTranslator.userInfo( error, status, response, missingProps.usersProps, function( properties ) {
+                                addUserProperties( id, properties, true );
+
+                                missingProps.usersProps = [];
+
+                                getAllPropsApisRecursive( id, missingProps, callback );
+                            });
+                        });
+                    } else {
+                        callback( getUser( id ) );
+                    }
                 }
             }
         },
@@ -645,6 +727,7 @@ var StorageManager = (function() {
             clearUsers();
             clearCircles();
             removeProperty( 'email' );
+            removeProperty( 'gID' );
         },
         
         getStorageSize: function() {
@@ -774,6 +857,6 @@ var StorageManager = (function() {
                     callback( circleId, callback );
                 });
             });
-        },
+        }
     }
 })();

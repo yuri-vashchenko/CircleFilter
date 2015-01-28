@@ -1,0 +1,54 @@
+.user {    
+    display: inline-block;
+    height: 72px;
+    width: 200px;
+    margin: 10px;
+    border: 1px solid silver;
+    border-radius: 5px 5px 0 0;
+    vertical-align: top;
+    background-color: whitesmoke;
+    color: dodgerblue;
+    font-family: arial, verdana, sans-serif;
+    font-size: 16px;
+    cursor: pointer;
+}
+
+.user .name {    
+    margin: 10px 0px 10px 10px;
+}
+
+.user img {
+    float: left;
+    height: 62px;
+    width: 62px;
+    margin: 4px;
+}
+
+.user a {
+    cursor: pointer;
+}
+
+.user.selected {
+    background-color: #00a3e8;
+    color: white;
+}
+
+.user.selected a {
+    color: white;
+}
+
+.userTooltip {
+    background-color: whitesmoke;
+}
+
+.contentBlock {
+    padding: 15px;
+}
+
+.userTooltip label {
+    font-weight: bold;
+}
+
+.userTooltip label>span {
+    font-weight: normal;
+}

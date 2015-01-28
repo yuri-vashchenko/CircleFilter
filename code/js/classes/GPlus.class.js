@@ -62,6 +62,9 @@ var GPlus = (function() {
                     case 'id':
                         result = 'id';
                         break;
+                    case 'gID':
+                        result = 'id';
+                        break;
                     case 'firstName':
                         result = 'name(givenName)';
                         break;
@@ -80,8 +83,11 @@ var GPlus = (function() {
                     case 'city':
                         result = 'placesLived';
                         break;
-                    case 'posts':
-                        result = 'items(updated,verb)';
+                    case 'postsDates':
+                        result = 'items(updated,verb,actor/id,object(actor/id,plusoners,replies,resharers))';
+                        break;
+                    case 'postsPeople':
+                        result = 'items(actor/id,object(actor/id,plusoners,replies,resharers))';
                         break;
                     default: break;
                 }
@@ -124,6 +130,28 @@ var GPlus = (function() {
     }
 
     return {
+        executePagedQuery : function( url, onPageFetched, nextQuery, maxResults, nextPageToken ) {
+
+            xhrWithAuth( 'GET', url + '?'
+                + $.param({
+                    'maxResults' : 100 || maxResults,
+                    //'fields' : propertiesToParam( ['postsDates'] ),
+                    'pageToken' : nextPageToken
+                }),
+                false,
+                nextIteration
+            );
+
+            function nextIteration( error, status, response ) {
+                onPageFetched( error, status, response );
+                if ( !error && status == 200 && JSON.parse( response ).nextPageToken ) {
+                    GPlus.executePagedQuery( url, onPageFetched, nextQuery, maxResults, JSON.parse( response ).nextPageToken );
+                } else {
+                    nextQuery();
+                }
+            }
+        },
+
         getUserIdsList : function( onUserIdsListPageFetched, maxResults, nextPageToken ) {
 
             xhrWithAuth( 'GET', 'https://www.googleapis.com/plus/v1/people/me/people/visible?fields=items%2Fid%2CnextPageToken%2CtotalItems&'
@@ -142,16 +170,18 @@ var GPlus = (function() {
                 }
             }
         },
+
         getUserInfo : function( id, properties, callback ) {
 
             xhrWithAuth( 'GET', 'https://www.googleapis.com/plus/v1/people/' + id + '?fields=' + propertiesToParam( properties ), false, callback );
         },
+
         getUserActivitiesList : function( userId, onUserActivitiesPageFetched, maxResults, nextPageToken ) {
 
             xhrWithAuth( 'GET', 'https://www.googleapis.com/plus/v1/people/' + userId + '/activities/public?'
                 + $.param({
                     'maxResults' : 100 || maxResults,
-                    'fields' : propertiesToParam( ['posts'] ),
+                    'fields' : propertiesToParam( ['postsDates'] ),
                     'pageToken' : nextPageToken
                 }),
                 false,
@@ -165,6 +195,27 @@ var GPlus = (function() {
                 }
             }
         },
+
+        getUserActivityPeopleList : function( userId, onUserActivitiesPageFetched, maxResults, nextPageToken ) {
+
+            xhrWithAuth( 'GET', 'https://www.googleapis.com/plus/v1/people/' + userId + '/activities/public?'
+                + $.param({
+                    'maxResults' : 100 || maxResults,
+                    'fields' : propertiesToParam( ['postsPeople'] ),
+                    'pageToken' : nextPageToken
+                }),
+                false,
+                nextIteration
+            );
+
+            function nextIteration( error, status, response ) {
+                onUserActivitiesPageFetched( error, status, response );
+                if ( !error && status == 200 && JSON.parse( response ).nextPageToken ) {
+                    GPlus.onUserActivitiesPageFetched( onUserActivitiesPageFetched, maxResults, JSON.parse( response ).nextPageToken );
+                }
+            }
+        },
+
         getUsersInfo : function( onUserListPageFetched, properties, maxResults, nextPageToken ) {
 
             xhrWithAuth( 'GET', 'https://www.googleapis.com/plus/v1/people/me/people/visible?fields=items(' + propertiesToParam( properties ) +')%2CnextPageToken%2CtotalItems&'
@@ -195,6 +246,34 @@ var GPlus = (function() {
                     GPlus.getUsersList( onUsersListPageFetched, maxResults, JSON.parse( response ).nextPageToken );
                 }
             }
+        },
+
+        getRelationshipOwn : function( id, callback ) {
+            checkEmails( function() {
+                getTokenGPlus( function( token ) {
+                    xhrWithAuth( 'GET', 'https://plus.google.com/u/'
+                        + getPageId()
+                        + '/_/socialgraph/lookup/visible/?o=%5Bnull%2Cnull%2C%22'
+                        + id
+                        + '%22%5D&rt=j'
+                    , false, callback );
+
+                });
+            });
+        },
+
+        getRelationshipAnother : function( id, callback ) {
+            checkEmails( function() {
+                getTokenGPlus( function( token ) {
+                    xhrWithAuth( 'GET', 'https://plus.google.com/u/'
+                        + getPageId()
+                        + '/_/socialgraph/lookup/incoming/?o=%5Bnull%2Cnull%2C%22'
+                        + id
+                        + '%22%5D&n=100000&rt=j'
+                        , false, callback );
+
+                });
+            });
         },
 
         getCirclesList : function( callback ) {

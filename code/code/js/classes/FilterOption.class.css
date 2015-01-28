@@ -1,0 +1,45 @@
+.name {
+    display: inline-block;
+    margin-left: 10px;
+    vertical-align: middle;
+}
+
+.configuration {
+    display: inline-block;
+    margin-left: 10px;
+    vertical-align: middle;
+    text-overflow: ellipsis;
+    width: 190px;
+    white-space: nowrap;
+    overflow: hidden;
+}
+
+img.icon {
+    -webkit-filter: grayscale(100%) brightness(50%);
+}
+
+.editInterface {
+    padding: 0px;
+}
+
+.editInterface .headerBlock {
+    padding: 12px;
+    border-bottom: 1px solid gray;
+    color: #00a3e8;
+    -webkit-filter: none;
+}
+
+.editInterface .headerBlock img.icon {
+    padding: 0px;
+    -webkit-filter: none;
+}
+
+.editInterface .contentBlock {
+    padding: 15px;
+}
+
+.editInterface .controlBlock {
+    float: right;
+}
+
+

@@ -277,5 +277,23 @@
     },
     "anyNumber": {
         "message": "any number"
-    }	
+    },
+    "filterByRelation": {
+      "message": "filterByRelation"
+    },
+    "relation": {
+      "message": "relation"
+    },
+    "relationBoth": {
+      "message": "relationBoth"
+    },
+    "relationOwn": {
+      "message": "relationOwn"
+    },
+    "relationAnother": {
+      "message": "relationAnother"
+    },
+    "relationNone": {
+        "message": "relationNone"
+    }
 }

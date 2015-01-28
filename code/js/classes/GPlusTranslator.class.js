@@ -42,6 +42,54 @@ var GPlusTranslator = (function() {
             }
         },
 
+        getUserActivityPeopleList: function( error, status, response, callback ) {
+            if ( !error && status == 200 ) {
+                var resp = JSON.parse(response),
+                    people = [],
+                    urls   = [];
+
+                for ( var i = 0; i < resp.items.length; i++ ) {
+                    if ( people.indexOf( resp.items[i].actor.id ) < 0 ) {
+                        people.push(resp.items[i].actor.id);
+                    }
+
+                    if (resp.items[i].object.replies.totalItems > 0) {
+                        urls.push( resp.items[i].object.replies );
+                    }
+                    if (resp.items[i].object.plusoners.totalItems > 0) {
+                        urls.push( resp.items[i].object.plusoners )
+                    }
+                    if (resp.items[i].object.resharers.totalItems > 0) {
+                        urls.push( resp.items[i].object.resharers )
+                    }
+                }
+
+                getActivityPeopleByUrls( people, urls, callback );
+
+                function getActivityPeopleByUrls( people, urls, callback ) {
+                    if ( urls.length > 0 ) {
+                        var url = urls.pop();
+
+                        GPlus.executePagedQuery( url.selfLink, function( error, status, response ) {
+                            if ( !error && status == 200 ) {
+                                var resp = JSON.parse(response);
+
+                                for (var i = 0; i < resp.items.length; i++) {
+                                    if ( people.indexOf( resp.items[i].id ) < 0 ) {
+                                        people.push(resp.items[i].id);
+                                    }
+                                }
+                            }
+                        }, function() {
+                            getActivityPeopleByUrls( people, urls, callback );
+                        });
+                    } else {
+                        callback( people );
+                    }
+                }
+            }
+        },
+
         getUserActivitiesList: function( error, status, response, callback ) {
             if ( !error && status == 200 ) {
                 var resp = JSON.parse(response),
@@ -108,6 +156,9 @@ var GPlusTranslator = (function() {
                         case 'id':
                             props[properties[i]] = ( resp.id != undefined ? resp.id : undefined );
                             break;
+                        case 'gID':
+                            props[properties[i]] = ( resp.id != undefined ? resp.id : undefined );
+                            break;
                         case 'city':
                             props[properties[i]] = ( resp.placesLived != undefined ? resp.placesLived[0].value : undefined );
                             break;
@@ -158,6 +209,20 @@ var GPlusTranslator = (function() {
             }
         },
 
+        relationship: function( error, status, response, callback ) {
+            var dirtyRes = parseDirtyJSON( response.substring( 4 ) ),
+                dirtyCirclesList = Array.isArray( dirtyRes ) ? dirtyRes[0] : dirtyRes,
+                userList = [];
+
+            dirtyCirclesList[0][2].forEach( function( element, index ) {
+                userList.push({
+                    id: element[0][2]
+                });
+            });
+
+            callback( userList );
+        },
+        
         usersWithFetchedCirclesList: function( error, status, response, callback ) {
             var dirtyRes = parseDirtyJSON( response.substring( 4 ) ),
                   dirtyCirclesList = Array.isArray( dirtyRes ) ? dirtyRes[0] : dirtyRes,
